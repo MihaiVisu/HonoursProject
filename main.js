@@ -15,18 +15,9 @@ $(function() {
     },
 
     onAdd: function (map) {
-      var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control');
+      var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control sidebar-trigger');
       container.innerHTML = '<i class="sidebar icon"></i>';
       container.style.backgroundColor = 'white';
-
-      // toggle sidebar
-      container.onclick = function(){
-        $('.ui.sidebar').sidebar({
-          transition: 'overlay',
-          dimPage: false,
-          closable: false
-        }).sidebar('toggle');
-      };
 
       return container;
     }
@@ -79,7 +70,7 @@ $(function() {
   });
 
 
-  // toggle event listeners
+  // toggle event listeners and triggers
 
   $('input[name="pm1Toggle"]').change(function() {
     if (this.checked) {
@@ -103,6 +94,26 @@ $(function() {
     } else {
       map.removeLayer(pm10Layer);
     }
+  });
+
+  $('.sidebar-trigger').click(function(){
+    $('.ui.sidebar').sidebar({
+      transition: 'overlay',
+      dimPage: false,
+      closable: false
+    }).sidebar('toggle');
+  });
+
+  $('.mapView').click(function(){
+    $('.graphs-section').hide();
+    $('.lmap').show();
+    $('.ui.sidebar .checkbox input').attr('disabled', false);
+  });
+
+  $('.graphView').click(function() {
+    $('.graphs-section').show();
+    $('.lmap').hide();
+    $('.ui.sidebar .checkbox input').attr('disabled', true);
   });
 
 });

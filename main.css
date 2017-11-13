@@ -3,9 +3,10 @@
 }
 
 .lmap {
-  height: 65%;
+  height: 100%;
 }
 
 .graphs-section {
-  height: 35%;
+  display: none;
+  height: 100%;
 }

@@ -61,7 +61,9 @@ $(function() {
         fillColor: 'red',
         fillOpacity: 0.2,
         radius: feature.properties.pm10*0.2
-      }).bindPopup("Timestamp: " + feature.properties.time));
+      }).bindPopup("Timestamp: " + feature.properties.time + '\n' +
+                    "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                    "Longitude: " + feature.geometry.coordinates[0]));
     });
     // initialize map layers once data is parsed
     pm1Layer = L.layerGroup(pm1Circles);

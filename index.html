@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- LIBS -->
+
+    <link rel="stylesheet" href="./libs/css/semantic.min.css"/>
+    <link rel="stylesheet" href="./libs/css/leaflet.css"/>
+
+    <!-- CUSTOM FILES -->
+    <link rel="stylesheet" href="./main.css">
+
+  </head>
+  <body>
+
+    <div class="ui left vertical fixed sidebar menu menu-padding">
+
+        <div class="ui list">
+          <header>
+            <h3 class="header">PM Layers</h3>
+          </header>
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="pm1Toggle" value="">
+              <label>PM1 Layer</label>
+            </div>
+          </div>
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="pm25Toggle" value="">
+              <label>PM2.5 Layer</label>
+            </div>
+          </div>
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="pm10Toggle" value="">
+              <label>PM10 Layer</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+    </div>
+
+    <div class="pusher" style="height:100%;">
+      <div class="ui grid padded" style="height:100%">
+        <div id="map" class="row lmap"></div>
+        <div class="row graphs-section">
+          <div class="sixteen wide column">
+            <h1 class="ui right aligned header">Graphs</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./libs/js/jquery-3.2.1.min.js"></script>
+    <script src="./libs/js/semantic.min.js"></script>
+    <script src="./main.js"></script>
+    <script src="./libs/js/leaflet.js"></script>
+  </body>
+</html>

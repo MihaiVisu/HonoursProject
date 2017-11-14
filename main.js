@@ -2,9 +2,12 @@ $(function() {
 
   var pm1Circles = [],
       pm25Circles = [],
-      pm10Circles = [];
+      pm10Circles = [],
+      parkPathsCircles = [],
+      busyRoadsCircles = [],
+      pedestrianAreasCircles = [];
 
-  var pm1Layer, pm25Layer, pm10Layer;
+  var pm1Layer, pm25Layer, pm10Layer, parkPathsLayer, busyRoadsLayer, pedestrianAreasLayer;
 
   var map = L.map('map');
 
@@ -39,41 +42,74 @@ $(function() {
   map.setView(edinburgh, 14);
 
   // parse json
-  $.getJSON('cc.json', function(data) {
+  $.getJSON('cycling_data.json', function(data) {
     data.features.forEach(function(feature) {
       // add a layer of pm1 circles
       pm1Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
         color: 'green',
         fillColor: 'green',
         fillOpacity: 0.2,
-        radius: feature.properties.pm1*20
+        radius: feature.properties.pm1*0.05
       }).bindPopup("Timestamp: " + feature.properties.time));
       // add a layer of pm2.5 circles
       pm25Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
         color: 'blue',
         fillColor: 'blue',
         fillOpacity: 0.2,
-        radius: feature.properties.pm2_5*1
+        radius: feature.properties.pm2_5*0.05
       }).bindPopup("Timestamp: " + feature.properties.time));
       // add a layer of pm10 circles
       pm10Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
         color: 'red',
         fillColor: 'red',
         fillOpacity: 0.2,
-        radius: feature.properties.pm10*0.2
-      }).bindPopup("Timestamp: " + feature.properties.time + '\n' +
+        radius: feature.properties.pm10*0.05
+      }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                     "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                     "Longitude: " + feature.geometry.coordinates[0]));
+      if (feature.properties.urban_environment == 1) {
+        parkPathsCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'pink',
+          fillColor: 'pink',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      } else if (feature.properties.urban_environment == 0) {
+        busyRoadsCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'yellow',
+          fillColor: 'yellow',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      } else if (feature.properties.urban_environment == 2) {
+        pedestrianAreasCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'brown',
+          fillColor: 'brown',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      }
     });
+
     // initialize map layers once data is parsed
     pm1Layer = L.layerGroup(pm1Circles);
     pm25Layer = L.layerGroup(pm25Circles);
     pm10Layer = L.layerGroup(pm10Circles);
+    parkPathsLayer = L.layerGroup(parkPathsCircles);
+    busyRoadsLayer = L.layerGroup(busyRoadsCircles);
+    pedestrianAreasLayer = L.layerGroup(pedestrianAreasCircles);
   });
 
 
   // toggle event listeners and triggers
 
+  // checkboxes toggles
   $('input[name="pm1Toggle"]').change(function() {
     if (this.checked) {
       map.addLayer(pm1Layer);
@@ -95,6 +131,30 @@ $(function() {
       map.addLayer(pm10Layer);
     } else {
       map.removeLayer(pm10Layer);
+    }
+  });
+
+  $('input[name="parkPathsToggleTrain"]').change(function() {
+    if (this.checked) {
+      map.addLayer(parkPathsLayer);
+    } else {
+      map.removeLayer(parkPathsLayer);
+    }
+  });
+
+  $('input[name="busyRoadsToggleTrain"]').change(function() {
+    if (this.checked) {
+      map.addLayer(busyRoadsLayer);
+    } else {
+      map.removeLayer(busyRoadsLayer);
+    }
+  });
+
+  $('input[name="pedestrianAreasToggleTrain"]').change(function() {
+    if (this.checked) {
+      map.addLayer(pedestrianAreasLayer);
+    } else {
+      map.removeLayer(pedestrianAreasLayer);
     }
   });
 

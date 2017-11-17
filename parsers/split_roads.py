@@ -17,6 +17,8 @@ with open('../../data/output.csv', 'rt') as csvfile:
         if row['urban_environment'] == 0:
             if latitude1 < row['latitude'] < latitude2 and longitude1 < row['longitude'] < longitude2:
                 row['urban_environment'] = urban_env
+            elif latitdue2 < row['latitude'] < latitude1 and longitude1 < row['longitude'] < longitude2:
+                row['urban_environment'] = urban_env
         rows.append(row)
 
 with open('../../data/split_outputs.csv', 'wt') as csvfile:

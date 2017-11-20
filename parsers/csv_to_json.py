@@ -43,5 +43,5 @@ def read_file(file_name):
 
 read_file(sys.argv[1])
 
-with open('../'+sys.argv[2], 'w') as jsonfile:
+with open('../json/'+sys.argv[2], 'w') as jsonfile:
     json.dump(features, jsonfile, indent=4)

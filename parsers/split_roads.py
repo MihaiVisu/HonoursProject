@@ -11,7 +11,7 @@ longitude2 = float(sys.argv[4])
 urban_env = int(sys.argv[5])
 
 rows = []
-with open('../../data/output.csv', 'rt') as csvfile:
+with open('../data/output.csv', 'rt') as csvfile:
     reader = csv.DictReader(csvfile, delimiter=',', quotechar='\"')
     for row in reader:
         if row['urban_environment'] == 0:
@@ -21,7 +21,7 @@ with open('../../data/output.csv', 'rt') as csvfile:
                 row['urban_environment'] = urban_env
         rows.append(row)
 
-with open('../../data/split_outputs.csv', 'wt') as csvfile:
+with open('../data/split_outputs.csv', 'wt') as csvfile:
     writer = csv.DictWriter(csvfile, delimiter=',', quotechar='\"', fieldnames=list(rows[0].keys()))
     writer.writeheader()
     writer.writerows(rows)

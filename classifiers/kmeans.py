@@ -28,6 +28,14 @@ kmeans = KMeans(n_clusters=3, random_state=0)
 kmeans.fit(x_pm, y)
 
 predicted_results = kmeans.predict(x_pm)
+print(predicted_results)
+print(set(predicted_results))
+
+cnt = 0
+for i in range(0, len(predicted_results)):
+    if predicted_results[i] == y[i]:
+        cnt+=1
+print("accuracy on kmeans: {}".format(cnt/len(predicted_results)))
 
 rows = []
 with open('../data/output.csv', 'rt') as csvfile:

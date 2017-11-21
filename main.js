@@ -1,13 +1,15 @@
 $(function() {
 
-  var pm1Circles = [],
-      pm25Circles = [],
-      pm10Circles = [],
-      parkPathsCircles = [],
+  var parkPathsCircles = [],
       busyRoadsCircles = [],
-      pedestrianAreasCircles = [];
+      pedestrianAreasCircles = [],
 
-  var pm1Layer, pm25Layer, pm10Layer, parkPathsLayer, busyRoadsLayer, pedestrianAreasLayer;
+      parkPathsPredictedCircles = [],
+      busyRoadsPredictedCircles = [],
+      pedestrianAreasPredictedCircles = [];
+
+  var parkPathsLayer, busyRoadsLayer, pedestrianAreasLayer,
+      parkPathsPredictedLayer, busyRoadsPredictedLayer, pedestrianAreasPredictedLayer;
 
   var map = L.map('map');
 
@@ -42,31 +44,10 @@ $(function() {
   map.setView(edinburgh, 14);
 
   // parse json
-  $.getJSON('cycling_data.json', function(data) {
+  $.getJSON('json/predicted_kmeans_outputs.json', function(data) {
     data.features.forEach(function(feature) {
-      // add a layer of pm1 circles
-      pm1Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-        color: 'green',
-        fillColor: 'green',
-        fillOpacity: 0.2,
-        radius: feature.properties.pm1*0.05
-      }).bindPopup("Timestamp: " + feature.properties.time));
-      // add a layer of pm2.5 circles
-      pm25Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-        color: 'blue',
-        fillColor: 'blue',
-        fillOpacity: 0.2,
-        radius: feature.properties.pm2_5*0.05
-      }).bindPopup("Timestamp: " + feature.properties.time));
-      // add a layer of pm10 circles
-      pm10Circles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-        color: 'red',
-        fillColor: 'red',
-        fillOpacity: 0.2,
-        radius: feature.properties.pm10*0.05
-      }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
-                    "Latitude: " + feature.geometry.coordinates[1] + '\n' +
-                    "Longitude: " + feature.geometry.coordinates[0]));
+
+      // add trained outputs
       if (feature.properties.urban_environment == 1) {
         parkPathsCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
           color: 'pink',
@@ -95,45 +76,52 @@ $(function() {
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
       }
+
+      // add predicted outputs from kmeans
+      if (feature.properties.predicted_environment == 1) {
+        parkPathsPredictedCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'pink',
+          fillColor: 'pink',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      } else if (feature.properties.predicted_environment == 0) {
+        busyRoadsPredictedCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'yellow',
+          fillColor: 'yellow',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      } else if (feature.properties.predicted_environment == 2) {
+        pedestrianAreasPredictedCircles.push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: 'brown',
+          fillColor: 'brown',
+          fillOpacity: 0.2,
+          radius: feature.properties.pm10*0.05
+        }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
+                      "Latitude: " + feature.geometry.coordinates[1] + '\n' +
+                      "Longitude: " + feature.geometry.coordinates[0]));
+      }
     });
 
     // initialize map layers once data is parsed
-    pm1Layer = L.layerGroup(pm1Circles);
-    pm25Layer = L.layerGroup(pm25Circles);
-    pm10Layer = L.layerGroup(pm10Circles);
     parkPathsLayer = L.layerGroup(parkPathsCircles);
     busyRoadsLayer = L.layerGroup(busyRoadsCircles);
     pedestrianAreasLayer = L.layerGroup(pedestrianAreasCircles);
+    // predicted layers
+    parkPathsPredictedLayer = L.layerGroup(parkPathsPredictedCircles);
+    busyRoadsPredictedLayer = L.layerGroup(busyRoadsPredictedCircles);
+    pedestrianAreasPredictedLayer = L.layerGroup(pedestrianAreasPredictedCircles);
   });
 
 
   // toggle event listeners and triggers
 
   // checkboxes toggles
-  $('input[name="pm1Toggle"]').change(function() {
-    if (this.checked) {
-      map.addLayer(pm1Layer);
-    } else {
-      map.removeLayer(pm1Layer);
-    }
-  });
-
-  $('input[name="pm25Toggle"]').change(function() {
-    if (this.checked) {
-      map.addLayer(pm25Layer);
-    } else {
-      map.removeLayer(pm25Layer);
-    }
-  });
-
-  $('input[name="pm10Toggle"]').change(function() {
-    if (this.checked) {
-      map.addLayer(pm10Layer);
-    } else {
-      map.removeLayer(pm10Layer);
-    }
-  });
-
   $('input[name="parkPathsToggleTrain"]').change(function() {
     if (this.checked) {
       map.addLayer(parkPathsLayer);
@@ -157,6 +145,32 @@ $(function() {
       map.removeLayer(pedestrianAreasLayer);
     }
   });
+
+  $('input[name="parkPathsPrediTogglePredict"]').change(function() {
+    if (this.checked) {
+      map.addLayer(parkPathsPredictedLayer);
+    } else {
+      map.removeLayer(parkPathsPredictedLayer);
+    }
+  });
+
+  $('input[name="busyRoadsTogglePredict"]').change(function() {
+    if (this.checked) {
+      map.addLayer(busyRoadsPredictedLayer);
+    } else {
+      map.removeLayer(busyRoadsPredictedLayer);
+    }
+  });
+
+  $('input[name="pedestrianAreasTogglePredict"]').change(function() {
+    if (this.checked) {
+      map.addLayer(pedestrianAreasPredictedLayer);
+    } else {
+      map.removeLayer(pedestrianAreasPredictedLayer);
+    }
+  });
+
+
 
   $('.sidebar-trigger').click(function(){
     $('.ui.sidebar').sidebar({

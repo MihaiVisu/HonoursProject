@@ -53,7 +53,7 @@ $(function() {
           color: 'pink',
           fillColor: 'pink',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
@@ -62,7 +62,7 @@ $(function() {
           color: 'yellow',
           fillColor: 'yellow',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
@@ -71,7 +71,7 @@ $(function() {
           color: 'brown',
           fillColor: 'brown',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
@@ -83,7 +83,7 @@ $(function() {
           color: 'pink',
           fillColor: 'pink',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
@@ -92,7 +92,7 @@ $(function() {
           color: 'yellow',
           fillColor: 'yellow',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));
@@ -101,7 +101,7 @@ $(function() {
           color: 'brown',
           fillColor: 'brown',
           fillOpacity: 0.2,
-          radius: feature.properties.pm10*0.05
+          radius: feature.properties.bin0*0.05
         }).bindPopup("Timestamp: " + feature.properties.time + "\n" +
                       "Latitude: " + feature.geometry.coordinates[1] + '\n' +
                       "Longitude: " + feature.geometry.coordinates[0]));

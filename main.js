@@ -8,9 +8,25 @@ $(function() {
     "4": [],
   };
 
+  var middayCircles = {
+    "0": [],
+    "1": [],
+    "2": [],
+    "3": [],
+    "4": [],
+  };
+
   var colors = ["pink", "yellow", "red", "green", "brown"];
 
   var layers = {
+    "0": {},
+    "1": {},
+    "2": {},
+    "3": {},
+    "4": {},
+  };
+
+  var middayLayers = {
     "0": {},
     "1": {},
     "2": {},
@@ -64,19 +80,41 @@ $(function() {
     }
   });
 
+  $.getJSON('json/labelled_midday.json', function(data) {
+    data.features.forEach(function(feature) {
+      middayCircles[feature.properties.environment_index].push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+        color: colors[feature.properties.environment_index],
+        fillColor: colors[feature.properties.environment_index],
+        fillOpacity: 0.2,
+        radius: feature.properties.bin0*0.1
+      }));
+    });
+    for (key in layers) {
+      middayLayers[key] = L.layerGroup(middayCircles[key]);
+    }
+  });
+
   $('input[name="labelledAfternoonFeatures"]').change(function() {
     if (this.checked) {
-      map.addLayer(layers['0']);
-      map.addLayer(layers['1']);
-      map.addLayer(layers['2']);
-      map.addLayer(layers['3']);
-      map.addLayer(layers['4']);
+      for (key in layers) {
+        map.addLayer(layers[key]);
+      }
     } else {
-      map.removeLayer(layers['0']);
-      map.removeLayer(layers['1']);
-      map.removeLayer(layers['2']);
-      map.removeLayer(layers['3']);
-      map.removeLayer(layers['4']);
+      for (key in layers) {
+        map.removeLayer(layers[key]);
+      }
+    }
+  });
+
+  $('input[name="labelledMiddayFeatures"]').change(function() {
+    if (this.checked) {
+      for (key in middayLayers) {
+        map.addLayer(middayLayers[key]);
+      }
+    } else {
+      for (key in middayLayers) {
+        map.removeLayer(middayLayers[key]);
+      }
     }
   });
 

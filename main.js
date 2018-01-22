@@ -1,38 +1,25 @@
 $(function() {
 
-  var circles = {
-    "0": [],
-    "1": [],
-    "2": [],
-    "3": [],
-    "4": [],
-  };
+  var requestData = function(dataFile, circles, layers, radiusProperty, colors, scale) {
+    $.getJSON(dataFile, function(data) {
+      data.features.forEach(function(feature) {
+        if (!circles[feature.properties.environment_index]) {
+          circles[feature.properties.environment_index] = [];
+        }
+        circles[feature.properties.environment_index].push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
+          color: colors[feature.properties.environment_index],
+          fillColor: colors[feature.properties.environment_index],
+          fillOpacity: 0.2,
+          radius: feature.properties[radiusProperty]*scale
+        }));
+      });
+      for (key in circles) {
+        layers[key] = L.layerGroup(circles[key]);
+      }
+    });
+  }
 
-  var middayCircles = {
-    "0": [],
-    "1": [],
-    "2": [],
-    "3": [],
-    "4": [],
-  };
-
-  var colors = ["pink", "yellow", "red", "green", "brown"];
-
-  var layers = {
-    "0": {},
-    "1": {},
-    "2": {},
-    "3": {},
-    "4": {},
-  };
-
-  var middayLayers = {
-    "0": {},
-    "1": {},
-    "2": {},
-    "3": {},
-    "4": {},
-  };
+  var colors = ["green", "yellow", "orange", "red", "brown"];
 
   var map = L.map('map');
 
@@ -66,107 +53,47 @@ $(function() {
   // set view of Edinburgh
   map.setView(edinburgh, 14);
 
-  $.getJSON('json/labelled_afternoon.json', function(data) {
-    data.features.forEach(function(feature) {
-      circles[feature.properties.environment_index].push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-        color: colors[feature.properties.environment_index],
-        fillColor: colors[feature.properties.environment_index],
-        fillOpacity: 0.2,
-        radius: feature.properties.bin0*0.1
-      }));
-    });
-    for (key in layers) {
-      layers[key] = L.layerGroup(circles[key]);
-    }
-  });
+  var circles = {
+    "labelledMiddayFeaturesBins": {},
+    "labelledAfternoonFeaturesBins": {},
+    "labelledMiddayFeaturesPm25": {},
+    "labelledMiddayFeaturesPm": {},
+    "labelledAfternoonFeaturesPm25": {},
+    "labelledAfternoonFeaturesPm": {}
+  };
 
-  $.getJSON('json/labelled_midday.json', function(data) {
-    data.features.forEach(function(feature) {
-      middayCircles[feature.properties.environment_index].push(L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
-        color: colors[feature.properties.environment_index],
-        fillColor: colors[feature.properties.environment_index],
-        fillOpacity: 0.2,
-        radius: feature.properties.bin0*0.1
-      }));
-    });
-    for (key in layers) {
-      middayLayers[key] = L.layerGroup(middayCircles[key]);
-    }
-  });
+  var layers = {
+    "labelledMiddayFeaturesBins": {},
+    "labelledAfternoonFeaturesBins": {},
+    "labelledMiddayFeaturesPm25": {},
+    "labelledMiddayFeaturesPm": {},
+    "labelledAfternoonFeaturesPm25": {},
+    "labelledAfternoonFeaturesPm": {}
+  };
 
-  $('input[name="labelledAfternoonFeatures"]').change(function() {
+  var binScale = 0.1, pmScale = 2;
+
+  // requests to json files of data
+  requestData('json/labelled_midday.json', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', colors, binScale);
+  requestData('json/labelled_afternoon.json', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', colors, binScale);
+  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', colors, pmScale);
+  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', colors, pmScale);
+  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', colors, pmScale);
+  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', colors, pmScale);
+
+
+  $('input').change(function() {
+    var featureKey = $(this).attr('name');
     if (this.checked) {
-      for (key in layers) {
-        map.addLayer(layers[key]);
+      for (key in layers[featureKey]) {
+        map.addLayer(layers[featureKey][key]);
       }
     } else {
-      for (key in layers) {
-        map.removeLayer(layers[key]);
+      for (key in layers[featureKey]) {
+        map.removeLayer(layers[featureKey][key]);
       }
     }
   });
-
-  $('input[name="labelledMiddayFeatures"]').change(function() {
-    if (this.checked) {
-      for (key in middayLayers) {
-        map.addLayer(middayLayers[key]);
-      }
-    } else {
-      for (key in middayLayers) {
-        map.removeLayer(middayLayers[key]);
-      }
-    }
-  });
-
-  // $('input[name="parkPathsToggleTrain"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(parkPathsLayer);
-  //   } else {
-  //     map.removeLayer(parkPathsLayer);
-  //   }
-  // });
-
-  // $('input[name="busyRoadsToggleTrain"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(busyRoadsLayer);
-  //   } else {
-  //     map.removeLayer(busyRoadsLayer);
-  //   }
-  // });
-
-  // $('input[name="pedestrianAreasToggleTrain"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(pedestrianAreasLayer);
-  //   } else {
-  //     map.removeLayer(pedestrianAreasLayer);
-  //   }
-  // });
-
-  // $('input[name="parkPathsPrediTogglePredict"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(parkPathsPredictedLayer);
-  //   } else {
-  //     map.removeLayer(parkPathsPredictedLayer);
-  //   }
-  // });
-
-  // $('input[name="busyRoadsTogglePredict"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(busyRoadsPredictedLayer);
-  //   } else {
-  //     map.removeLayer(busyRoadsPredictedLayer);
-  //   }
-  // });
-
-  // $('input[name="pedestrianAreasTogglePredict"]').change(function() {
-  //   if (this.checked) {
-  //     map.addLayer(pedestrianAreasPredictedLayer);
-  //   } else {
-  //     map.removeLayer(pedestrianAreasPredictedLayer);
-  //   }
-  // });
-
-
 
   $('.sidebar-trigger').click(function(){
     $('.ui.sidebar').sidebar({

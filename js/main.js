@@ -1,6 +1,8 @@
 $(function() {
 
-  var colors = ["green", "yellow", "orange", "red", "brown"];
+  var env_colors = ["green", "yellow", "orange", "red", "brown"];
+  var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
+  var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
   var map = L.map('map');
 
@@ -40,7 +42,9 @@ $(function() {
     "labelledMiddayFeaturesPm25": {},
     "labelledMiddayFeaturesPm": {},
     "labelledAfternoonFeaturesPm25": {},
-    "labelledAfternoonFeaturesPm": {}
+    "labelledAfternoonFeaturesPm": {},
+    "londonData": {},
+    "unsupervisedLondonData": {}
   };
 
   var layers = {
@@ -49,18 +53,22 @@ $(function() {
     "labelledMiddayFeaturesPm25": {},
     "labelledMiddayFeaturesPm": {},
     "labelledAfternoonFeaturesPm25": {},
-    "labelledAfternoonFeaturesPm": {}
+    "labelledAfternoonFeaturesPm": {},
+    "londonData": {},
+    "unsupervisedLondonData": {}
   };
 
   var binScale = 0.1, pmScale = 2;
 
   // requests to json files of data
-  requestData('json/labelled_midday.json', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', colors, binScale);
-  requestData('json/labelled_afternoon.json', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', colors, binScale);
-  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', colors, pmScale);
-  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', colors, pmScale);
-  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', colors, pmScale);
-  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', colors, pmScale);
+  requestData('json/labelled_midday.json', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "environment_index");
+  requestData('json/labelled_afternoon.json', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "environment_index");
+  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "environment_index");
+  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "environment_index");
+  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "environment_index");
+  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "environment_index");
+  requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "environment_index");
+  requestData('json/filtered_london_data_unsupervised.json', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'PM2.5', unsupervisedLondonColors, pmScale, "unsupervised_environment_index")
 
 
   $('input').change(function() {

@@ -3,3 +3,7 @@ node_modules/
 json/
 data/
 notebooks/.*
+report/*.aux
+report/*.log
+report/*.synctex.gz
+report/*.toc

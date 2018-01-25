@@ -6,7 +6,7 @@
 
 \begin{document}
 
-\title{Sensing Spaces: A Study in Mapping Air Pollution in Public Spaces using Personal Exposure Monitors}
+\title{Sensing Spaces: Personal Exposure with Different Modes of Transport and Urban Environments Using Wearable Sensors}
 
 \author{Mihai Visuian}
 
@@ -50,7 +50,10 @@ page as given here, and including a table of contents and bibliography.
 \maketitle
 
 \section*{Acknowledgements}
-Acknowledgements go here. 
+
+I would like to thank my supervisor, professor D K Arvind for his main support in helping me work thoroughly on a project of such high complexity and importance in the real world. I would also like to thank him for his valuable advice and guidance.
+
+Furthermore, I would like to thank Andrew Bates for his support in providing equipment and helping with maintenance of sensors and servers.
 
 \tableofcontents
 
@@ -59,70 +62,47 @@ Acknowledgements go here.
 
 \chapter{Introduction}
 
-The document structure should include:
+\section{Motivation}
+
+Air pollution in large urban environments is a controversial topic nowadays and pollution sources, as well as distribution and effect on human health have been widely studied. Particulate matter (PM) represents the sum of all solid particles and liquid droplets of small sizes that are suspended in the air. It has been discovered that exposure to such particles of size less than 10 microns can be hazardous for the human body and it has been associated with increased mortality rates in areas labelled as highly polluted.
+
+Air quality is mostly measured through stationary Air Quality Monitoring Stations (AQMS). They measure air quality at a fixed location on a certain radius with high precision. Data collected from such networks of stations distributed strategically within urban environments is used to determine exposure to pollutants and is used for checking if a specific area meets requirements set by legislation. One drawback of this approach is that monitoring a large fixed region through a stationary sensor would not always suffice to obtain accurate information about air quality and pollution sources, as parameters vary from a corner of the region to another and other external factors such as wind speed and terrain type affect the results.
+
+One approach to solve this issue and obtain more accurate data from the environment would be to deploy low-cost mobile sensors on people, such as drivers, pedestrians and cyclists in order to obtain a more precise spatial representation of the air quality. However, these sensors have to be calibrated in correlation with the Air Quality Monitoring Stations to ensure high precision of the information gathered.
+
+\section{Objectives}
+
+This project mainly focuses on Mobile Exposure Monitors (MEM) developed by the Centre for Speckled Computing. These wearable devices are equipped with sensors measuring humidity, temperature and particulate matter. Data is transmitted to an Android device via Bluetooth Low Energy. The project presents several study methods for detecting urban environments and personal exposure with different means of transport, based on air quality data collected with the wearable sensors. The objectives of the project are:
+
 \begin{itemize}
-\item
-The title page  in the format used above.
-\item
-An optional acknowledgements page.
-\item
-The table of contents.
-\item
-The report text divided into chapters as appropriate.
-\item
-The bibliography.
+\item Collect data at specific times on a daily basis and on a fixed route.
+\item Perform analysis on data gathered for various modes of transport and urban environments and research machine learning techniques to detect personal exposure on a specific mode of transport or urban environment based on temperature, humidity and particulate matter attributes.
+\item Build a data visualization tool for a more accurate spatial representation of data gathered and results obtained after applying statistical and machine learning methods.
+\item Validate measurements of sensors against a more accurate Air Quality Monitoring Station in Edinburgh.
 \end{itemize}
 
-Commands for generating the title page appear in the skeleton file and
-are self explanatory.
-The file also includes commands to choose your report type (project
-report, thesis or dissertation) and degree.
-These will be placed in the appropriate place in the title page. 
+\section{Literature Review}
 
-The default behaviour of the documentclass is to produce documents typeset in
-12 point.  Regardless of the formatting system you use, 
-it is recommended that you submit your thesis printed (or copied) 
-double sided.
+\section{Method}
 
-The report should be printed single-spaced.
-It should be 30 to 60 pages long, and preferably no shorter than 20 pages.
-Appendices are in addition to this and you should place detail
-here which may be too much or not strictly necessary when reading the relevant section.
+\section{Structure of the Report}
 
-\section{Using Sections}
+\chapter{Background}
 
-Divide your chapters into sub-parts as appropriate.
+\chapter{Methodology}
 
-\section{Citations}
+\chapter{Implementation}
 
-Note that citations 
-(like \cite{P1} or \cite{P2})
-can be generated using {\tt BibTeX} or by using the
-{\tt thebibliography} environment. This makes sure that the
-table of contents includes an entry for the bibliography.
-Of course you may use any other method as well.
+\section{Data Visualisation Tool}
 
-\section{Options}
+\chapter{Conclusions}
 
-There are various documentclass options, see the documentation.  Here we are
-using an option ({\tt bsc} or {\tt minf}) to choose the degree type, plus:
-\begin{itemize}
-\item {\tt frontabs} (recommended) to put the abstract on the front page;
-\item {\tt twoside} (recommended) to format for two-sided printing, with
-  each chapter starting on a right-hand page;
-\item {\tt singlespacing} (required) for single-spaced formating; and
-\item {\tt parskip} (a matter of taste) which alters the paragraph formatting so that
-paragraphs are separated by a vertical space, and there is no
-indentation at the start of each paragraph.
-\end{itemize}
-
-\chapter{The Real Thing}
-
-Of course
-you may want to use several chapters and much more text than here.
+\chapter{Results}
 
 % use the following and \cite{} as above if you use BibTeX
 % otherwise generate bibtem entries
+\nocite{P1}
+\nocite{P2}
 \bibliographystyle{plain}
 \bibliography{mybibfile}
 

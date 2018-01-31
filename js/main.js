@@ -4,6 +4,8 @@ $(function() {
   var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
   var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
+  var url = "http://fddb91e4.ngrok.io/api_mihai/";
+
   var map = L.map('map');
 
   var menuControl =  L.Control.extend({
@@ -61,13 +63,13 @@ $(function() {
   var binScale = 0.1, pmScale = 2;
 
   // requests to json files of data
-  requestData('json/labelled_midday.json', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "environment_index");
-  requestData('json/labelled_afternoon.json', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "environment_index");
-  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "environment_index");
-  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "environment_index");
-  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "environment_index");
-  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "environment_index");
-  requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "environment_index");
+  requestData(url+'labelled_midday_bins', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label");
+  requestData(url+'labelled_afternoon_bins', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label");
+  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
+  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
+  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label");
+  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "label");
+  requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "label");
   requestData('json/filtered_london_data_unsupervised.json', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'PM2.5', unsupervisedLondonColors, pmScale, "unsupervised_environment_index")
 
 

@@ -4,7 +4,7 @@ $(function() {
   var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
   var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
-  var url = "http://fddb91e4.ngrok.io/api_mihai/";
+  var url = "http://24239d2b.ngrok.io";
 
   var map = L.map('map');
 
@@ -63,8 +63,8 @@ $(function() {
   var binScale = 0.1, pmScale = 2;
 
   // requests to json files of data
-  requestData(url+'labelled_midday_bins', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label");
-  requestData(url+'labelled_afternoon_bins', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label");
+  requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label");
+  requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label");
   requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
   requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
   requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label");

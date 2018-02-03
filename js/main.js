@@ -76,8 +76,8 @@ $(function() {
   requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label", ['pm2_5']);
   requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
   requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
-  // requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "label");
-  // requestData('json/filtered_london_data_unsupervised.json', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'PM2.5', unsupervisedLondonColors, pmScale, "unsupervised_environment_index")
+  requestData(url+'/api_mihai/labelled_london_data/supervised/', circles.londonData, layers.londonData, 'pm2_5', londonColors, pmScale, "label");
+  requestData(url+'/api_mihai/labelled_london_data/unsupervised/', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'pm2_5', unsupervisedLondonColors, pmScale, "label", pmVals);
 
 
   $('input').change(function() {

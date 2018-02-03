@@ -1,5 +1,6 @@
-function requestData(dataUrl, circles, layers, radiusProperty, colors, scale, index) {
-  $.post(dataUrl, JSON.stringify({"attrs": ["bin0", "bin1", "bin2"]}), function(data) {
+function requestData(dataUrl, circles, layers, radiusProperty, colors, scale, index, attrs) {
+  // use encodeURIComponent for XSS validation
+  $.getJSON(dataUrl, {"attrs[]": encodeURIComponent(attrs)}, function(data) {
     data.features.forEach(function(feature) {
       if (!circles[feature.properties[index]]) {
         circles[feature.properties[index]] = [];
@@ -14,5 +15,5 @@ function requestData(dataUrl, circles, layers, radiusProperty, colors, scale, in
     for (key in circles) {
       layers[key] = L.layerGroup(circles[key]);
     }
-  }, 'json');
+  });
 }

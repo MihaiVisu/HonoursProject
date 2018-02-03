@@ -4,7 +4,7 @@ $(function() {
   var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
   var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
-  var url = "http://24239d2b.ngrok.io";
+  var url = "http://localhost:8080";
 
   var map = L.map('map');
 
@@ -60,17 +60,24 @@ $(function() {
     "unsupervisedLondonData": {}
   };
 
+  var binVals = [];
+  for (var i = 0; i < 16; i++) {
+    binVals.push('bin'+i);
+  }
+
   var binScale = 0.1, pmScale = 2;
 
+  var pmVals = ['pm1', 'pm2_5', 'pm10'];
+
   // requests to json files of data
-  requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label");
-  requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label");
-  requestData('json/labelled_midday_pm.json', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
-  requestData('json/labelled_afternoon_pm.json', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label");
-  requestData('json/labelled_midday_pm_all.json', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label");
-  requestData('json/labelled_afternoon_pm_all.json', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "label");
-  requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "label");
-  requestData('json/filtered_london_data_unsupervised.json', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'PM2.5', unsupervisedLondonColors, pmScale, "unsupervised_environment_index")
+  requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label", binVals);
+  requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label", binVals);
+  requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "label", ['pm2_5']);
+  requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label", ['pm2_5']);
+  requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
+  requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
+  // requestData('json/filtered_london_data.json', circles.londonData, layers.londonData, 'PM2.5', londonColors, pmScale, "label");
+  // requestData('json/filtered_london_data_unsupervised.json', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'PM2.5', unsupervisedLondonColors, pmScale, "unsupervised_environment_index")
 
 
   $('input').change(function() {

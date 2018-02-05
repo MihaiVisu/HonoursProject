@@ -44,4 +44,4 @@ def write_file(file_name, rows):
 for f in cycling_files:
     read_file(f)
 
-write_file('../../data/' + sys.argv[1], rows)
+write_file('../data/' + sys.argv[1], rows)

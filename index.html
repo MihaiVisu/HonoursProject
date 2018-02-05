@@ -15,79 +15,90 @@
     <div class="ui left vertical fixed sidebar menu menu-padding">
 
         <div class="ui list">
+
           <header>
-            <h3 class="header">PM Layers</h3>
+            <h3 class="header">Labelled Urban Environments (Unsupervised)</h3>
+          </header>
+          <br/>
+          <header>
+            <h4 class="header">
+              Bin Values Classification
+            </h4>
           </header>
           <div class="item">
             <div class="ui toggle checkbox">
-              <input type="checkbox" name="pm1Toggle" value="">
-              <label>PM1 Layer</label>
+              <input type="checkbox" name="labelledAfternoonFeaturesBins" value="">
+              <label>Labelled Afternoon Features</label>
             </div>
           </div>
           <div class="item">
             <div class="ui toggle checkbox">
-              <input type="checkbox" name="pm25Toggle" value="">
-              <label>PM2.5 Layer</label>
+              <input type="checkbox" name="labelledMiddayFeaturesBins" value="">
+              <label>Labelled Midday Features</label>
+            </div>
+          </div>
+
+          <div class="ui divider"></div>
+          
+          <header>
+            <h4>
+              PM 2.5 Values Classification
+            </h4>
+          </header>
+          
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="labelledAfternoonFeaturesPm25" value="">
+              <label>Labelled Afternoon Features</label>
             </div>
           </div>
           <div class="item">
             <div class="ui toggle checkbox">
-              <input type="checkbox" name="pm10Toggle" value="">
-              <label>PM10 Layer</label>
+              <input type="checkbox" name="labelledMiddayFeaturesPm25" value="">
+              <label>Labelled Midday Features</label>
+            </div>
+          </div>
+
+          <header>
+            <h4>
+              All PM Values Classification
+            </h4>
+          </header>
+
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="labelledAfternoonFeaturesPm" value="">
+              <label>Labelled Afternoon Features</label>
+            </div>
+          </div>
+          <div class="item">
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="labelledMiddayFeaturesPm" value="">
+              <label>Labelled Midday Features</label>
             </div>
           </div>
 
           <div class="ui divider"></div>
 
           <header>
-            <h3 class="header">Trained Urban Environments</h3>
+            <h3>London Data Analysis</h3>
           </header>
+
           <div class="item">
             <div class="ui toggle checkbox">
-              <input type="checkbox" name="parkPathsToggleTrain" value="">
-              <label>Park Paths</label>
-            </div>
-          </div>
-          <div class="item">
-            <div class="ui toggle checkbox">
-              <input type="checkbox" name="busyRoadsToggleTrain" value="">
-              <label>Busy Roads</label>
-            </div>
-          </div>
-          <div class="item">
-            <div class="ui toggle checkbox">
-              <input type="checkbox" name="pedestrianAreasToggleTrain" value="">
-              <label>Pedestrian Areas</label>
+              <input type="checkbox" name="londonData" value="">
+              <label>Default London Data</label>
             </div>
           </div>
 
-          <div class="ui divider"></div>
-
-          <header>
-            <h3 class="header">Predicted Urban Environments</h3>
-          </header>
           <div class="item">
             <div class="ui toggle checkbox">
-              <input type="checkbox" name="parkPathsTogglePredict" value="">
-              <label>Park Paths</label>
-            </div>
-          </div>
-          <div class="item">
-            <div class="ui toggle checkbox">
-              <input type="checkbox" name="busyRoadsTogglePredict" value="">
-              <label>Busy Roads</label>
-            </div>
-          </div>
-          <div class="item">
-            <div class="ui toggle checkbox">
-              <input type="checkbox" name="pedestrianAreasTogglePredict" value="">
-              <label>Pedestrian Areas</label>
+              <input type="checkbox" name="unsupervisedLondonData" value="">
+              <label>Classified Unsupervised Data</label>
             </div>
           </div>
 
-          <div class="ui divider"></div>
-
-          <a href="#" class="item graphView">Graphs View</a>
+          <a href="#" class="item graphView">Menu View</a>
           <a href="#" class="item mapView">Map View</a>
 
         </div>
@@ -107,10 +118,11 @@
         </div>
       </div>
     </div>
-
+    <script src="./libs/js/js.cookies.js"></script>
     <script src="./libs/js/jquery-3.2.1.min.js"></script>
     <script src="./libs/js/semantic.min.js"></script>
-    <script src="./main.js"></script>
+    <script src="./js/requests.js"></script>
+    <script src="./js/main.js"></script>
     <script src="./libs/js/leaflet.js"></script>
   </body>
 </html>

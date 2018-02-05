@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: report.aux
+The style file: plain.bst
+Database file #1: mybibfile.bib
+Warning--to sort, need author or key in Langan
+Warning--empty journal in Dirks2012
+Warning--empty journal in Cho2008
+Warning--empty journal in Dockery1994
+You've used 5 entries,
+            2118 wiz_defined-function locations,
+            536 strings with 5160 characters,
+and the built_in function-call counts, 1885 in all, are:
+= -- 167
+> -- 128
+< -- 0
++ -- 52
+- -- 46
+* -- 160
+:= -- 326
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 38
+chr.to.int$ -- 0
+cite$ -- 9
+duplicate$ -- 51
+empty$ -- 123
+format.name$ -- 46
+if$ -- 373
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 4
+newline$ -- 28
+num.names$ -- 8
+pop$ -- 43
+preamble$ -- 1
+purify$ -- 33
+quote$ -- 0
+skip$ -- 33
+stack$ -- 0
+substring$ -- 95
+swap$ -- 2
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 4
+while$ -- 12
+width$ -- 6
+write$ -- 52
+(There were 4 warnings)

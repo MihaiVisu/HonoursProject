@@ -16,20 +16,20 @@ $(function() {
     [55.94011133, -3.18323372]
   ];
 
-  var menuControl =  L.Control.extend({
+  // var menuControl =  L.Control.extend({
 
-    options: {
-      position: 'topright'
-    },
+  //   options: {
+  //     position: 'topright'
+  //   },
 
-    onAdd: function (map) {
-      var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control sidebar-trigger');
-      container.innerHTML = '<i class="sidebar icon"></i>';
-      container.style.backgroundColor = 'white';
+  //   onAdd: function (map) {
+  //     var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control sidebar-trigger');
+  //     container.innerHTML = '<i class="sidebar icon"></i>';
+  //     container.style.backgroundColor = 'white';
 
-      return container;
-    }
-  });
+  //     return container;
+  //   }
+  // });
 
   //add a tile layer to add to our map, in this case it's the 'standard' OpenStreetMap.org tile server
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,7 +43,7 @@ $(function() {
     marker.bindPopup('Static Sensor s'+(i+1));
   }
 
-  map.addControl(new menuControl());
+  // map.addControl(new menuControl());
 
   map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text. Attribution overload
 
@@ -115,16 +115,24 @@ $(function() {
     }).sidebar('toggle');
   });
 
-  $('.mapView').click(function(){
-    $('.graphs-section').hide();
+
+  // interface events
+
+  $('.ui.dropdown').dropdown();
+
+   $('.menu a.item').on('click', function() {
+      $('.menu a.item').removeClass('active');
+      $(this).addClass('active');
+   }); 
+
+  $('.map-view').click(function(){
+    $('.menu-section').hide();
     $('.lmap').show();
-    $('.ui.sidebar .checkbox input').attr('disabled', false);
   });
 
-  $('.graphView').click(function() {
-    $('.graphs-section').show();
+  $('.menu-view').click(function() {
+    $('.menu-section').show();
     $('.lmap').hide();
-    $('.ui.sidebar .checkbox input').attr('disabled', true);
   });
 
 });

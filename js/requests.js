@@ -1,4 +1,4 @@
-function requestData(dataUrl, circles, layers, radiusProperty, colors, scale, index, attrs) {
+function requestData(dataUrl, circles, radiusProperty, colors, scale, index, attrs, map) {
   // use encodeURIComponent for XSS validation
   $.getJSON(dataUrl, {"attrs[]": encodeURIComponent(attrs)}, function(data) {
     data.features.forEach(function(feature) {
@@ -13,7 +13,7 @@ function requestData(dataUrl, circles, layers, radiusProperty, colors, scale, in
       }));
     });
     for (key in circles) {
-      layers[key] = L.layerGroup(circles[key]);
+      map.addLayer(L.layerGroup(circles[key]));
     }
   });
 }

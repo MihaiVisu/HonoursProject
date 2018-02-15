@@ -43,7 +43,7 @@
                   <div class="ui segment">
                     <h3 class="ui header">Modes of Transport Classification</h3>
 
-                    <form class="ui form">
+                    <form class="ui form classification-form">
 
                       <div class="field">
                         <label>Classifier</label>  
@@ -73,8 +73,8 @@
                             <label>Include all Bin Values</label>
                           </div>
                         </div>
-
                       </div>
+
                       <div class="field">
                         <label>Validation Criterion</label>
                         <select class="ui dropdown">
@@ -96,27 +96,27 @@
                         </div>
                       </div>
 
-                      <div class="ui segment">
+                      <div class="ui segment dataset">
                         <div class="grouped fields">
                           <label>Dataset to classify</label>
 
                           <div class="field">
                             <div class="ui slider checkbox">
-                              <input type="radio" name="dataset">
+                              <input type="radio" name="dataset" data-val="0">
                               <label>Midday Meadows Walking Data</label>
                             </div>
                           </div>
 
                           <div class="field">
                             <div class="ui slider checkbox">
-                              <input type="radio" name="dataset">
+                              <input type="radio" name="dataset" data-val="1">
                               <label>Afternoon Meadows Walking Data</label>
                             </div>
                           </div>
 
                           <div class="field">
                             <div class="ui slider checkbox">
-                              <input type="radio" name="dataset" checked="checked">
+                              <input type="radio" name="dataset" checked="checked" data-val="2">
                               <label>London Data</label>
                             </div>
                           </div>
@@ -134,7 +134,7 @@
                   <div class="ui segment">
                     <h3 class="ui header">Urban Environment Classification</h3>
 
-                    <form class="ui form">
+                    <form class="ui form kmeans-form">
 
                       <div class="field">
                         <label>Number of clusters for location-based clustering</label>
@@ -146,7 +146,27 @@
                         <input type="number" name="environment-clusters-number" placeholder="Number of clusters">
                       </div>
 
-                      <div class="ui button">Cluster data</div>
+                      <div class="ui segment">
+                        <div class="field attributes">
+                          <label>Attributes to Classify On</label>
+                          <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="attributes"/>
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Attributes</div>
+                            <div class="menu">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="inline field include-all-bins">
+                          <div class="ui slider checkbox">
+                            <input type="checkbox" name="all-bins">
+                            <label>Include all Bin Values</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="ui button" id="cluster-data-button">Cluster data</div>
 
                     </form>
                   </div>
@@ -177,6 +197,7 @@
         <div id="map" class="row lmap"></div>
       </div>
     </div>
+
     <script src="./libs/cookies/js.cookie.js"></script>
     <script src="./libs/jquery/jquery-3.3.1.min.js"></script>
     <script src="./libs/semantic-ui/semantic.min.js"></script>

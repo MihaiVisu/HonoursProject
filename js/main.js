@@ -5,9 +5,15 @@ $(function() {
   var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
   // -----JQUERY VARIABLES-----
-  var $attrsDropdown = $('.attributes .ui.dropdown');
+  var $classifyAttrsDropdown = $('.classification-form .attributes .ui.dropdown');
+  var $clusterAttrsDropdown = $('.kmeans-form .attributes .ui.dropdown');
+  var $environmentClustersInput = $('.kmeans-form input[name="environment-clusters-number"]');
+  var $locationClustersInput = $('.kmeans-form input[name="location-clusters-number"]');
 
   var url = "http://localhost:8080";
+
+  // local variables
+  var dataset = 2;
 
   var binVals = [];
   for (var i = 0; i < 16; i++) {
@@ -23,15 +29,34 @@ $(function() {
   // enable the dropdown
   $('.ui.dropdown').dropdown();
 
-  $('.include-all-bins input').change(function() {
+  $('.kmeans-form .include-all-bins input').change(function() {
 
     if (this.checked) {
-      currentAttrs = $attrsDropdown.dropdown('get value');
-      $attrsDropdown.dropdown('set selected', binVals);
+      currentAttrs = $clusterAttrsDropdown.dropdown('get value');
+      $clusterAttrsDropdown.dropdown('set selected', binVals);
     }
     else {
-      $attrsDropdown.dropdown('clear');
-      $attrsDropdown.dropdown('set selected', currentAttrs);
+      $clusterAttrsDropdown.dropdown('clear');
+      $clusterAttrsDropdown.dropdown('set selected', currentAttrs);
+    }
+  });
+
+  $('.classification-form .include-all-bins input').change(function() {
+
+    if (this.checked) {
+      currentAttrs = $classifyAttrsDropdown.dropdown('get value');
+      $classifyAttrsDropdown.dropdown('set selected', binVals);
+    }
+    else {
+      $classifyAttrsDropdown.dropdown('clear');
+      $classifyAttrsDropdown.dropdown('set selected', currentAttrs);
+    }
+  });
+
+  // on dataset radios change change dataset variable
+  $('.dataset .checkbox').checkbox({
+    onChecked: function() {
+      dataset = $(this).data('val');
     }
   });
 
@@ -99,17 +124,6 @@ $(function() {
     "unsupervisedLondonData": {}
   };
 
-  var layers = {
-    "labelledMiddayFeaturesBins": {},
-    "labelledAfternoonFeaturesBins": {},
-    "labelledMiddayFeaturesPm25": {},
-    "labelledMiddayFeaturesPm": {},
-    "labelledAfternoonFeaturesPm25": {},
-    "labelledAfternoonFeaturesPm": {},
-    "londonData": {},
-    "unsupervisedLondonData": {}
-  };
-
   var binScale = 0.1, pmScale = 2;
 
   var pmVals = ['pm1', 'pm2_5', 'pm10'];
@@ -125,18 +139,18 @@ $(function() {
   // requestData(url+'/api_mihai/labelled_london_data/unsupervised/', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'pm2_5', unsupervisedLondonColors, pmScale, "label", pmVals);
 
 
-  $('input').change(function() {
-    var featureKey = $(this).attr('name');
-    if (this.checked) {
-      for (key in layers[featureKey]) {
-        map.addLayer(layers[featureKey][key]);
-      }
-    } else {
-      for (key in layers[featureKey]) {
-        map.removeLayer(layers[featureKey][key]);
-      }
-    }
-  });
+  // $('input').change(function() {
+  //   var featureKey = $(this).attr('name');
+  //   if (this.checked) {
+  //     for (key in layers[featureKey]) {
+  //       map.addLayer(layers[featureKey][key]);
+  //     }
+  //   } else {
+  //     for (key in layers[featureKey]) {
+  //       map.removeLayer(layers[featureKey][key]);
+  //     }
+  //   }
+  // });
 
   $('.sidebar-trigger').click(function(){
     $('.ui.sidebar').sidebar({
@@ -172,6 +186,44 @@ $(function() {
   // -----REQUESTS-----
   $('#classify-data-button').click(function() {
     requestData(url + '/api_mihai/labelled_london_data');
+  });
+
+  $('#cluster-data-button').click(function() {
+
+    // clear all layers before
+    map.eachLayer(function(layer) {
+      if(!layer._url) {
+        map.removeLayer(layer);
+      }
+    });
+
+    var locationClustersNumber = $locationClustersInput.val();
+    var environmentClustersNumber = $environmentClustersInput.val();
+    var attrs = $clusterAttrsDropdown.dropdown('get value');
+    var colors = env_colors;
+
+    if (dataset == 2) {
+      colors = unsupervisedLondonColors;
+    }
+
+    requestData(url+'/api_mihai/labelled_clustered_data/' + 
+      (dataset+1) + '/' +
+      locationClustersNumber + '/' +
+      environmentClustersNumber, 
+      circles.unsupervisedLondonData, 'pm2_5', colors, pmScale, "label", attrs, map);
+  });
+
+  $('#classify-data-button').click(function() {
+
+    // clear all layers before
+    map.eachLayer(function(layer) {
+      if(!layer._url) {
+        map.removeLayer(layer);
+      }
+    });
+
+    requestData(url+'api_mihai/');
+
   });
 
 });

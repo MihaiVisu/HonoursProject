@@ -12,69 +12,170 @@
   </head>
   <body>
 
-    <div class="ui large menu">
-      <div class="header item">Sensing Spaces</div>
+    <div class="ui inverted labeled icon top inline horizontal sidebar menu">
+      <div class="header item">Sensing Spaces Honours Project</div>
       <div class="right menu">
         <a class="item active menu-view">Classifiers Menu</a>
         <a class="item map-view">Map View</a>
       </div>
     </div>
 
-    <div class="ui grid padded" style="height:100%">
-      <!-- CLASSIFIERS MENU VIEW -->
-      <div class="row menu-section">
-        <div class="sixteen wide column">
-          
-          <h1 class="ui header">Classifiers Menu</h1>
+    <div class="pusher" style="height: 100%;">
+      <div class="ui padded grid" style="height: 100%;">
+        <!-- CLASSIFIERS MENU VIEW -->
+        <div class="row menu-section">
+          <div class="sixteen wide column">
+            <div class="row ui clearing segment">
+              <div class="two wide column">
+                <button class="ui icon button left floated sidebar-trigger">
+                  <i class="sidebar icon"></i>
+                </button>
+              </div>
+              <div class="fourteen wide column">
+                <h1 class="ui left floated header">
+                  Classifiers Menu
+                </h1>
+              </div>
+            </div>
+            <div class="row">
+              <div class="ui grid">
+                <div class="eight wide column">
+                  <div class="ui segment">
+                    <h3 class="ui header">Modes of Transport Classification</h3>
 
-          <div class="row">
-            <div class="six wide column">
-              <form class="ui form">
+                    <form class="ui form">
 
-                <div class="field">
-                  <label>Classifier</label>  
-                  <select class="ui dropdown">
-                    <option value="">Classifier</option>
-                    <option value="svc">SVC</option>
-                    <option value="rf">Random Forest Classifier</option>
-                    <option value="knn">KNN</option>
-                  </select>
-                </div>
+                      <div class="field">
+                        <label>Classifier</label>  
+                        <select class="ui dropdown">
+                          <option value="">Classifier</option>
+                          <option value="svc">SVC</option>
+                          <option value="rf">Random Forest Classifier</option>
+                          <option value="knn">KNN</option>
+                        </select>
+                      </div>
 
-                <div class="field">
-                  <label>Attributes to Classify on</label>
-                  <div class="ui fluid multiple search selection dropdown">
-                    <input type="hidden" name="attributes"/>
-                    <div class="default text">Attributes</div>
-                    <div class="menu">
-                      <div class="item" data-value="bin0">Bin 0</div>
-                      <div class="item" data-value="bin1">Bin 1</div>
-                      <div class="item" data-value="bin2">Bin 2</div>
-                      <div class="item" data-value="bin3">Bin 3</div>
-                      <div class="item" data-value="bin4">Bin 4</div>
-                      <div class="item" data-value="bin5">Bin 5</div>
-                      <div class="item" data-value="bin6">Bin 6</div>
-                      <div class="item" data-value="bin7">Bin 7</div>
-                      <div class="item" data-value="bin8">Bin 8</div>
-                      <div class="item" data-value="bin9">Bin 9</div>
-                    </div>
+                      <div class="ui segment">
+                        <div class="field attributes">
+                          <label>Attributes to Classify On</label>
+                          <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="attributes"/>
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Attributes</div>
+                            <div class="menu">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="inline field include-all-bins">
+                          <div class="ui slider checkbox">
+                            <input type="checkbox" name="all-bins">
+                            <label>Include all Bin Values</label>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="field">
+                        <label>Validation Criterion</label>
+                        <select class="ui dropdown">
+                          <option value="">Select Validation Criterion</option>
+                          <option value="kf">KFold Cross Validation</option>
+                          <option value="ho">Hold-out Validation</option>
+                        </select>
+                      </div>
+                      
+                      <div class="field">
+                        <label>Number of Folds</label>
+                        <input type="number" name="folds-number" placeholder="Number of Folds">
+                      </div>
+
+                      <div class="field">
+                        <div class="ui slider checkbox">
+                          <input type="checkbox" name="all-bins">
+                          <label>Classify modes of transport in terms of obtained urban environments</label>
+                        </div>
+                      </div>
+
+                      <div class="ui segment">
+                        <div class="grouped fields">
+                          <label>Dataset to classify</label>
+
+                          <div class="field">
+                            <div class="ui slider checkbox">
+                              <input type="radio" name="dataset">
+                              <label>Midday Meadows Walking Data</label>
+                            </div>
+                          </div>
+
+                          <div class="field">
+                            <div class="ui slider checkbox">
+                              <input type="radio" name="dataset">
+                              <label>Afternoon Meadows Walking Data</label>
+                            </div>
+                          </div>
+
+                          <div class="field">
+                            <div class="ui slider checkbox">
+                              <input type="radio" name="dataset" checked="checked">
+                              <label>London Data</label>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <div class="ui button" id="classify-data-button">Classify data</div>
+                    
+                    </form>
                   </div>
                 </div>
 
-                <div class="ui button">Classify Data</div>
+                <div class="eight wide column">
+                  <div class="ui segment">
+                    <h3 class="ui header">Urban Environment Classification</h3>
 
-                <h4 class="ui dividing header">Results</h4>
+                    <form class="ui form">
 
-              </form>
+                      <div class="field">
+                        <label>Number of clusters for location-based clustering</label>
+                        <input type="number" name="location-clusters-number" placeholder="Number of clusters">
+                      </div>
 
+                      <div class="field">
+                        <label>Number of clusters for urban environments clustering</label>
+                        <input type="number" name="environment-clusters-number" placeholder="Number of clusters">
+                      </div>
 
+                      <div class="ui button">Cluster data</div>
+
+                    </form>
+                  </div>
+
+                  <div class="ui segment">
+                    <h3 class="ui dividing header">Results</h3>
+
+                    <h4 class="ui header">
+                      <i class="bar chart icon"></i>
+                      Total Number of Features: {{ num_features }}
+                    </h4>
+
+                    <h4 class="ui header">
+                      <i class="crosshairs icon"></i>
+                      Accuracy: {{ accuracy }}
+                    </h4>
+
+                    <div class="ui divider"></div>
+
+                    <h5>For a spatial visualisation check <a class="map-view">Map View</a>.</h5>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="ten wide column"></div>
           </div>
         </div>
+        <!-- MAP VIEW -->
+        <div id="map" class="row lmap"></div>
       </div>
-      <!-- MAP VIEW -->
-      <div id="map" class="row lmap"></div>
     </div>
     <script src="./libs/cookies/js.cookie.js"></script>
     <script src="./libs/jquery/jquery-3.3.1.min.js"></script>

@@ -4,9 +4,45 @@ $(function() {
   var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
   var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
 
+  // -----JQUERY VARIABLES-----
+  var $attrsDropdown = $('.attributes .ui.dropdown');
+
   var url = "http://localhost:8080";
 
+  var binVals = [];
+  for (var i = 0; i < 16; i++) {
+    binVals.push('bin'+i);
+  }
+
+  var currentAttrs;
+
   var map = L.map('map');
+
+  // -----SEMANTIC UI INIT-----
+
+  // enable the dropdown
+  $('.ui.dropdown').dropdown();
+
+  $('.include-all-bins input').change(function() {
+
+    if (this.checked) {
+      currentAttrs = $attrsDropdown.dropdown('get value');
+      $attrsDropdown.dropdown('set selected', binVals);
+    }
+    else {
+      $attrsDropdown.dropdown('clear');
+      $attrsDropdown.dropdown('set selected', currentAttrs);
+    }
+  });
+
+  // get attributes
+  $.getJSON(url+'/api_mihai/attributes/', function(data) {
+    data.forEach(function(val) {
+      $('.attributes .ui.dropdown .menu').append(
+        '<div class="item" data-value="'+val+'">'+val+'</div>'
+      );
+    });
+  });
 
   var staticSensors = [
     [55.94246859, -3.19137017],
@@ -16,20 +52,20 @@ $(function() {
     [55.94011133, -3.18323372]
   ];
 
-  // var menuControl =  L.Control.extend({
+  var menuControl =  L.Control.extend({
 
-  //   options: {
-  //     position: 'topright'
-  //   },
+    options: {
+      position: 'topright'
+    },
 
-  //   onAdd: function (map) {
-  //     var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control sidebar-trigger');
-  //     container.innerHTML = '<i class="sidebar icon"></i>';
-  //     container.style.backgroundColor = 'white';
+    onAdd: function (map) {
+      var container = L.DomUtil.create('button', 'ui icon button leaflet-bar leaflet-control sidebar-trigger');
+      container.innerHTML = '<i class="sidebar icon"></i>';
+      container.style.backgroundColor = 'white';
 
-  //     return container;
-  //   }
-  // });
+      return container;
+    }
+  });
 
   //add a tile layer to add to our map, in this case it's the 'standard' OpenStreetMap.org tile server
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,7 +79,7 @@ $(function() {
     marker.bindPopup('Static Sensor s'+(i+1));
   }
 
-  // map.addControl(new menuControl());
+  map.addControl(new menuControl());
 
   map.attributionControl.setPrefix(''); // Don't show the 'Powered by Leaflet' text. Attribution overload
 
@@ -73,11 +109,6 @@ $(function() {
     "londonData": {},
     "unsupervisedLondonData": {}
   };
-
-  var binVals = [];
-  for (var i = 0; i < 16; i++) {
-    binVals.push('bin'+i);
-  }
 
   var binScale = 0.1, pmScale = 2;
 
@@ -109,30 +140,38 @@ $(function() {
 
   $('.sidebar-trigger').click(function(){
     $('.ui.sidebar').sidebar({
-      transition: 'overlay',
-      dimPage: false,
-      closable: false
+      transition: 'scale down',
+      dimPage: true,
+      closable: true
     }).sidebar('toggle');
   });
 
+  // hide the map initially
+  $('.lmap').hide();
 
-  // interface events
+  // ----INTERFACE EVENTS-----
 
-  $('.ui.dropdown').dropdown();
-
-   $('.menu a.item').on('click', function() {
-      $('.menu a.item').removeClass('active');
-      $(this).addClass('active');
-   }); 
+  // check if menu items are active 
+  $('.menu a.item').on('click', function() {
+    $('.menu a.item').removeClass('active');
+    $(this).addClass('active');
+  }); 
 
   $('.map-view').click(function(){
     $('.menu-section').hide();
     $('.lmap').show();
+    $('.menu a.item').removeClass('active');
+    $('.map-view').addClass('active');
   });
 
   $('.menu-view').click(function() {
     $('.menu-section').show();
     $('.lmap').hide();
+  });
+
+  // -----REQUESTS-----
+  $('#classify-data-button').click(function() {
+    requestData(url + '/api_mihai/labelled_london_data');
   });
 
 });

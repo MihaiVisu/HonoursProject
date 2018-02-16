@@ -73,13 +73,13 @@ $(function() {
     });
   });
 
-  var staticSensors = [
-    [55.94246859, -3.19137017],
-    [55.94006915, -3.19115559],
-    [55.94520598, -3.19119151],
-    [55.94039595, -3.19428355],
-    [55.94011133, -3.18323372]
-  ];
+  // var staticSensors = [
+  //   [55.94246859, -3.19137017],
+  //   [55.94006915, -3.19115559],
+  //   [55.94520598, -3.19119151],
+  //   [55.94039595, -3.19428355],
+  //   [55.94011133, -3.18323372]
+  // ];
 
   var menuControl =  L.Control.extend({
 
@@ -103,10 +103,10 @@ $(function() {
   }).addTo(map);
 
   // add static sensors on map
-  for (var i = 0; i < staticSensors.length; i++) {
-    var marker = L.marker(staticSensors[i]).addTo(map);
-    marker.bindPopup('Static Sensor s'+(i+1));
-  }
+  // for (var i = 0; i < staticSensors.length; i++) {
+  //   var marker = L.marker(staticSensors[i]).addTo(map);
+  //   marker.bindPopup('Static Sensor s'+(i+1));
+  // }
 
   map.addControl(new menuControl());
 

@@ -10,6 +10,10 @@ $(function() {
   var $environmentClustersInput = $('.kmeans-form input[name="environment-clusters-number"]');
   var $locationClustersInput = $('.kmeans-form input[name="location-clusters-number"]');
 
+  var $classifierDropdown = $('.classifier .ui.dropdown');
+  var $validationCriterionDropdown = $('.validation-criterion .ui.dropdown');
+  var $foldsNumberInput = $('.folds-number input');
+
   var url = "http://localhost:8080";
 
   // local variables
@@ -184,9 +188,6 @@ $(function() {
   });
 
   // -----REQUESTS-----
-  $('#classify-data-button').click(function() {
-    requestData(url + '/api_mihai/labelled_london_data');
-  });
 
   $('#cluster-data-button').click(function() {
 
@@ -222,8 +223,18 @@ $(function() {
       }
     });
 
-    requestData(url+'api_mihai/');
+    var colors = londonColors;
+    var classifier = $classifierDropdown.dropdown('get value');
+    var attrs = $classifyAttrsDropdown.dropdown('get value');
+    var validationCriterion = $validationCriterionDropdown.dropdown('get value');
+    var foldsNumber = $foldsNumberInput.val();
 
+
+    requestData(url+'/api_mihai/labelled_classified_data/' +
+      (dataset+1) + '/' +
+      classifier + '/' +
+      validationCriterion + '/' +
+      foldsNumber, circles.londonData, 'pm2_5', colors, pmScale, "label", attrs, map);
   });
 
 });

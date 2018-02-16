@@ -73,14 +73,6 @@ $(function() {
     });
   });
 
-  // var staticSensors = [
-  //   [55.94246859, -3.19137017],
-  //   [55.94006915, -3.19115559],
-  //   [55.94520598, -3.19119151],
-  //   [55.94039595, -3.19428355],
-  //   [55.94011133, -3.18323372]
-  // ];
-
   var menuControl =  L.Control.extend({
 
     options: {
@@ -131,30 +123,6 @@ $(function() {
   var binScale = 0.1, pmScale = 2;
 
   var pmVals = ['pm1', 'pm2_5', 'pm10'];
-
-  // requests to json files of data
-  // requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesBins, layers.labelledMiddayFeaturesBins, 'bin0', env_colors, binScale, "label", binVals);
-  // requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesBins, layers.labelledAfternoonFeaturesBins, 'bin0', env_colors, binScale, "label", binVals);
-  // requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesPm25, layers.labelledMiddayFeaturesPm25, 'pm2_5', env_colors, pmScale, "label", ['pm2_5']);
-  // requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm25, layers.labelledAfternoonFeaturesPm25, 'pm2_5', env_colors, pmScale, "label", ['pm2_5']);
-  // requestData(url+'/api_mihai/labelled_data/1/', circles.labelledMiddayFeaturesPm, layers.labelledMiddayFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
-  // requestData(url+'/api_mihai/labelled_data/2/', circles.labelledAfternoonFeaturesPm, layers.labelledAfternoonFeaturesPm, 'pm2_5', env_colors, pmScale, "label", pmVals);
-  // requestData(url+'/api_mihai/labelled_london_data/supervised/', circles.londonData, layers.londonData, 'pm2_5', londonColors, pmScale, "label");
-  // requestData(url+'/api_mihai/labelled_london_data/unsupervised/', circles.unsupervisedLondonData, layers.unsupervisedLondonData, 'pm2_5', unsupervisedLondonColors, pmScale, "label", pmVals);
-
-
-  // $('input').change(function() {
-  //   var featureKey = $(this).attr('name');
-  //   if (this.checked) {
-  //     for (key in layers[featureKey]) {
-  //       map.addLayer(layers[featureKey][key]);
-  //     }
-  //   } else {
-  //     for (key in layers[featureKey]) {
-  //       map.removeLayer(layers[featureKey][key]);
-  //     }
-  //   }
-  // });
 
   $('.sidebar-trigger').click(function(){
     $('.ui.sidebar').sidebar({
@@ -228,7 +196,6 @@ $(function() {
     var attrs = $classifyAttrsDropdown.dropdown('get value');
     var validationCriterion = $validationCriterionDropdown.dropdown('get value');
     var foldsNumber = $foldsNumberInput.val();
-
 
     requestData(url+'/api_mihai/labelled_classified_data/' +
       (dataset+1) + '/' +

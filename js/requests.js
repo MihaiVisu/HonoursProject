@@ -15,5 +15,12 @@ function requestData(dataUrl, circles, radiusProperty, colors, scale, index, att
     for (key in circles) {
       map.addLayer(L.layerGroup(circles[key]));
     }
+
+    if (data.score) {
+      $('.accuracy').html("<i class='crosshairs icon'></i> Accuracy: " + data.score);
+    }
+    if (data.total_features) {
+      $('.total-features').html("<i class='bar chart icon'></i> Total Features: " + data.total_features);
+    }
   });
 }

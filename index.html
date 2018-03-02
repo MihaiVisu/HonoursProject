@@ -89,10 +89,17 @@
                         <input type="number" name="folds-number" placeholder="Number of Folds">
                       </div>
 
-                      <div class="field">
+                      <div class="field include-urban-environments">
                         <div class="ui slider checkbox">
                           <input type="checkbox" name="all-bins">
                           <label>Classify modes of transport in terms of obtained urban environments</label>
+                        </div>
+                      </div>
+
+                      <div class="field normalise-bins">
+                        <div class="ui slider checkbox">
+                          <input type="checkbox" name="normalise-bins">
+                          <label>Normalise bin counts</label>
                         </div>
                       </div>
 
@@ -116,7 +123,7 @@
 
                           <div class="field">
                             <div class="ui slider checkbox">
-                              <input type="radio" name="dataset" checked="checked" data-val="2">
+                              <input type="radio" name="dataset" data-val="2">
                               <label>London Data</label>
                             </div>
                           </div>

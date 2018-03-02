@@ -13,6 +13,8 @@ $(function() {
   var $classifierDropdown = $('.classifier .ui.dropdown');
   var $validationCriterionDropdown = $('.validation-criterion .ui.dropdown');
   var $foldsNumberInput = $('.folds-number input');
+  var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
+  var $normaliseBinCounts = $('.normalise-bins input:checked');
 
   var url = "http://localhost:8080";
 
@@ -196,11 +198,15 @@ $(function() {
     var attrs = $classifyAttrsDropdown.dropdown('get value');
     var validationCriterion = $validationCriterionDropdown.dropdown('get value');
     var foldsNumber = $foldsNumberInput.val();
+    var includeUrbanEnvironments = $includeUrbanEnvironments.length;
+    var normaliseBinCounts = $normaliseBinCounts.length;
 
     requestData(url+'/api_mihai/labelled_classified_data/' +
       (dataset+1) + '/' +
       classifier + '/' +
       validationCriterion + '/' +
+      normaliseBinCounts + '/' +
+      includeUrbanEnvironments + '/' +
       foldsNumber, circles.londonData, 'pm2_5', colors, pmScale, "label", attrs, map);
   });
 

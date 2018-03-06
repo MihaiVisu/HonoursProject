@@ -93,7 +93,7 @@ Most research regarding particulate matter has been performed in terms of values
 
 Data collection has been performed in several phases, using a monitoring device worn around the chest, measuring particulate matter (PM1, PM2.5 and PM10 values along with particle counts of different sizes), as well as temperature and humidity. The sensor communicates with an Android device via Bluetooth to which the data gathered is sent. First, data was gathered on Nicholson Street while using a taxi to Calton Hill during midday. Then, data was gathered while walking on the same route, at the same time of the day, in order to perform the first classification analysis between different means of transport (walking as opposed to cars). For further investigation of personal exposure with different modes of transport, another set of data collected was obtained from a train trip from Edinburgh to London King's Cross, including a bus trip to Edinburgh Waverley, as well as walking trips in Edinburgh, London and London Underground.
 
-Data analysis has been performed using Jupyter Notebooks. First, the raw data was labelled accordingly in terms of the mean of transport used at each point in time. Secondly, the raw data was checked for any outliers existing in all the values of interest. After removing all irrelevant outliers, several machine learning classifiers have been used on PM data, along with temperature and humidity, in order to perform a classification of means of transport used during personal exposure experiments.
+Data analysis has been performed using Python and Jupyter Notebooks. First, the raw data was labelled accordingly in terms of the mean of transport used at each point in time. Secondly, the raw data was checked for any outliers existing in all the values of interest. After removing all irrelevant outliers, several machine learning classifiers have been used on PM data, along with temperature and humidity, in order to perform a classification of means of transport used during personal exposure experiments.
 
 As far as personal exposure with different urban environments is concerned, a data collection schedule has been organised on a route in Edinburgh, including Nicholson Street, Melville Drive, Middle Meadow Walk, Tollcross and Lauriston Place, so that all types of urban environments would be detected. More exactly, the same route was covered over a week at two different times of the day, first at midday, during lunchtime between 13:00 and 14:00 and then in the evening, between 17:00 and 18:00, when a traffic peak hour is most probable to occur.
 
@@ -115,9 +115,21 @@ Finally, chapter 6 presents the conclusions drawn from the results obtained from
 
 \section{Mobile Exposure Monitor}
 
+The Mobile Exposure Monitor (MEM) is a wearable device developed with the purpose of quality of environment measurement by the Centre for Speckled Computing. It is equipped with sensors measuring particulate matter counts and mass (Alphasense OPC-N1), as well as temperature and humidity (Sensirion SHT-75). The device transmits sensor readings via Bluetooth Low Energy (BLE) technology to a smart phone or tablet.
+
 \section{Alphasense Optical Particulate Counter}
 
 \section{Urban Environments}
+
+As far as urban environments detection is concerned, five different types of urban environments are taken into consideration in terms of the average values of the bin counts:
+
+\begin{itemize}
+\item park paths
+\item pedestrian areas
+\item quiet roads
+\item medium traffic areas
+\item crowded / high traffic areas
+\end{itemize}
 
 \section{Personal Exposure with Modes of Transport}
 

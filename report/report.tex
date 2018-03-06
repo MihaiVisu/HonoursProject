@@ -4,6 +4,8 @@
 \documentclass[bsc,frontabs,twoside,singlespacing,parskip,deptreport]{infthesis}     % for BSc, BEng etc.
 % \documentclass[minf,frontabs,twoside,singlespacing,parskip,deptreport]{infthesis}  % for MInf
 
+\usepackage{graphicx}
+
 \begin{document}
 
 \title{Sensing Spaces: Personal Exposure to Air Pollution with Different Modes of Transport and Urban Environments Using Wearable Sensors}
@@ -133,7 +135,47 @@ As far as urban environments detection is concerned, five different types of urb
 
 \section{Personal Exposure with Modes of Transport}
 
+In order to study personal exposure in all cases, six different exposure situations corresponding to six different modes of transport used have been taken into consideration especially during the data collection process:
+
+\begin{itemize}
+\item pedestrian data
+\item car
+\item train
+\item bicycle
+\item bus
+\item subway (in London)
+\end{itemize}
+
 \chapter{Methodology}
+
+\section{Data Collection Process}
+
+During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
+
+Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the afternoon between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{december_route.png} 
+  \caption{This map of Meadows region emphasises the route that was scanned while walking in December based on the schedule mentioned.}
+  \label{fig:december_route}
+\end{figure}
+
+More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from \textbf{[NAME]} who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport.
+
+Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the snow storm, in order to analyse how different weather affects sensor readings of particulate matter.
+
+\section{Unsupervised Learning for Urban Environments Study}
+
+\subsection{K-means Clustering on Particulate Matter}
+
+\subsection{Generalising Clustering Approach}
+
+\section{Supervised Learning for Modes of Transport Classification}
+
+\subsection{Models Comparison}
+
+\section{Data Analysis}
 
 \chapter{Implementation}
 
@@ -144,6 +186,14 @@ As far as urban environments detection is concerned, five different types of urb
 \subsection{Back-end Server}
 
 \chapter{Results}
+
+\section{Detection of Urban Environments}
+
+\section{Comparison of Personal Exposure with Different Modes of Transport}
+
+\subsection{Generalisation of Classification Model}
+
+\subsection{Bin Counts Normalisation}
 
 \chapter{Conclusions}
 

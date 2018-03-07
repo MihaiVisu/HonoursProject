@@ -150,7 +150,7 @@ In order to study personal exposure in all cases, six different exposure situati
 
 \section{Data Collection Process}
 
-During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
+During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
 Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the afternoon between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
 
@@ -161,15 +161,30 @@ Moreover, a major phase of data collection involving the analysis of different t
   \label{fig:december_route}
 \end{figure}
 
-More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from \textbf{[NAME]} who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport.
+More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from \textbf{[NAME]} who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
 
-Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the snow storm, in order to analyse how different weather affects sensor readings of particulate matter.
+Moreover, more data was collected by bus several times, on a similar route as the one scanned by \textbf{[NAME]} (Figure \ref{fig:bus_route}) in order to balance the final dataset categories by adding new bus tagged data points.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{bus_route.png} 
+  \caption{This map emphasises the route that was scanned while taking the bus several times from Waverley station towards Princes Street, George Street and Telford Road.}
+  \label{fig:bus_route}
+\end{figure}
+
+Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the beginning of the snow storm, in order to analyse how different weather affects sensor readings of particulate matter related information.
 
 \section{Unsupervised Learning for Urban Environments Study}
 
+This section emphasises on the methodology performed for the analysis of different urban environments. The approach is done using unsupervised machine learning technique on several groups of attributes retrieved from sensor readings of the MEM.
+
 \subsection{K-means Clustering on Particulate Matter}
 
+As a first version of the method, a K-means clustering algorithm is proposed as an approach for automatically detecting different urban environment types based on the distribution of particulate matter values, as well as particulate matter counts.
+
 \subsection{Generalising Clustering Approach}
+
+In order to generalise the clustering approach, 
 
 \section{Supervised Learning for Modes of Transport Classification}
 

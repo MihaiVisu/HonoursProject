@@ -207,6 +207,7 @@ First, several basic models have been trained using the absolute values of the p
 After training the models, the accuracy score has been obtained by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model.
 
 \subsection{Normalisation of Bin Counts}
+\label{subsec:bin-count-normalisation}
 
 Absolute values for the particulate matter counts when all 16 bins are taken into consideration differ significantly in different weather conditions or different urban environments. Hence, only taking the absolute values of the particulate matter counts into consideration in training of the model would produce over-fitting of the model on the training dataset.
 
@@ -231,13 +232,45 @@ Raw data is stored in CSV format and analysis is performed using Python 3.6 and 
 
 \subsection{Time Series Analysis of PM Data}
 
+Time series analysis has been performed on the dataset obtained when walking around Meadows area (Figure \ref{fig:december_route}) in order to study the variance of the particulate matter counts in time while changing urban environments. First the dataset has been sorted in ascending order by the time of the day and it has been split in two halves. The first half contains the data collected at lunch time, while the second one consists of data gathered in the evening.
+
+Same analysis has also been performed on the dataset from the journey to and around London in order to analyse how the particulate matter values change in time while switching from a mode of transport to another.
+
+As to the counts of the particulate matter, bin 0 has the highest variance, followed by the next two bins, so the first three bins have been taken into consideration for this analysis. Moreover, exponential moving average (EMA) , which is implemented in the scikit-learn Python library, has been used for normalisation of bin counts, as well as PM1, PM2.5, and PM10 values respectively in order to ease event detection (either change of urban environment or mode of transport) by analysing the means of the attributes at each point. Figures \ref{fig:time_series_meadows} and \ref{fig:time_series_london} present the time series analysis of bin counts and PM values for the Meadows and London journey datasets.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{time_series_meadows.pdf} 
+  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected while walking in Meadows. The Exponential Moving Average is used to express the mean value at each point in time.}
+  \label{fig:time_series_meadows}
+\end{figure}
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{time_series_london.pdf} 
+  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected on the journey to London. The Exponential Moving Average is used to express the mean value at each point in time.}
+  \label{fig:time_series_london}
+\end{figure}
+
+\subsection{Spatial Analysis of PM Data}
+
+As GPS information is made available by the MEM readings in the raw data, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes.
 
 \subsection{Pattern Comparison for Different Modes of Transport}
 
+The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure with each mode of transport (Figure \ref{fig:norm-bins}).
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{norm_bins.pdf} 
+  \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for each mode of transport.}
+  \label{fig:norm-bins}
+\end{figure}
 
 \chapter{Implementation}
 
 \section{Data Visualisation Tool}
+\label{sec:data-visualisation-tool}
 
 \subsection{Front-end Interface}
 

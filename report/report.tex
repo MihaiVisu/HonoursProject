@@ -132,6 +132,7 @@ As far as urban environments detection is concerned, five different types of urb
 \item medium traffic areas
 \item crowded / high traffic areas
 \end{itemize}
+\label{list:urban-environments}
 
 \section{Personal Exposure with Modes of Transport}
 
@@ -149,6 +150,8 @@ In order to study personal exposure in all cases, six different exposure situati
 \chapter{Methodology}
 
 \section{Data Collection Process}
+
+To begin with, the Mobile Exposure Monitor transmits sensor readings to the Android device through the Airspeck app, via Bluetooth Low Energy. Values obtained from OPC measurements are sent every 25 seconds along with GPS coordinates. This ensures an effective spatial representation of the created datasets especially when data is collected at walking speed.
 
 During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
@@ -184,13 +187,53 @@ As a first version of the method, a K-means clustering algorithm is proposed as 
 
 \subsection{Generalising Clustering Approach}
 
-In order to generalise the clustering approach, 
+In order to generalise the environment type detection approach, K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{clustering-twice.pdf}
+  \caption{This diagram shows the pipeline of the unsupervised learning method for urban environments detection, applied twice on the dataset.}
+  \label{fig:clustering-twice}
+\end{figure}
 
 \section{Supervised Learning for Modes of Transport Classification}
 
-\subsection{Models Comparison}
+This section is concerned about the methodology applied for the classification of different modes of transport by using supervised machine learning technique on annotated datasets, the label of each data point representing the mode of transport used at a certain moment.
+
+\subsection{Models Performance Comparison}
+
+First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change in these two attributes affects classification accuracy on the validation sets.
+
+After training the models, the accuracy score has been obtained by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model.
+
+\subsection{Normalisation of Bin Counts}
+
+Absolute values for the particulate matter counts when all 16 bins are taken into consideration differ significantly in different weather conditions or different urban environments. Hence, only taking the absolute values of the particulate matter counts into consideration in training of the model would produce over-fitting of the model on the training dataset.
+
+One first approach taken into consideration in order to address this issue is to normalise the bin counts by dividing each of the 16 counts by the total sum of the counts for each data point. Thus, the newly normalised attributes would emphasise the percentage that each particulate matter count would affect personal exposure to individuals when using a certain mode of transport in general.
+
+\subsection{Usage of Urban Environments}
+
+As an attempt to make the classification even more independent of the environment and thus, more generic and accurate for validation sets highlighting edge cases, the results obtained from the urban environments detection method have been used as additional attributes in the model training process for modes of transport classification. Figure \ref{fig:urban-environments-classification-model} displays the final data processing pipeline applied prior to the training of the model.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=\columnwidth]{urban-environments-classification-model.pdf}
+  \caption{This diagram presents the data processing pipeline which is performed prior to model training for modes of transport classification.}
+  \label{fig:urban-environments-classification-model}
+\end{figure}
 
 \section{Data Analysis}
+
+\subsection{Bin Count Means on Different Weather Conditions}
+
+Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and on different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015, while the second one was collected on the 26th of February 2018, during the snow storm.
+
+\subsection{Time Series Analysis of PM Data}
+
+
+\subsection{Pattern Comparison for Different Modes of Transport}
+
 
 \chapter{Implementation}
 

@@ -282,9 +282,9 @@ Thus, K-means clustering is applied twice in a row. First, location-based cluste
 
 This section is concerned about the methodology applied for the classification of different modes of transport by using supervised machine learning technique on annotated datasets, the label of each data point representing the mode of transport used at a certain moment.
 
-\subsection{Models Performance Comparison}
+\subsection{Comparison of Models Performance}
 
-First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change in these two attributes affects classification accuracy on the validation sets.
+First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change of these two attributes in time affects classification accuracy on the validation sets. The models used include logistic regression classifiers, support vector machine classifiers (SVC), k-nearest neighbours (KNN) and random forest classifiers (RF). All classification methods previously mentioned are implemented in scikit-learn Python library.
 
 After training the models, the accuracy score has been obtained by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model.
 

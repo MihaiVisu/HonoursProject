@@ -165,9 +165,9 @@ Moreover, a major phase of data collection involving the analysis of different t
   \label{fig:december_route}
 \end{figure}
 
-More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from \textbf{[NAME]} who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
+More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from Mark Miller who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
 
-Moreover, more data was collected by bus several times, on a similar route as the one scanned by \textbf{[NAME]} (Figure \ref{fig:bus_route}) in order to balance the final dataset categories by adding new bus tagged data points.
+Moreover, more data was collected by bus several times, on a similar route as the one scanned by Mark Miller (Figure \ref{fig:bus_route}) in order to balance the final dataset categories by adding new bus tagged data points.
 
 \begin{figure}[h]
   \center
@@ -178,19 +178,100 @@ Moreover, more data was collected by bus several times, on a similar route as th
 
 Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the beginning of the snow storm, in order to analyse how different weather affects sensor readings of particulate matter related information.
 
-\section{Unsupervised Learning for Urban Environments Study}
 
-This section emphasises on the methodology performed for the analysis of different urban environments. The approach is done using unsupervised machine learning technique on several groups of attributes retrieved from sensor readings of the MEM.
 
-\subsection{K-means Clustering on Particulate Matter}
+\section{Data Analysis}
+\label{sec:data-analysis}
 
-As a first version of the method, a K-means clustering algorithm is proposed as an approach for automatically detecting different urban environment types based on the distribution of particulate matter values, as well as particulate matter counts.
+\subsection{Mean of Bin Counts}
+\label{subsec:bin-count-means}
+
+First, all particulate matter counts have been taken into consideration for analysis in order to visualise the mean values for each bin count over the entire final dataset. Figure \ref{fig:mean_bins_all} shows the distribution of the means of the values for all bin counts over the entire dataset. As it could be observed, bin 0 has the highest values and hence, the distribution of the particulate matter counts is dominated by particulates in bin 0 (range of particulates from 0.38 to 0.52 microns), followed by bins 1 and 2. Therefore, the initial data analysis and visualisation were emphasised mostly on first three bin counts.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=\columnwidth]{mean_bins_all.pdf}
+  \caption{This diagram presents the mean values of all bin counts over the entire final dataset.}
+  \label{fig:mean_bins_all}
+\end{figure}
+
+\subsection{Bin Count Means on Different Weather Conditions}
+
+Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and on different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015, while the second one was collected on the 26th of February 2018, during the snow storm. Figure \ref{fig:bins_weather} displays the distribution of the bin counts for different weather conditions as previously mentioned. The means of the bin counts have been normalised as described in \ref{subsec:bin-count-normalisation} in order to visualise how the pattern, namely the percentage of each bin value is affected by weather changes.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=\columnwidth]{bins_weather.pdf} 
+  \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for different weather conditions when a bicycle was the mean of transport used.}
+  \label{fig:bins_weather}
+\end{figure}
+
+As it could be observed, the percentage of bin 0 decreased during winter while the average percentages of the other bins increased compared to the values obtained during summer. However, similarities in the patterns could be observed as the order of the percentage values for all bin counts is the same.
+
+\subsection{Time Series Analysis of PM Data}
+
+Time series analysis has been performed on the dataset obtained when walking around Meadows area (Figure \ref{fig:december_route}) in order to study the variance of the particulate matter counts in time while changing urban environments. First the dataset has been sorted in ascending order by the time of the day and it has been split in two halves. The first half contains the data collected at lunch time, while the second one consists of data gathered in the evening.
+
+Same analysis has also been performed on the dataset from the journey to and around London in order to analyse how the particulate matter values change in time while switching from a mode of transport to another.
+
+As to the counts of the particulate matter, bin 0 has the highest variance, followed by the next two bins, so the first three bins have been taken into consideration for this analysis. Moreover, exponential moving average (EMA) , which is implemented in the scikit-learn Python library, has been used for visualisation of bin counts (only first three bins as they are the most prominent ones), as well as PM1, PM2.5, and PM10 values respectively in order to ease event detection (either change of urban environment or mode of transport) by analysing the means of the attributes at each point. Figures \ref{fig:time_series_london} and \ref{fig:time_series_meadows} present the time series analysis of bin counts and PM values for the London journey and Meadows datasets respectively. Moreover, for the London journey dataset, the normalised bin counts have also been taken into consideration in order to discover whether normalisation would ease the detection of modes of transport for the time series analysis. The vertical dashed lines represent the moment when the use of one mean of transport ended during data collection and a new one began until the occurrence of a new line.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=\columnwidth]{time_series_london.pdf} 
+  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected on the journey to London. The Exponential Moving Average is used to express the mean value at each point in time.}
+  \label{fig:time_series_london}
+\end{figure}
+
+As described in \ref{subsec:bin-count-means}, the first 3 bin counts are the most dominant ones, thus these values were used in the time series analysis and visualisation of particulate matter counts. The first diagram of Figure \ref{fig:time_series_london} presents the exponential moving average of the raw values of the bin counts over time. There could be observed several pollution spikes in the absolute value of bin 0, however no detectable pattern emphasising visible changes of the counts in the event of switching means of transport could be seen.
+
+The next diagram displays the normalised values of the bin counts. In this case, the results have improved, as the percentage level differs visibly form a mean of transport to another, especially for the values of bin 0.
+
+As it could be observed in the third diagram of Figure \ref{fig:time_series_london}, the PM10 values are the most dominant ones across the entire journey. There are pollution spikes from time to time, however, the event of change of a mean of transport is not visually detectable and neither a detectable pattern exists nor a visible difference in the absolute values between different means of transport.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=\columnwidth]{time_series_meadows.pdf} 
+  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected while walking in Meadows. The Exponential Moving Average is used to express the mean value at each point in time.}
+  \label{fig:time_series_meadows}
+\end{figure}
+
+As it could be observed in Figure \ref{fig:time_series_meadows}, there are more frequent spikes in the afternoon dataset than in midday, meaning that traffic intensity was on average higher at that time of the day. Moreover, the bin values time series diagrams show longer intervals of time when the values are high, after which they suddenly decrease and stay at a certain level both in the afternoon and during midday. For instance, between 17:17:00 and 17:22:00, the average values of bin 0 are much higher than the values between 17:22:00 and 17:37:00. After that point, they begin to slowly increase again, which suggest that a change in the urban environment is occurring. As to the values of PM1, PM2.5 and PM10, the latter has the most dominant values, however no detectable change of the pattern in time could be observed, especially in the dataset containing data collected during midday, where most of the data points present values between 0 and 20 with a spike at about 13:07:00.
+
+\subsection{Pattern Comparison for Different Modes of Transport}
+
+The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated over the entire final dataset and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure with each mode of transport (Figure \ref{fig:norm-bins}).
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=\columnwidth]{norm_bins.pdf} 
+  \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for each mode of transport.}
+  \label{fig:norm-bins}
+\end{figure}
+
+As it could be observed in Figure \ref{fig:norm-bins}, after normalising the values of the particulate matter counts by using the method described in \ref{subsec:bin-count-normalisation}, the patterns between specific modes of transport are visibly distinguishable. For instance, bins 4 and 5 have much smaller values in the case of the car data compared to walking and bicycle datasets. Moreover, bins 7, 8 and 9 have higher values in the case of the bus data compared to any other mean of transport.
+
+\subsection{Spatial Analysis of PM Data}
+
+As GPS information is made available by the MEM readings in the raw data, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
+
+
+\section{Unsupervised Learning for Urban Environments Detection}
+
+This section emphasises on the methodology performed for detection of different urban environments based on data analysis results explained in section \ref{sec:data-analysis}. The approach is done using unsupervised machine learning technique on several groups of attributes retrieved from sensor readings of the AirSpeck device.
+
+\subsection{K-means Clustering on Particulate Matter Data}
+
+As a first version of the method, a K-means clustering algorithm is proposed as an approach for automatically detecting different urban environment types based on the distribution of particulate matter values, as well as particulate matter counts. In this way, the values that have a continuous pattern obtained during a certain time interval (Figure \ref{fig:time_series_meadows}) would be clustered in the same group. PM1, PM2.5 and PM10 values are tested and the results obtained are compared to the ones when the bin counts are used instead for the K-means clustering method.
 
 \subsection{Generalising Clustering Approach}
+\label{subsec:generic-clustering}
 
-In order to generalise the environment type detection approach, K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points.
+There might be cases in which only the absolute values and counts of particulate matter would not be sufficient for a robust clustering of urban environments. As it could be seen in Figure \ref{fig:time_series_meadows}, there is a significant number of individual spikes in both the PM values and bin counts  from time to time, which would lead to a misclassification of the specific data points. Therefore, in order to generalise the environment type detection, a new approach is proposed with the aim of addressing these edge cases of misclassified points and preserving the same urban environment in a certain area. 
 
-\begin{figure}[h]
+Thus, K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points.
+
+\begin{figure}[H]
   \center
   \includegraphics[width=\columnwidth]{clustering-twice.pdf}
   \caption{This diagram shows the pipeline of the unsupervised learning method for urban environments detection, applied twice on the dataset.}
@@ -223,57 +304,6 @@ As an attempt to make the classification even more independent of the environmen
   \includegraphics[width=\columnwidth]{urban-environments-classification-model.pdf}
   \caption{This diagram presents the data processing pipeline which is performed prior to model training for modes of transport classification.}
   \label{fig:urban-environments-classification-model}
-\end{figure}
-
-\section{Data Analysis}
-
-\subsection{Bin Count Means on Different Weather Conditions}
-
-Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and on different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015, while the second one was collected on the 26th of February 2018, during the snow storm. Figure \ref{fig:bins_weather} displays the distribution of the bin counts for different weather conditions as previously mentioned.
-
-\begin{figure}[H]
-  \center
-  \includegraphics[width=\columnwidth]{bins_weather.pdf} 
-  \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for different weather conditions when a bicycle was the mean of transport used.}
-  \label{fig:bins_weather}
-\end{figure}
-
-\subsection{Time Series Analysis of PM Data}
-
-Time series analysis has been performed on the dataset obtained when walking around Meadows area (Figure \ref{fig:december_route}) in order to study the variance of the particulate matter counts in time while changing urban environments. First the dataset has been sorted in ascending order by the time of the day and it has been split in two halves. The first half contains the data collected at lunch time, while the second one consists of data gathered in the evening.
-
-Same analysis has also been performed on the dataset from the journey to and around London in order to analyse how the particulate matter values change in time while switching from a mode of transport to another.
-
-As to the counts of the particulate matter, bin 0 has the highest variance, followed by the next two bins, so the first three bins have been taken into consideration for this analysis. Moreover, exponential moving average (EMA) , which is implemented in the scikit-learn Python library, has been used for normalisation of bin counts, as well as PM1, PM2.5, and PM10 values respectively in order to ease event detection (either change of urban environment or mode of transport) by analysing the means of the attributes at each point. Figures \ref{fig:time_series_london} and \ref{fig:time_series_meadows} present the time series analysis of bin counts and PM values for the London journey and Meadows datasets respectively.
-
-\begin{figure}[H]
-  \center
-  \includegraphics[width=\columnwidth]{time_series_london.pdf} 
-  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected on the journey to London. The Exponential Moving Average is used to express the mean value at each point in time.}
-  \label{fig:time_series_london}
-\end{figure}
-
-
-\begin{figure}[H]
-  \center
-  \includegraphics[width=\columnwidth]{time_series_meadows.pdf} 
-  \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected while walking in Meadows. The Exponential Moving Average is used to express the mean value at each point in time.}
-  \label{fig:time_series_meadows}
-\end{figure}
-
-\subsection{Spatial Analysis of PM Data}
-
-As GPS information is made available by the MEM readings in the raw data, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes.
-
-\subsection{Pattern Comparison for Different Modes of Transport}
-
-The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure with each mode of transport (Figure \ref{fig:norm-bins}).
-
-\begin{figure}[H]
-  \center
-  \includegraphics[width=\columnwidth]{norm_bins.pdf} 
-  \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for each mode of transport.}
-  \label{fig:norm-bins}
 \end{figure}
 
 \chapter{Implementation}

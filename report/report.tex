@@ -58,6 +58,8 @@ I would like to thank my supervisor, professor D K Arvind for his main support i
 
 Furthermore, I would like to thank Andrew Bates for his support in providing equipment and helping with maintenance of sensors and servers.
 
+More acknowledgements to follow.....
+
 \tableofcontents
 
 %\pagenumbering{arabic}
@@ -154,6 +156,8 @@ In order to study personal exposure in all cases, six different exposure situati
 
 To begin with, the Mobile Exposure Monitor transmits sensor readings to the Android device through the Airspeck app, via Bluetooth Low Energy. Values obtained from OPC measurements are sent every 25 seconds along with GPS coordinates. This ensures an effective spatial representation of the created datasets especially when data is collected at walking speed.
 
+\subsection{Training Dataset Creation}
+
 During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
 Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the afternoon between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
@@ -169,7 +173,7 @@ More data gathered and annotated with the purpose of studying personal exposure 
 
 Moreover, more data was collected by bus several times, on a similar route as the one scanned by Mark Miller (Figure \ref{fig:bus_route}) in order to balance the final dataset categories by adding new bus tagged data points.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \center
   \includegraphics[width=\columnwidth]{bus_route.png} 
   \caption{This map emphasises the route that was scanned while taking the bus several times from Waverley station towards Princes Street, George Street and Telford Road.}
@@ -177,6 +181,10 @@ Moreover, more data was collected by bus several times, on a similar route as th
 \end{figure}
 
 Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the beginning of the snow storm, in order to analyse how different weather affects sensor readings of particulate matter related information.
+
+\subsection{Test Data Collection}
+
+Apart from data gathered from different urban environments and by using different modes of transport with the aim of creating a balanced and annotated training dataset used in supervised learning methods for classification of means of transport, more data has been collected by other users of the AirSpeck and labelled with the corresponding modes of transport used for each data point with the purpose of validating the classification methods created.
 
 
 
@@ -284,20 +292,20 @@ This section is concerned about the methodology applied for the classification o
 
 \subsection{Comparison of Models Performance}
 
-First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change of these two attributes in time affects classification accuracy on the validation sets. The models used include logistic regression classifiers, support vector machine classifiers (SVC), k-nearest neighbours (KNN) and random forest classifiers (RF). All classification methods previously mentioned are implemented in scikit-learn Python library.
+First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change of these two attributes in time affects classification accuracy on the validation sets. The models used include logistic regression classifiers (LRC), support vector machine classifiers (SVC), k-nearest neighbours (KNN), random forest classifiers (RFC) and multilayer perceptron classifiers (MLPC). All classification methods previously mentioned are implemented using scikit-learn Python library.
 
-After training the models, the accuracy score has been obtained by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model.
+Training of models and classification accuracy score calculations have been performed by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model. Moreover, the validation datasets that have been collected by other users of the AirSpeck have been used for testing of the models and the accuracy scores obtained have been compared. Then, the top three best performing models have been taken into consideration for further experiments involving model tweaking and data processing in order to increase the overall classification accuracy both over the entire dataset using K-Fold cross validation and the validation sets.
 
 \subsection{Normalisation of Bin Counts}
 \label{subsec:bin-count-normalisation}
 
-Absolute values for the particulate matter counts when all 16 bins are taken into consideration differ significantly in different weather conditions or different urban environments. Hence, only taking the absolute values of the particulate matter counts into consideration in training of the model would produce over-fitting of the model on the training dataset.
+Absolute values for the particulate matter counts when all 16 bins are taken into consideration differ significantly in different weather conditions or different urban environments. Hence, only taking the absolute values of the particulate matter counts into consideration in the training phase would produce over-fitting of the classification model on the training dataset.
 
-One first approach taken into consideration in order to address this issue is to normalise the bin counts by dividing each of the 16 counts by the total sum of the counts for each data point. Thus, the newly normalised attributes would emphasise the percentage that each particulate matter count would affect personal exposure to individuals when using a certain mode of transport in general.
+One first approach taken into consideration in order to address this issue was to normalise the bin counts by dividing each of the 16 counts by the total sum of the counts for each data point. Thus, the newly normalised attributes would emphasise the percentage that each particulate matter count would affect personal exposure to individuals when using a certain mode of transport in general.
 
 \subsection{Usage of Urban Environments}
 
-As an attempt to make the classification even more independent of the environment and thus, more generic and accurate for validation sets highlighting edge cases, the results obtained from the urban environments detection method have been used as additional attributes in the model training process for modes of transport classification. Figure \ref{fig:urban-environments-classification-model} displays the final data processing pipeline applied prior to the training of the model.
+As an attempt to make the classification even more independent of the environment and thus, more generic and accurate for validation sets highlighting edge cases, the results obtained from the urban environments detection method have been used as additional attributes in the model training process for modes of transport classification. Figure \ref{fig:urban-environments-classification-model} displays the final data processing pipeline applied prior to the training phase on the dataset.
 
 \begin{figure}[h]
   \center
@@ -311,19 +319,135 @@ As an attempt to make the classification even more independent of the environmen
 \section{Data Visualisation Tool}
 \label{sec:data-visualisation-tool}
 
-\subsection{Front-end Interface}
+\subsection{Database}
 
 \subsection{Back-end Server}
 
+\subsection{Front-end Interface}
+
+
+
 \chapter{Results}
+
+
 
 \section{Detection of Urban Environments}
 
+
+
 \section{Comparison of Personal Exposure with Different Modes of Transport}
 
-\subsection{Generalisation of Classification Model}
+This section presents the results obtained after training different models and testing different methods for the classification of modes of transport problem.
 
-\subsection{Bin Counts Normalisation}
+\subsection{Classification on absolute values of attributes}
+\label{subsec:abs-values-models}
+
+Several pairs of attributes have been used for training different models. First, all 16 particulate matter count bins have been taken into consideration. Then, the number of bin counts taken for training has been reduced to 3, as the first three bins proved to be the most dominant ones. Separately, the PM1, PM2.5 and PM10 values have been taken for training and the mode of transport classification accuracies obtained have been compared with the former case. 
+
+Table \ref{table:abs-values-models} presents the validation accuracies obtained using K-Fold cross validation for each classification method after training the models on the raw attribute values of the entire dataset. As it could be observed, the best performing model was the one implementing a random forest classifier on all bin 16 bin counts. Therefore, for the next experiments involving data processing and model optimisation, the particulate matter counts have been taken into consideration for training and testing.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c | c | c | c||} 
+ \hline
+ Classification Method & All Bin Counts & First 3 Bin Counts & PM Values \\ [0.5ex] 
+ \hline\hline
+ SVC & 71.0\% & 70.8\% & 83.1\% \\ 
+ \hline
+ LRC & 83.9\% & 79.7\% & 76.7\% \\
+ \hline
+ KNN & 90.2\% & 89.0\% & 84.3\% \\ 
+ \hline
+ \textbf{RFC} & \textbf{92.3}\% & 89.5\% & 87.9\% \\ 
+ \hline
+  MLPC & 83.4\% & 80.9\% & 80.1\% \\ 
+ \hline
+\end{tabular}
+\caption{This table shows the classification accuracies obtained after training the models using the specified attributes and classification methods for training separately. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
+\label{table:abs-values-models}
+\end{table}
+
+
+\subsection{Usage of Urban Environments}
+\label{subsec:results-urban-env-use}
+
+The next step was to find a data processing method that would improve the accuracy for modes of transport classification. One of them represented the usage of urban environment types using the method described in \ref{subsec:generic-clustering} as an additional attribute for means of transport classification. Thus, classification becomes more generalised and the model would eventually perform more accurately in different urban environments (e.g. a car driven on a crowded street compared to a car driven in a quiet area).
+
+Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods, except for the multilayer perceptron. Moreover, the random forest classifier delivered the highest classification accuracy as in the previous section(\ref{subsec:abs-values-models}).
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c | c | c | c||} 
+ \hline
+ Classification Method & Bin Counts & Bin Counts + Urban Environments \\ [0.5ex] 
+ \hline\hline
+ SVC & 71.0\% & 71.1\% \\ 
+ \hline
+ LRC & 83.9\% & 86.7\% \\
+ \hline
+ KNN & 90.2\% & 90.3\% \\ 
+ \hline
+ \textbf{RFC} & 92.3\% & \textbf{94.9}\% \\ 
+ \hline
+  MLPC & 83.4\% & 82.8\% \\ 
+ \hline
+\end{tabular}
+\caption{This table shows the classification accuracies obtained after training the models using the bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
+\label{table:urban-env-models}
+\end{table}
+
+
+\subsection{Normalisation of Bin Counts}
+\label{subsec:norm-bin-counts-results}
+
+Another step taken with the aim of generalising classification and improving the validation accuracy represented the normalisation of particulate matter counts for each data point by dividing the counts for each bin by the total number of bin counts in order to emphasise the percentage of each bin that is affected by different modes of transport individually. The classification accuracy results that were obtained from the entire training dataset after applying the normalisation of bin counts are shown in Table \ref{table:norm-bin-counts}, in comparison with the results obtained after adding the urban environments as an additional attribute for classification. In this case, only the top three performing classification methods from the previous experiments have been taken into consideration.
+
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c | c | c | c||} 
+ \hline
+ Classification Method & With Urban Environments & Without Urban Environments \\ [0.5ex] 
+ \hline\hline
+ KNN & 84.4\% & 79.9\% \\ 
+ \hline
+ \textbf{RFC} & \textbf{91.6}\% & 88.8\% \\ 
+ \hline
+  MLPC & 83.4\% & 78.5\% \\ 
+ \hline
+\end{tabular}
+\caption{This table shows the classification accuracies obtained after training the models using the values of the normalised bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
+\label{table:norm-bin-counts}
+\end{table}
+
+As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when the random forests were used as classification methods from 91.6\% to 94.9\%.
+
+\subsection{Further Tuning of Classification Methods}
+
+Up to this point, all methods that have been used for modes of transport classification have been initialised with default settings provided by the scikit-learn library. Moreover, the random forest classifier delivered the best results so far. Hence, its library settings have been taken into consideration for further tuning. Thus, several values have been tested for the library setting representing the number of estimators and the accuracy results have been compared using the newly tweaked models. Table \ref{table:n-estimators} shows the classification accuracies obtained for several values of the number of estimators, using the best performing model described in \ref{subsec:norm-bin-counts-results}. As it could be observed, the best classification accuracy obtained over the training dataset with K-Fold cross validation with 5 folds was when 260 estimators were used for the best performing model, namely \textbf{95.7\%}.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|| c | c ||} 
+ \hline
+ Number of Estimators & Classification Accuracy \\ [0.5ex] 
+ \hline\hline
+ 10 & 84.4\% \\ 
+ \hline
+ 30 & 83.4\% \\ 
+ \hline
+ 50 & 83.4\% \\ 
+ \hline
+ 100 & 83.4\% \\ 
+ \hline
+  200 & 83.4\% \\ 
+ \hline
+ \textbf{260} & \textbf{95.7}\% \\ 
+ \hline
+\end{tabular}
+\caption{This table shows the classification accuracies obtained after tuning the number of estimators for the best performing model using a random forest classifier that takes the normalised bin counts along with the clustered urban environments and the sum of bin counts as classification attributes. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
+\label{table:n-estimators}
+\end{table}
 
 \chapter{Conclusions}
 

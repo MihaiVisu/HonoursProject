@@ -9,3 +9,5 @@ report/*.synctex.gz
 report/*.toc
 report/*.pdf
 report/*.png
+report/*.blg
+report/*.bbl

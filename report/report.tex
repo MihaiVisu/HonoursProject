@@ -193,7 +193,7 @@ Apart from data gathered from different urban environments and by using differen
 
 \subsection{Data Information}
 
-The entire training dataset contains initially a total of 5146 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments and hence, the final, sanitized dataset contains 4828 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used.
+The entire training dataset contains initially a total of 5146 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments and hence, the final, sanitized dataset contains 4828 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used. As it could be observed, the data points distribution over the \textit{on foot}, \textit{train}, \textit{bike} and \textit{bus} labels is balanced as the training dataset contains roughly 1000 inputs of each type.
 
 \begin{figure}[h]
   \center
@@ -324,6 +324,50 @@ As an attempt to make the classification even more independent of the environmen
   \caption{This diagram presents the data processing pipeline which is performed prior to model training for modes of transport classification.}
   \label{fig:urban-environments-classification-model}
 \end{figure}
+
+\subsection{Mixed Model Methodology}
+
+
+\subsubsection{Model Description}
+
+As an attempt to improve the classification of modes of transport accuracy and make use of as many attributes available from the OPC as possible, a mixed model containing several classifiers trained on different attributes is proposed. A similar approach, called co-training is used by \cite{Radu2014}, where they present a semi-supervised model for indoor-outdoor detection using smart phones.
+
+
+\subsubsection{Feature Selection}
+
+In order to train the model as accurately as possible and obtain a precise confidence level when deciding on the final predicted labels, the attributes were split in terms of their importance in the classification procedure and distributed along the classifiers. Feature selection and ranking was made in terms of the attribute importance in the classification problem. The random forest classifier that was used in the classification problem was also utilised for ranking the attributes in terms of their importance (Table \ref{table:attr-rank}).
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c | c | c | c||} 
+ \hline
+ Rank & Attribute \\ [0.5ex] 
+ \hline\hline
+ 1 & total bin counts \\ 
+ \hline
+ 2 &  temperature \\
+ \hline
+ 3 &  environment type \\
+  \hline
+ 4 &  humidity \\
+  \hline
+ 5 &  bin 0 \\
+  \hline
+ 6 &  bin 3 \\
+  \hline
+ 7 &  bin 7 \\
+ \hline
+ 8 & bin 5 \\
+  \hline
+ 9 &  bin 6 \\ 
+  \hline
+ 10 &  bin 4 \\
+ \hline
+ 
+\end{tabular}
+\caption{This table shows the tanking of the importance of each attribute in the classification of modes of transport problem. The rankings have been obtained by fitting a random forest classifier on the training dataset.}
+\label{table:attr-rank}
+\end{table}
 
 \chapter{Implementation}
 
@@ -462,6 +506,10 @@ Up to this point, all methods that have been used for modes of transport classif
 \caption{This table shows the classification accuracies obtained after tuning the number of estimators for the best performing model using a random forest classifier that takes the normalised bin counts along with the clustered urban environments and the sum of bin counts as classification attributes. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
 \label{table:n-estimators}
 \end{table}
+
+\subsection{Mixed Model Performance}
+
+Section describing mixed model performance. Same classification method training multiple times on different attributes and calculating the prediction probabilities. Mean of probabilities in order to take the difference between the probabilities into account.
 
 \chapter{Conclusions}
 

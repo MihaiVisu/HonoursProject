@@ -191,6 +191,17 @@ Apart from data gathered from different urban environments and by using differen
 \section{Data Analysis}
 \label{sec:data-analysis}
 
+\subsection{Data Information}
+
+The entire training dataset contains initially a total of 5146 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments and hence, the final, sanitized dataset contains 4828 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=0.6\columnwidth]{distribution.pdf}
+  \caption{This histogram presents the distribution of the data points in terms of the modes of transport labels.}
+  \label{fig:distribution}
+\end{figure}
+
 \subsection{Mean of Bin Counts}
 \label{subsec:bin-count-means}
 
@@ -344,7 +355,7 @@ This section presents the results obtained after training different models and t
 
 Several pairs of attributes have been used for training different models. First, all 16 particulate matter count bins have been taken into consideration. Then, the number of bin counts taken for training has been reduced to 3, as the first three bins proved to be the most dominant ones. Separately, the PM1, PM2.5 and PM10 values have been taken for training and the mode of transport classification accuracies obtained have been compared with the former case. 
 
-Table \ref{table:abs-values-models} presents the validation accuracies obtained using K-Fold cross validation for each classification method after training the models on the raw attribute values of the entire dataset. As it could be observed, the best performing model was the one implementing a random forest classifier on all bin 16 bin counts. Therefore, for the next experiments involving data processing and model optimisation, the particulate matter counts have been taken into consideration for training and testing.
+Table \ref{table:abs-values-models} presents the validation accuracies obtained using K-Fold cross validation for each classification method after training the models on the raw attribute values of the entire dataset. As it could be observed, the best performing model was the one implementing a random forest classifier on all bin 16 bin counts. Therefore, for the next experiments involving data processing and model optimisation, the 16 particulate matter counts have been taken into consideration for training and testing.
 
 \begin{table}[h!]
 \centering
@@ -352,15 +363,15 @@ Table \ref{table:abs-values-models} presents the validation accuracies obtained 
  \hline
  Classification Method & All Bin Counts & First 3 Bin Counts & PM Values \\ [0.5ex] 
  \hline\hline
- SVC & 71.0\% & 70.8\% & 83.1\% \\ 
+ SVC & 57.9\% & 58.1\% & 78.9\% \\ 
  \hline
- LRC & 83.9\% & 79.7\% & 76.7\% \\
+ LRC & 78.1\% & 68.9\% & 70.7\% \\
  \hline
- KNN & 90.2\% & 89.0\% & 84.3\% \\ 
+ KNN & 87.3\% & 83.0\% & 79.3\% \\ 
  \hline
- \textbf{RFC} & \textbf{92.3}\% & 89.5\% & 87.9\% \\ 
+ \textbf{RFC} & \textbf{88.9}\% & 82.3\% & 81.2\% \\ 
  \hline
-  MLPC & 83.4\% & 80.9\% & 80.1\% \\ 
+  MLPC & 79.8\% & 67.9\% & 74.4\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the specified attributes and classification methods for training separately. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
@@ -373,7 +384,7 @@ Table \ref{table:abs-values-models} presents the validation accuracies obtained 
 
 The next step was to find a data processing method that would improve the accuracy for modes of transport classification. One of them represented the usage of urban environment types using the method described in \ref{subsec:generic-clustering} as an additional attribute for means of transport classification. Thus, classification becomes more generalised and the model would eventually perform more accurately in different urban environments (e.g. a car driven on a crowded street compared to a car driven in a quiet area).
 
-Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods, except for the multilayer perceptron. Moreover, the random forest classifier delivered the highest classification accuracy as in the previous section(\ref{subsec:abs-values-models}).
+Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods, except for the multilayer perceptron. Moreover, the random forest classifier delivered the highest classification accuracy from this set of experiments, as in the previous section (\ref{subsec:abs-values-models}).
 
 \begin{table}[h!]
 \centering
@@ -381,15 +392,15 @@ Table \ref{table:urban-env-models} presents the new validation accuracy results 
  \hline
  Classification Method & Bin Counts & Bin Counts + Urban Environments \\ [0.5ex] 
  \hline\hline
- SVC & 71.0\% & 71.1\% \\ 
+ SVC & 57.9\% & 58.0\% \\ 
  \hline
- LRC & 83.9\% & 86.7\% \\
+ LRC & 78.1\% & 81.8\% \\
  \hline
- KNN & 90.2\% & 90.3\% \\ 
+ KNN & 87.3\% & 87.3\% \\ 
  \hline
- \textbf{RFC} & 92.3\% & \textbf{94.9}\% \\ 
+ \textbf{RFC} & 88.9\% & \textbf{92.6}\% \\ 
  \hline
-  MLPC & 83.4\% & 82.8\% \\ 
+  MLPC & 79.8\% & 79.1\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
@@ -409,22 +420,23 @@ Another step taken with the aim of generalising classification and improving the
  \hline
  Classification Method & With Urban Environments & Without Urban Environments \\ [0.5ex] 
  \hline\hline
- KNN & 84.4\% & 79.9\% \\ 
+ KNN & 81.2\% & 75.3\% \\ 
  \hline
- \textbf{RFC} & \textbf{91.6}\% & 88.8\% \\ 
+ \textbf{RFC} & \textbf{89.4}\% & 83.1\% \\ 
  \hline
-  MLPC & 83.4\% & 78.5\% \\ 
+  MLPC & 79.1\% & 72.7\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the values of the normalised bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
 \label{table:norm-bin-counts}
 \end{table}
 
-As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when the random forests were used as classification methods from 91.6\% to 94.9\%.
+As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.4\% to 92.3\%.
+
 
 \subsection{Further Tuning of Classification Methods}
 
-Up to this point, all methods that have been used for modes of transport classification have been initialised with default settings provided by the scikit-learn library. Moreover, the random forest classifier delivered the best results so far. Hence, its library settings have been taken into consideration for further tuning. Thus, several values have been tested for the library setting representing the number of estimators and the accuracy results have been compared using the newly tweaked models. Table \ref{table:n-estimators} shows the classification accuracies obtained for several values of the number of estimators, using the best performing model described in \ref{subsec:norm-bin-counts-results}. As it could be observed, the best classification accuracy obtained over the training dataset with K-Fold cross validation with 5 folds was when 260 estimators were used for the best performing model, namely \textbf{95.7\%}.
+Up to this point, all methods that have been used for modes of transport classification have been initialised with default settings provided by the scikit-learn library. Moreover, the random forest classifier delivered the best results so far. Hence, its library settings have been taken into consideration for further tuning. Thus, several values have been tested for the library setting representing the number of estimators and the accuracy results have been compared using the newly tweaked models. Table \ref{table:n-estimators} shows the classification accuracies obtained for several values of the number of estimators, using the best performing model described in \ref{subsec:norm-bin-counts-results}. As it could be observed, the best classification accuracy obtained over the training dataset with K-Fold cross validation with 5 folds was when 260 estimators were used for the best performing model, namely \textbf{94.3\%}.
 
 \begin{table}[h!]
 \centering
@@ -432,17 +444,19 @@ Up to this point, all methods that have been used for modes of transport classif
  \hline
  Number of Estimators & Classification Accuracy \\ [0.5ex] 
  \hline\hline
- 10 & 84.4\% \\ 
+ 10 & 93.0\% \\ 
  \hline
- 30 & 83.4\% \\ 
+ 30 & 93.9\% \\ 
  \hline
- 50 & 83.4\% \\ 
+ 50 & 94.0\% \\ 
  \hline
- 100 & 83.4\% \\ 
+ 100 & 94.2\% \\ 
  \hline
-  200 & 83.4\% \\ 
+ 150 & 94.1\% \\
  \hline
- \textbf{260} & \textbf{95.7}\% \\ 
+  200 & 94.2\% \\ 
+ \hline
+ \textbf{260} & \textbf{94.3}\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after tuning the number of estimators for the best performing model using a random forest classifier that takes the normalised bin counts along with the clustered urban environments and the sum of bin counts as classification attributes. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}

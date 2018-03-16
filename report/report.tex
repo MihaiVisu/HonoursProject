@@ -6,6 +6,7 @@
 
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{url}
 
 \begin{document}
 
@@ -120,39 +121,70 @@ Finally, chapter 6 presents the conclusions drawn from the results obtained from
 
 \section{Mobile Exposure Monitor}
 
-The Mobile Exposure Monitor (MEM) is a wearable device developed with the purpose of quality of environment measurement by the Centre for Speckled Computing. It is equipped with sensors measuring particulate matter counts and mass (Alphasense OPC-N1), as well as temperature and humidity (Sensirion SHT-75). The device transmits sensor readings via Bluetooth Low Energy (BLE) technology to a smart phone or tablet.
+The Mobile Exposure Monitor (MEM), called AirSpeck-P is a wearable device developed with the purpose of quality of environment measurement by the Centre for Speckled Computing. It is equipped with sensors measuring particulate matter counts and mass (Alphasense OPC-N2), as well as temperature and humidity (Sensirion SHT-75). The device transmits sensor readings via Bluetooth Low Energy (BLE) technology to a smart phone or tablet \cite{airspeck}. The latest firmware of the device is also equipped with a light sensor, measuring light intensity. The MEM is adapted to a running belt, so that it could be easily worn during data collection. Figure \ref{fig:airspeck} presents the AirSpeck device attached to the running belt, along with the placement of each sensor.
 
-\section{Alphasense Optical Particulate Counter}
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{airspeck.jpeg} 
+  \caption{This picture presents the AirSpeck mobile exposure monitor along with the layout of all the sensors attached to a running belt.}
+  \label{fig:airspeck}
+\end{figure}
+
+
+\subsection*{Alphasense Optical Particle Counter}
+
+The data gathered via the Alphasense OPC-N2 \cite{opc} represents the main subject of interest in this project. Size-resolved particulate matter counts are measured in real time, with the latest version of the sensor sampling the environment every 10 seconds. The sensor detects particulates in the range from 0.38 to 17 microns and separates them in 16 different ranges depending on their size \cite{airspeck}. Each range is referred to as a bin, and every bin has a particulate count measurement for the given sampling period. The OPC uses a laser beam and measures the light scattered by individual particulates to determine particulate sizes and counts. PM1, PM2.5, and PM10 measured in $ \mu g /m^3 $ are calculated from the number concentrations detected, assuming negligible contribution from particulates of size less than the lower limit of 0.38 microns.
+
+
+\subsection*{Temperature Sensor}
+
+A Sensirion SHT-75 temperature and humidity sensor \cite{sensirion} is included on the AirSpeck printed circuit board (PCB) to enable temperature and humidity monitoring without the need to connect to external sensors. The sensor is contained in a waterproof (sintered metal) enclosure \cite{airspeck} and it is placed to protrude outside the enclosure, so that an accurate reading of the temperature and humidity values in the ambient air is ensured.
+
+
+\subsection*{Communication}
+
+The AirSpeck device has a built-in Bluetooth Low Energy (BLE) radio which communicates with a custom Android application on the mobile device, utilised for receiving and labelling the the sensor readings with time and location (GPS) information. The sensor readings are saved locally in CSV files and they are also forwarded to a remote server for analysis either via cellular network or WiFi.
 
 \section{Urban Environments}
 
-As far as urban environments detection is concerned, five different types of urban environments are taken into consideration in terms of the average values of the bin counts:
+As far as urban environments detection is concerned, five different types of urban environments are taken into consideration in terms of the average values of the sensor readings regarding particulate matter:
 
 \begin{itemize}
-\item park paths
-\item pedestrian areas
-\item quiet roads
-\item medium traffic areas
-\item crowded / high traffic areas
+\item Park Paths - they are referred to green areas and paths within parks. One example that was constantly scanned with the purpose of studying personal exposure to different urban environments is the North Meadow Walk in the Meadows Park in Edinburgh, also highlighted in Figure \ref{fig:december_route}.
+
+\item Pedestrian Areas - they are referred to roads accessible only to pedestrians such as the Middle Meadow Walk portion between Lauriston Place and George Square Lane, also highlighted in Figure \ref{fig:december_route}.
+
+\item Quiet Roads - they represent quiet roads in the city with little or non-existent traffic.
+
+\item medium traffic areas - they represent streets with medium traffic during the day, such as Melville Drive.
+
+\item crowded / high traffic areas - they represent crowded areas with intense traffic during the day. They are located especially in the city centre and they mostly exist around junctions such as Tollcross or the cross-roads between Princes Street and Telford Road in the West End. 
 \end{itemize}
 \label{list:urban-environments}
 
 \section{Personal Exposure with Modes of Transport}
 
-In order to study personal exposure in all cases, six different exposure situations corresponding to six different modes of transport used have been taken into consideration especially during the data collection process:
+In order to study personal exposure in all cases, six different exposure situations corresponding to six different modes of transport used have been taken into consideration during the data collection process:
 
 \begin{itemize}
-\item pedestrian data
-\item car
-\item train
-\item bicycle
-\item bus
-\item subway (in London)
+
+\item Pedestrian Data - this represents sensor readings gathered from subjects wearing the AirSpeck device while walking around key areas in Edinburgh, described more thoroughly in \ref{sec:data-collection}.
+
+\item Car - air quality data was collected by Mark Miller (a member of the Centre for Speckled Computing) with the AirSpeck while commuting to work by car in Edinburgh. More details about the routes are presented in \ref{sec:data-collection}.
+
+\item Train - data was also gathered while travelling by train on different routes (From Edinburgh to London and Manchester respectively).
+
+\item Bicycle - bicycle data is composed of two different datasets. One represents data that was collected during the summer of 2015 by Aart Meijer, an MSc student while commuting to university by bicycle. Another dataset was gathered in February, during the snow storm. More details regarding the paths are emphasised in \ref{sec:data-collection}.
+
+\item Bus - data was also collected while travelling by bus on different routes around Edinburgh which will be further detailed in \ref{sec:data-collection}. One of the bus routes on which scanning was performed is shown in Figure \ref{fig:bus_route}.
+
+\item subway (in London) - a small amount of sensor readings were gathered while travelling by subway in London. However, the ambient air scanning was performed during only one trip and hence, this dataset contains few inputs.
 \end{itemize}
 
 \chapter{Methodology}
 
 \section{Data Collection Process}
+\label{sec:data-collection}
 
 To begin with, the Mobile Exposure Monitor transmits sensor readings to the Android device through the Airspeck app, via Bluetooth Low Energy. Values obtained from OPC measurements are sent every 25 seconds along with GPS coordinates. This ensures an effective spatial representation of the created datasets especially when data is collected at walking speed.
 

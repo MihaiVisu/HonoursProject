@@ -239,11 +239,11 @@ Furthermore, new inputs were collected for validation on a train journey to Lond
 
 \subsection{Raw Data Information}
 
-The entire training dataset contains initially a total of 6423 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments as described in \ref{subsec:outlier-removal} and hence, the final, sanitized dataset contains 5409 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used. As it could be observed, the data points distribution over the \textit{on foot}, \textit{train}, \textit{bike} and \textit{bus} labels is balanced as the training dataset contains roughly over 1100 inputs of each type.
+The entire training dataset contains initially a total of 6423 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments as described in subsection \ref{subsec:outlier-removal} and hence, the final, sanitized dataset contains 5409 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used. As it could be observed, the data points distribution over the \textit{on foot}, \textit{train}, \textit{bike} and \textit{bus} labels is balanced as the training dataset contains roughly over 1100 inputs of each type.
 
 \begin{figure}[h!]
   \center
-  \includegraphics[width=0.6\columnwidth]{distribution.pdf}
+  \includegraphics[width=0.8\columnwidth]{distribution.pdf}
   \caption{This histogram presents the distribution of the data points in terms of the modes of transport labels.}
   \label{fig:distribution}
 \end{figure}
@@ -397,7 +397,7 @@ As an attempt to make the classification even more independent of the environmen
 
 \begin{figure}[h]
   \center
-  \includegraphics[width=0.8\columnwidth]{urban-environments-classification-model.pdf}
+  \includegraphics[width=\columnwidth]{urban-environments-classification-model.pdf}
   \caption{This diagram presents the data processing pipeline which is performed prior to model training for modes of transport classification.}
   \label{fig:urban-environments-classification-model}
 \end{figure}
@@ -452,7 +452,7 @@ After ranking the features based on their importance level obtained from the ran
 
 \begin{figure}[h]
   \center
-  \includegraphics[width=0.8\columnwidth]{mixed_model_feature_distribution.pdf}
+  \includegraphics[width=\columnwidth]{mixed_model_feature_distribution.pdf}
   \caption{This diagram presents methodology for the mixed model used to for validating new inputs after fitting on the training dataset.}
   \label{fig:mixed_model_feature_distribution}
 \end{figure}
@@ -566,7 +566,7 @@ Another step taken with the aim of generalising classification and improving the
 \label{table:norm-bin-counts}
 \end{table}
 
-As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.3\% to 91.2\%. Even if the overall classification accuracy has not improved after normalisation of bin counts, this method will still be used for further validation on the testing datasets in order to verify the generalisation of the classification model in cases of new data points that have not been used for training before. 
+As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in subsection \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.3\% to 91.2\%. Even if the overall classification accuracy has not improved after normalisation of bin counts, this method will still be used for further validation on the testing datasets in order to verify the generalisation of the classification model in cases of new data points that have not been used for training before. 
 
 
 \subsection{Further Tuning of Classification Methods}

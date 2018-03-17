@@ -111,7 +111,7 @@ Chapter 2 reveals detailed information regarding equipments used in the data col
 
 Chapter 3 details the data collection phase. Then, it also introduces details about statistics and machine learning techniques used in the data analysis process. Moreover, it introduces a data visualization tool implemented from scratch to ease analysis of data collected. Details about this tool will be further discussed in the following chapter.
 
-Chapter 4 details on the data visualization tool, focusing both on the purpose and the functionality of the tool. The application is formed of two main parts, namely the front-end dealing with the spatial representation of the data on a map and the back-end, which consists of an API making requests to the data collected which is stored in a database.
+Chapter 4 details on the data visualization tool, focusing both on the purpose and the functionality of the tool. The application is formed of two main parts, namely the front-end dealing with the spatial representation of the data on a map and the back-end, which consists of an API creating requests to the data collected which is stored in a database.
 
 Chapter 5 presents the results obtained from the data analysis phase. First, a research regarding classification of pollution exposure with different modes of transport is done using various machine learning classifiers. Then, unsupervised data is used to detect several types of urban environments, which will be presented in detail in chapter 2.
 
@@ -186,9 +186,10 @@ In order to study personal exposure in all cases, six different exposure situati
 \section{Data Collection Process}
 \label{sec:data-collection}
 
-To begin with, the Mobile Exposure Monitor transmits sensor readings to the Android device through the Airspeck app, via Bluetooth Low Energy. Values obtained from OPC measurements are sent every 25 seconds along with GPS coordinates. This ensures an effective spatial representation of the created datasets especially when data is collected at walking speed.
+To begin with, the Mobile Exposure Monitor transmits sensor readings to the Android device through the Airspeck app, via Bluetooth Low Energy. Values obtained from OPC measurements are sent every 10 seconds along with GPS coordinates. This ensures an effective spatial representation of the created datasets especially when data is collected at walking speed.
 
 \subsection{Training Dataset Creation}
+\label{subsec:training-dataset}
 
 During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
@@ -203,54 +204,98 @@ Moreover, a major phase of data collection involving the analysis of different t
 
 More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from Mark Miller who commuted to work by car and wore the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
 
-Moreover, more data was collected by bus several times, on a similar route as the one scanned by Mark Miller (Figure \ref{fig:bus_route}) in order to balance the final dataset categories by adding new bus tagged data points.
+Moreover, more data was collected by bus several times. Firstly, a similar route as the one scanned by Mark Miller (Figure \ref{fig:bus_route}) was taken into account in order to test the types of environment encountered on the route and to balance the final training dataset with the addition of new bus tagged data points. Then, a second bus route between St Andrews Square and Queensferry was taken into account for scanning. The latter data collection session involved the gathering of both pedestrian and bus labelled inputs and a part of these data points were included in the validation sets described in \ref{subsec:test-data-collection}.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{bus_route.png} 
   \caption{This map emphasises the route that was scanned while taking the bus several times from Waverley station towards Princes Street, George Street and Telford Road.}
   \label{fig:bus_route}
 \end{figure}
 
-Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared to a new set of data points collected in the evening of the 26th of February 2018, during the beginning of the snow storm, in order to analyse how different weather affects sensor readings of particulate matter related information.
+Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists collected data on a fixed route around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared in \ref{subsec:different-weather} to a new set of data points collected in the evening of the 26th of February 2018 (Figure \ref{fig:february-bike}), during the beginning of the snow storm, in order to analyse how different weather conditions affect sensor readings of particulate matter related information.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{bike_feb.png} 
+  \caption{This map emphasises the route that was scanned while taking the bicycle on the 26th of February, during the beginning of the snow storm.}
+  \label{fig:february-bike}
+\end{figure}
 
 \subsection{Test Data Collection}
+\label{subsec:test-data-collection}
 
-Apart from data gathered from different urban environments and by using different modes of transport with the aim of creating a balanced and annotated training dataset used in supervised learning methods for classification of means of transport, more data has been collected by other users of the AirSpeck and labelled with the corresponding modes of transport used for each data point with the purpose of validating the classification methods created.
+Apart from data gathered from different urban environments and by using different modes of transport with the aim of creating a balanced and annotated training dataset used in supervised learning methods for classification of means of transport, more data has been collected and labelled by other users of the AirSpeck device with the purpose of further validating the classification methods created. The classification results for the validation dataset are thoroughly described in \ref{subsec:results-urban-env-use}.
 
+As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation.
+
+Moreover, walking data was collected on the 28th of February by different subjects during the night around the Meadows Park. All the inputs gathered in this session were used for validation.
+
+Furthermore, new inputs were collected for validation on a train journey to London for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered was used entirely for validation.
 
 
 \section{Data Analysis}
 \label{sec:data-analysis}
 
-\subsection{Data Information}
+\subsection{Raw Data Information}
 
-The entire training dataset contains initially a total of 5146 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments and hence, the final, sanitized dataset contains 4828 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used. As it could be observed, the data points distribution over the \textit{on foot}, \textit{train}, \textit{bike} and \textit{bus} labels is balanced as the training dataset contains roughly 1000 inputs of each type.
+The entire training dataset contains initially a total of 6423 data points. However, there exist points that have missing information related to important attributes such as null temperature and humidity values or null particulate matter counts over the entire series of 16 bins. Thus, these outliers have been removed before proceeding to any experiments as described in \ref{subsec:outlier-removal} and hence, the final, sanitized dataset contains 5409 data points. Figure \ref{fig:distribution} shows the distribution of the training dataset in terms of the labels representing the modes of transport used. As it could be observed, the data points distribution over the \textit{on foot}, \textit{train}, \textit{bike} and \textit{bus} labels is balanced as the training dataset contains roughly over 1100 inputs of each type.
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \center
   \includegraphics[width=0.6\columnwidth]{distribution.pdf}
   \caption{This histogram presents the distribution of the data points in terms of the modes of transport labels.}
   \label{fig:distribution}
 \end{figure}
 
+
+\subsection{Outliers in Sensor Readings}
+\label{subsec:outlier-removal}
+
+\subsubsection*{Temperature and Humidity Outliers}
+
+Data collected via the AirSpeck devices was not always fully accurate and sometimes data errors were created. For instance, either null or unrealistically high values of the temperature and humidity were sometimes registered at the beginning of data collection sessions after the sensor had been initially started. Figure \ref{fig:outliers} presents the values of the temperature expressed in Celsius degrees, along with the values of the humidity across the training dataset. In the case of the values of temperature data, the lower and upper thresholds were set at -15 and +35 degrees respectively (considering that average temperature in the UK did not exceed these values during data collection). Furthermore, in the case of humidity data, all outliers registering null values were removed.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{outliers.pdf}
+  \caption{This set of scatter plots represents the raw values of temperature and humidity data across the entire training dataset with the purpose of highlighting the outliers. The red horizontal lines represent the thresholds that were set to remove the outliers in the data.}
+  \label{fig:outliers}
+\end{figure}
+
+\subsubsection*{Bin Counts Outliers}
+
+Moreover, sometimes values of particulate matter related data (PM values and bin counts) that were higher than the average or null values were registered by the sensors. Figure \ref{fig:outliers-bins} emphasizes the outliers in the values of the first bin count, as well as the total sum of bin count values for each input. As first bin count had the most dominant values across the training dataset, it has been taken into consideration for the outliers removal procedure along with the total sum of particulate matter counts for each data point.
+
+As it could be observed in the top right scatter plot of Figure \ref{fig:outliers-bins}, the high values of the first outliers for the total sum of bin counts scaled the diagram such that the difference between points with values between 0 and 20000 became unnoticeable. Thus, the first upper threshold for the points representing the sum of particulate matter counts was set at 15000. After removing those outliers, a second threshold was set at 12000 (the bottom left scatter plot), as the large majority of points were placed before that upper bound. In the final step, a final lower threshold was set at 0, such that erroneous data representing points that did not register any bin readings would be removed from the training dataset.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{outliers_bins.pdf}
+  \caption{This set of scatter plots represents the raw values of first bin count along with the total sum of particulate matter counts for each data point across the entire training dataset with the purpose of highlighting the outliers. The red horizontal lines represent the thresholds that were set to remove the outliers in the data.}
+  \label{fig:outliers-bins}
+\end{figure}
+
+
 \subsection{Mean of Bin Counts}
 \label{subsec:bin-count-means}
 
 First, all particulate matter counts have been taken into consideration for analysis in order to visualise the mean values for each bin count over the entire final dataset. Figure \ref{fig:mean_bins_all} shows the distribution of the means of the values for all bin counts over the entire dataset. As it could be observed, bin 0 has the highest values and hence, the distribution of the particulate matter counts is dominated by particulates in bin 0 (range of particulates from 0.38 to 0.52 microns), followed by bins 1 and 2. Therefore, the initial data analysis and visualisation were emphasised mostly on first three bin counts.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{mean_bins_all.pdf}
-  \caption{This diagram presents the mean values of all bin counts over the entire final dataset.}
+  \caption{This diagram presents the mean values of all bin counts over the entire final dataset. The histogram on the left presents the raw values on the bin counts, while the one on the right presents the normalised distribution of particulate matter counts.}
   \label{fig:mean_bins_all}
 \end{figure}
 
+
 \subsection{Bin Count Means on Different Weather Conditions}
+\label{subsec:different-weather}
 
 Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and on different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015, while the second one was collected on the 26th of February 2018, during the snow storm. Figure \ref{fig:bins_weather} displays the distribution of the bin counts for different weather conditions as previously mentioned. The means of the bin counts have been normalised as described in \ref{subsec:bin-count-normalisation} in order to visualise how the pattern, namely the percentage of each bin value is affected by weather changes.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{bins_weather.pdf} 
   \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for different weather conditions when a bicycle was the mean of transport used.}
@@ -267,7 +312,7 @@ Same analysis has also been performed on the dataset from the journey to and aro
 
 As to the counts of the particulate matter, bin 0 has the highest variance, followed by the next two bins, so the first three bins have been taken into consideration for this analysis. Moreover, exponential moving average (EMA) , which is implemented in the scikit-learn Python library, has been used for visualisation of bin counts (only first three bins as they are the most prominent ones), as well as PM1, PM2.5, and PM10 values respectively in order to ease event detection (either change of urban environment or mode of transport) by analysing the means of the attributes at each point. Figures \ref{fig:time_series_london} and \ref{fig:time_series_meadows} present the time series analysis of bin counts and PM values for the London journey and Meadows datasets respectively. Moreover, for the London journey dataset, the normalised bin counts have also been taken into consideration in order to discover whether normalisation would ease the detection of modes of transport for the time series analysis. The vertical dashed lines represent the moment when the use of one mean of transport ended during data collection and a new one began until the occurrence of a new line.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{time_series_london.pdf} 
   \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected on the journey to London. The Exponential Moving Average is used to express the mean value at each point in time.}
@@ -280,7 +325,7 @@ The next diagram displays the normalised values of the bin counts. In this case,
 
 As it could be observed in the third diagram of Figure \ref{fig:time_series_london}, the PM10 values are the most dominant ones across the entire journey. There are pollution spikes from time to time, however, the event of change of a mean of transport is not visually detectable and neither a detectable pattern exists nor a visible difference in the absolute values between different means of transport.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{time_series_meadows.pdf} 
   \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected while walking in Meadows. The Exponential Moving Average is used to express the mean value at each point in time.}
@@ -293,7 +338,7 @@ As it could be observed in Figure \ref{fig:time_series_meadows}, there are more 
 
 The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated over the entire final dataset and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure with each mode of transport (Figure \ref{fig:norm-bins}).
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{norm_bins.pdf} 
   \caption{This set of diagrams represents patterns formed by the distribution of the bin counts expressed in percentages for each mode of transport.}
@@ -304,7 +349,7 @@ As it could be observed in Figure \ref{fig:norm-bins}, after normalising the val
 
 \subsection{Spatial Analysis of PM Data}
 
-As GPS information is made available by the MEM readings in the raw data, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
+As GPS information is made available by the Android application that collects readings of sensors, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
 
 
 \section{Unsupervised Learning for Urban Environments Detection}
@@ -358,6 +403,7 @@ As an attempt to make the classification even more independent of the environmen
 \end{figure}
 
 \subsection{Mixed Model Methodology}
+\label{subsec:mixed-model-methodology}
 
 As an attempt to improve the classification of modes of transport accuracy and make use of as many attributes available from the OPC as possible, a mixed model containing several classifiers trained on different attributes is proposed. A similar approach, called co-training is used by \cite{Radu2014}, where they present a semi-supervised model for indoor-outdoor detection using smart phones. In order to implement the proposed model, a selection of attributes in terms of their importance should be performed first, followed by a split of the features across multiple classifiers which would be further fitted on the training dataset.
 
@@ -452,15 +498,15 @@ Table \ref{table:abs-values-models} presents the validation accuracies obtained 
  \hline
  Classification Method & All Bin Counts & First 3 Bin Counts & PM Values \\ [0.5ex] 
  \hline\hline
- SVC & 57.9\% & 58.1\% & 78.9\% \\ 
+ SVC & 55.4\% & 54.9\% & 76.6\% \\ 
  \hline
- LRC & 78.1\% & 68.9\% & 70.7\% \\
+ LRC & 78.6\% & 68.0\% & 66.5\% \\
  \hline
- KNN & 87.3\% & 83.0\% & 79.3\% \\ 
+ KNN & 84.6\% & 79.3.0\% & 76.7\% \\ 
  \hline
- \textbf{RFC} & \textbf{88.9}\% & 82.3\% & 81.2\% \\ 
+ \textbf{RFC} & \textbf{87.4}\% & 79.8\% & 78.9\% \\ 
  \hline
-  MLPC & 79.8\% & 67.9\% & 74.4\% \\ 
+  MLPC & 77.2\% & 65.5\% & 73.1\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the specified attributes and classification methods for training separately. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
@@ -473,7 +519,7 @@ Table \ref{table:abs-values-models} presents the validation accuracies obtained 
 
 The next step was to find a data processing method that would improve the accuracy for modes of transport classification. One of them represented the usage of urban environment types using the method described in \ref{subsec:generic-clustering} as an additional attribute for means of transport classification. Thus, classification becomes more generalised and the model would eventually perform more accurately in different urban environments (e.g. a car driven on a crowded street compared to a car driven in a quiet area).
 
-Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods, except for the multilayer perceptron. Moreover, the random forest classifier delivered the highest classification accuracy from this set of experiments, as in the previous section (\ref{subsec:abs-values-models}).
+Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods. Moreover, the random forest classifier delivered the highest classification accuracy from this set of experiments, as in the previous section (\ref{subsec:abs-values-models}).
 
 \begin{table}[h!]
 \centering
@@ -481,15 +527,15 @@ Table \ref{table:urban-env-models} presents the new validation accuracy results 
  \hline
  Classification Method & Bin Counts & Bin Counts + Urban Environments \\ [0.5ex] 
  \hline\hline
- SVC & 57.9\% & 58.0\% \\ 
+ SVC & 55.4\% & 55.6\% \\ 
  \hline
- LRC & 78.1\% & 81.8\% \\
+ LRC & 78.6\% & 80.5\% \\
  \hline
- KNN & 87.3\% & 87.3\% \\ 
+ KNN & 84.6\% & 84.6\% \\ 
  \hline
- \textbf{RFC} & 88.9\% & \textbf{92.6}\% \\ 
+ \textbf{RFC} & 87.4\% & \textbf{91.3}\% \\ 
  \hline
-  MLPC & 79.8\% & 79.1\% \\ 
+  MLPC & 78.5\% & 80.1\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
@@ -509,23 +555,24 @@ Another step taken with the aim of generalising classification and improving the
  \hline
  Classification Method & With Urban Environments & Without Urban Environments \\ [0.5ex] 
  \hline\hline
- KNN & 81.2\% & 75.3\% \\ 
+ KNN & 80.2\% & 75.9\% \\
  \hline
- \textbf{RFC} & \textbf{89.4}\% & 83.1\% \\ 
+ \textbf{RFC} & \textbf{91.2}\% & 87.8\% \\ 
  \hline
-  MLPC & 79.1\% & 72.7\% \\ 
+  MLPC & 75.4\% & 73.3\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after training the models using the values of the normalised bin counts, before and after applying urban environments detection. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
 \label{table:norm-bin-counts}
 \end{table}
 
-As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.4\% to 92.3\%.
+As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.3\% to 91.2\%.
 
 
 \subsection{Further Tuning of Classification Methods}
+\label{subsec:classifier-tweaking}
 
-Up to this point, all methods that have been used for modes of transport classification have been initialised with default settings provided by the scikit-learn library. Moreover, the random forest classifier delivered the best results so far. Hence, its library settings have been taken into consideration for further tuning. Thus, several values have been tested for the library setting representing the number of estimators and the accuracy results have been compared using the newly tweaked models. Table \ref{table:n-estimators} shows the classification accuracies obtained for several values of the number of estimators, using the best performing model described in \ref{subsec:norm-bin-counts-results}. As it could be observed, the best classification accuracy obtained over the training dataset with K-Fold cross validation with 5 folds was when 260 estimators were used for the best performing model, namely \textbf{94.3\%}.
+Up to this point, all methods that have been used for modes of transport classification have been initialised with default settings provided by the scikit-learn library. Moreover, the random forest classifier delivered the best results so far. Hence, its library settings have been taken into consideration for further tuning. Thus, several values have been tested for the library setting representing the number of estimators and the accuracy results have been compared using the newly tweaked models. Table \ref{table:n-estimators} shows the classification accuracies obtained for several values of the number of estimators, using the best performing model described in \ref{subsec:norm-bin-counts-results}. As it could be observed, the best classification accuracy obtained over the training dataset with K-Fold cross validation with 5 folds was when 300 estimators were used for the best performing model, namely \textbf{92.8\%}.
 
 \begin{table}[h!]
 \centering
@@ -533,28 +580,40 @@ Up to this point, all methods that have been used for modes of transport classif
  \hline
  Number of Estimators & Classification Accuracy \\ [0.5ex] 
  \hline\hline
- 10 & 93.0\% \\ 
+ 10 & 91.2\% \\ 
  \hline
- 30 & 93.9\% \\ 
+ 30 & 92.2\% \\ 
  \hline
- 50 & 94.0\% \\ 
+ 50 & 92.3\% \\ 
  \hline
- 100 & 94.2\% \\ 
+ 100 & 92.5\% \\ 
  \hline
- 150 & 94.1\% \\
+ 150 & 92.5\% \\
  \hline
-  200 & 94.2\% \\ 
+  200 & 92.5\% \\ 
  \hline
- \textbf{260} & \textbf{94.3}\% \\ 
+   250 & 92.6\% \\ 
+ \hline
+ \textbf{300} & \textbf{92.8}\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the classification accuracies obtained after tuning the number of estimators for the best performing model using a random forest classifier that takes the normalised bin counts along with the clustered urban environments and the sum of bin counts as classification attributes. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
 \label{table:n-estimators}
 \end{table}
 
+
 \subsection{Mixed Model Performance}
 
-Section describing mixed model performance. Same classification method training multiple times on different attributes and calculating the prediction probabilities. Mean of probabilities in order to take the difference between the probabilities into account.
+As presented in \ref{subsec:classifier-tweaking}, the random forest with 260 estimators provided the highest accuracy. Hence, the configuration of this classifier was utilised in the mixed model as described in subsection \ref{subsec:mixed-model-methodology}. As usage of urban environments and normalisation of bin counts increased the overall accuracy in previous experiments and ensured a generalisation of the model, making the classifier less dependent on the type of environment and weather conditions, they have been used in this case as well. 
+
+Firstly, overall performance has been tested on the training set using K-Fold cross validation with 5 folds, as in the other tests performed with models previously described in this section and the classification accuracy obtained was \textbf{95.8\%}.
+
+
+\subsection{Performance Results on Validation Sets}
+
+As it was presented in subsection \ref{subsec:test-data-collection}, more data that was gathered by different subjects was taken into account with the purpose of further testing and validating the model that was performing the best on the training dataset.
+
+
 
 \chapter{Conclusions}
 

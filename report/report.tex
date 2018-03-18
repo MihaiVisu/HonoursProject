@@ -156,9 +156,9 @@ As far as urban environments detection is concerned, five different types of urb
 
 \item Quiet Roads - they represent quiet roads in the city with little or non-existent traffic.
 
-\item medium traffic areas - they represent streets with medium traffic during the day, such as Melville Drive.
+\item Medium Traffic Areas - they represent streets with medium traffic during the day, such as Melville Drive.
 
-\item crowded / high traffic areas - they represent crowded areas with intense traffic during the day. They are located especially in the city centre and they mostly exist around junctions such as Tollcross or the cross-roads between Princes Street and Telford Road in the West End. 
+\item Crowded / High Traffic Areas - they represent crowded areas with intense traffic during the day. They are located especially in the city centre and they mostly exist around junctions such as Tollcross or the cross-roads between Princes Street and Telford Road in the West End. 
 \end{itemize}
 \label{list:urban-environments}
 
@@ -178,7 +178,7 @@ In order to study personal exposure in all cases, six different exposure situati
 
 \item Bus - data was also collected while travelling by bus on different routes around Edinburgh which will be further detailed in \ref{sec:data-collection}. One of the bus routes on which scanning was performed is shown in Figure \ref{fig:bus_route}.
 
-\item subway (in London) - a small amount of sensor readings were gathered while travelling by subway in London. However, the ambient air scanning was performed during only one trip and hence, this dataset contains few inputs.
+\item Subway (in London) - a small amount of sensor readings were gathered while travelling by subway in London. However, the ambient air scanning was performed during only one trip and hence, this dataset contains few inputs.
 \end{itemize}
 
 \chapter{Methodology}
@@ -227,12 +227,20 @@ Furthermore, Aart Meijer, an MSc student whose honours project involved air qual
 
 Apart from data gathered from different urban environments and by using different modes of transport with the aim of creating a balanced and annotated training dataset used in supervised learning methods for classification of means of transport, more data has been collected and labelled by other users of the AirSpeck device with the purpose of further validating the classification methods created. The classification results for the validation dataset are thoroughly described in \ref{subsec:results-urban-env-use}.
 
-As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation.
+As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry, Edinburgh, was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation. The final validation dataset created during this data collection session consists of 501 data points.
 
-Moreover, walking data was collected on the 28th of February by different subjects during the night around the Meadows Park. All the inputs gathered in this session were used for validation.
+Moreover, walking data was collected on the 28th of February by different subjects during the night around the Meadows Park and Nicholson Street in Edinburgh. The dataset created after this gathering session has a total number of 640 data points and all the inputs gathered were used for validation.
 
-Furthermore, new inputs were collected for validation on a train journey to London for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered was used entirely for validation.
+Furthermore, new inputs were collected for validation on a train journey to London for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation.
 
+A separate set of 1278 bike tagged inputs that were collected by Aart Meijer during the summer of 2015 was taken only for validation. The route chosen for this data gathering session is highlighted in Figure \ref{fig:bike-validation-route}.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{bike_validation_route.png} 
+  \caption{This map emphasises the route that was scanned while taking the bicycle on the 26th of February, during the beginning of the snow storm.}
+  \label{fig:bike-validation-route}
+\end{figure}
 
 \section{Data Analysis}
 \label{sec:data-analysis}
@@ -243,7 +251,7 @@ The entire training dataset contains initially a total of 6423 data points. Howe
 
 \begin{figure}[h!]
   \center
-  \includegraphics[width=0.8\columnwidth]{distribution.pdf}
+  \includegraphics[width=\columnwidth]{distribution.pdf}
   \caption{This histogram presents the distribution of the data points in terms of the modes of transport labels.}
   \label{fig:distribution}
 \end{figure}

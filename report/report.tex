@@ -109,9 +109,9 @@ As in the previous set of experiments, Jupyter Notebooks have been used for anal
 
 Chapter 2 reveals detailed information regarding equipments used in the data collection phase, as well as details about PM measurements obtained. Moreover, details about the modes of transport used and types of urban environments taken into consideration are presented.
 
-Chapter 3 details the data collection phase. Then, it also introduces details about statistics and machine learning techniques used in the data analysis process. Moreover, it introduces a data visualization tool implemented from scratch to ease analysis of data collected. Details about this tool will be further discussed in the following chapter.
+Chapter 3 details the data collection phase along with data analysis techniques applied. Then, it also introduces details about machine learning techniques and data preprocessing methods used in the data analysis process, including both urban environment detection and classification of modes of transport.
 
-Chapter 4 details on the data visualization tool, focusing both on the purpose and the functionality of the tool. The application is formed of two main parts, namely the front-end dealing with the spatial representation of the data on a map and the back-end, which consists of an API creating requests to the data collected which is stored in a database.
+Chapter 4 details on the data visualization tool, focusing both on the purpose and the functionality of the tool. The application is formed of two main parts, namely the front-end concerned with the spatial representation of the data on a map and the back-end, which consists of an API creating requests to the data collected which is stored in a database.
 
 Chapter 5 presents the results obtained from the data analysis phase. First, a research regarding classification of pollution exposure with different modes of transport is done using various machine learning classifiers. Then, unsupervised data is used to detect several types of urban environments, which will be presented in detail in chapter 2.
 
@@ -357,7 +357,7 @@ As it could be observed in Figure \ref{fig:norm-bins}, after normalising the val
 
 \subsection{Spatial Analysis of PM Data}
 
-As GPS information is made available by the Android application that collects readings of sensors, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualisation tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
+As GPS information is made available by the Android application that collects readings of sensors, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualization tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
 
 
 \section{Unsupervised Learning for Urban Environments Detection}
@@ -375,7 +375,7 @@ There might be cases in which only the absolute values and counts of particulate
 
 Thus, K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points.
 
-\begin{figure}[H]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{clustering-twice.pdf}
   \caption{This diagram shows the pipeline of the unsupervised learning method for urban environments detection, applied twice on the dataset.}
@@ -403,7 +403,7 @@ One first approach taken into consideration in order to address this issue was t
 
 As an attempt to make the classification even more independent of the environment and thus, more generic and accurate for validation sets highlighting edge cases, the results obtained from the urban environments detection method have been used as additional attributes in the model training process for modes of transport classification. Figure \ref{fig:urban-environments-classification-model} displays the final data processing pipeline applied prior to the training phase on the dataset.
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{urban-environments-classification-model.pdf}
   \caption{This diagram presents the data processing pipeline which is performed prior to model training for modes of transport classification.}
@@ -458,7 +458,7 @@ In order to train the model as accurately as possible and obtain a precise confi
 
 After ranking the features based on their importance level obtained from the random forest classifier, they were split in such a way to obtain a balanced distribution of attributes in terms of their ranking across two random forest classifiers. Figure \ref{fig:mixed_model_feature_distribution} presents the architecture of the mixed model along with the distribution of the input attributes based on the importance ranks obtained and shown in \ref{subsubsec:feat-selection}.
 
-\begin{figure}[h]
+\begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{mixed_model_feature_distribution.pdf}
   \caption{This diagram presents methodology for the mixed model used to for validating new inputs after fitting on the training dataset.}
@@ -470,15 +470,87 @@ After dividing the features in two groups, two random forest classifiers are cre
 
 \chapter{Implementation}
 
-\section{Data Visualisation Tool}
-\label{sec:data-visualisation-tool}
+\section{Data Visualization Tool}
+\label{sec:data-visualization-tool}
+
+This chapter focuses on the data visualization tool which has been implemented with the purpose of easing spatial visualization of results obtained after performing machine learning experiments. Data is visualized with the help of GPS information provided by the mobile device through the AirSpeck Android app during data collection. Figure \ref{fig:vis-tool} describes briefly the main structure of the data visualization tool which will be further explained in the next three subsections.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{vis-tool.pdf}
+  \caption{This diagram presents briefly the main structure of the data visualization tool built with the purpose of easing spatial visualisation of results obtained after performing machine learning experiments.}
+  \label{fig:vis-tool}
+\end{figure}
+
 
 \subsection{Database}
+\label{subsec:database}
+
+\subsubsection*{Motivation for Database Implementation}
+
+The training data is stored in a database which configured using \texttt{PostgreSQL} \cite{postgres}. The main reason behind using a database system is the extra layer of security provided for the training data. Moreover, PostgreSQL has native support for using SSL connections and hence, connections with the back-end server are encrypted. Therefore, a secured storage of the training data will provide an additional layer of protection against system breaks.
+
+\subsubsection*{Database Structure}
+
+The structure of the database system is shown in Figure \ref{fig:database}. It consists of three tables. Table \texttt{mode\_of\_transport} contains the names and unique identifiers of all labels for the modes of transport. The \texttt{dataset} table contains the ids and names of the datasets that currently exist in the database and whose inputs are stored in one place as training data points. Finally, table \texttt{collected\_data} contains all the data points from all the datasets that have been uploaded by the user. In Figure \ref{fig:database}, \textit{[Airspeck Attributes]} refers to all attributes of the data points that exist in the CSV files created by the AirSpeck Android app during data collection. In addition, the table contains two mandatory foreign keys, one to the \texttt{mode\_of\_transport} table and the other one to the \texttt{dataset} table.
+
+There is no table for urban environments, as the method performed for environment type detection is unsupervised and classification results will always differ based on the training dataset taken in consideration and validation data that is queried. More information about handling urban environment indices is provided in subsection \ref{subsec:back-end}, which presents the back-end structure.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{database.pdf}
+  \caption{This diagram presents briefly the main structure of the data visualization tool built with the purpose of easing spatial visualisation of results obtained after performing machine learning experiments.}
+  \label{fig:database}
+\end{figure}
 
 \subsection{Back-end Server}
+\label{subsec:back-end}
+
+A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of my API (Mihai's API).
+
+\subsubsection*{Motivation for Framework Choice}
+
+The server has been created using Django 2 Framework \cite{django}. The main reason behind choosing Django 2 for back-end development is that it is a high-level framework written in Python 3, which makes it significantly easier to migrate the machine learning models developed in Jupyter Notebooks to the back-end side of the tool. Moreover, it provides efficient and secure connections both to the database which is further described in subsection \ref{subsec:database} and the front-end interface, detailed in subsection \ref{subsec:front-end}.
+
+\subsubsection*{Connection to Database}
+
+Django framework provides full support for PostgreSQL databases and connection is established once the framework first makes a database query. This connection is then kept open and reused in subsequent requests.
+
+Database queries are performed through Django objects that belong to classes called data models \cite{django-queries}, which are custom classes written in Python. In other words, each data model corresponds to a table in the database and the properties of a class represent the fields in the corresponding table. In addition, each data model instance represents an input which is stored in the database table. Furthermore, once the structure of a data model has been modified or a data model has been either created or deleted, the operation is synchronised with the database and applied to the schema through so-called \texttt{migrations} \cite{django-migrations}.
+
+\subsubsection*{Connection to Front-end Interface}
+
+As to the connection of the server to the front-end interface, \texttt{ngrok} \cite{ngrok}, a multi-platform tunnelling software has been used for development, as it establishes secure tunnels from a public endpoint where the back-end server stands to the front-end running locally. 
+
+Moreover, in order to maintain communication between two different endpoints running on different systems, the \texttt{django-cors-headers} \cite{django-cors} library was used with the purpose of handling connection request headers that are required for Cross-Origin Resource Sharing (CORS) \cite{cors}.
+
+Django framework provides an efficient way of handling connection requests through the use of so-called \texttt{views} \cite{django-views}. A view is most generally a function that takes a web request from the front-end interface and returns a web response. In the case of the current project, the response returned from the back-end API will be in \texttt{JSON} format \cite{json} and will be further interpreted by the front-end interface. The current structure consists of 4 different views 4 different requests (Figure \ref{fig:views}).
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{views.pdf}
+  \caption{This diagram shows the structure of the Django views used for handling web requests and responses.}
+  \label{fig:views}
+\end{figure}
+
+The urban environments detection view is responsible for applying the clustering methods using the parameters sent from the front-end menu as clustering attributes. The clustering and modes of transport classification menus will be further described in subsection \ref{subsec:front-end}. The modes of transport classification view is handles requests regarding modes of transport classification for datasets specified by the user and returns the labelled data as a response to the interface. The dataset view returns unique identifiers and names of all datasets that exist in the database as a response in JSON format once the interface has finished loading in the web browser. Moreover, the new data upload view contains the back-end functionality of the new data upload tool which is utilised for storing new labelled data points in the database and performing machine learning predictions on unlabelled data.
+
+
+\subsubsection*{Classifiers Implementation}
+
+The classifiers are initialised in the modes of transport and urban environments views and are implemented using \texttt{scikit-learn} \cite{scikit-learn} Python library. The user has the ability to select from a range of classifiers in order to either perform urban environments and modes of transport predictions on new data or test performance of the classification method settings using K-Fold cross validation on the training dataset. Furthermore, the user has the ability to select the number of folds to use while performing cross-validation, so that they can choose the percentage of the training data that would be taken for validation. As to the attributes used for urban environments detection and modes of transport classification, the user has the ability to choose which attributes to use. Moreover, a choice of whether to use bin counts normalisation in the classification methods is provided by the interface. All these settings configured by the user on the interface are sent within requests to the back-end and handled in the views.
+
 
 \subsection{Front-end Interface}
+\label{subsec:front-end}
 
+\subsubsection*{Map Interface}
+
+\subsubsection*{Classifiers Menu}
+
+\subsubsection*{New Data Upload Tool}
+
+The new data upload tool is responsible for handling new data that is uploaded by the user in CSV format. The user is able to upload either unlabelled or labelled data with modes of transport tags. In the case of labelled inputs, the new dataset will be stored in the database as training data and the user has the ability to name it for future referencing. On the other hand, if the inputs are unlabelled, the user will be able to decide whether to perform clustering for urban environment detection or classification of modes of transport on the new data points. In the latter case, the CSV file will be uploaded from the classifiers menu and the data will be loaded on the back-end through \texttt{pandas} dataframes \cite{pandas}.
 
 
 \chapter{Results}
@@ -626,9 +698,26 @@ Firstly, overall performance has been tested on the training set using K-Fold cr
 
 \subsection{Performance Results on Validation Sets}
 
-As it was presented in subsection \ref{subsec:test-data-collection}, more data that was gathered by different subjects was taken into account with the purpose of further testing and validating the model that was performing the best on the training dataset.
+As it was presented in subsection \ref{subsec:test-data-collection}, more data that was gathered by different subjects was taken into account with the purpose of further testing and validating the model that was performing the best on the training dataset. Hence, in this case, the mixed model described in subsection \ref{subsec:mixed-model-methodology} was fitted on the entire training dataset. Then, it was utilised to predict the mean of transport labels for the data points from each validation set separately. Moreover, the methodology involving normalisation of bin counts has been compared to the one using raw values. Table \ref{table:validation-results} presents the results obtained after the predictions had been made. The accuracy score is expressed in percentages and calculated by the following formula: $$ \frac{\texttt{\# of correctly predicted labels}}{\texttt{\# of validation data points}} $$
 
-
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|| c | c | c | c ||} 
+ \hline
+ Validation Dataset & Dataset Size & Accuracy 1 & Accuracy 2 \\ [0.5ex] 
+ \hline\hline
+ Bicycle Dataset & 1278 &  91.8\% & 91.6\% \\ 
+ \hline
+ Queensferry Bus Dataset & 501 & 95.6\% & 90.3\% \\ 
+ \hline
+ Night Walk Dataset & 640 & 93.8\% & 93.3\% \\
+ \hline
+ London Train Dataset & 600 & 93.9\% & 94.3\% \\ 
+ \hline
+\end{tabular}
+\caption{This table shows the results obtained after predicting the mean of transport labels for data points from the validation datasets separately. \textit{Accuracy 1} represents the validation accuracy obtained by utilising the methodology which normalises the bin counts. \textit{Accuracy 2} shows the validation accuracy obtained by utilising the default methodology which uses the raw values of the bin counts.}
+\label{table:validation-results}
+\end{table}
 
 \chapter{Conclusions}
 

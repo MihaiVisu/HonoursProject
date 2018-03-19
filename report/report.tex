@@ -544,9 +544,15 @@ The classifiers are initialised in the modes of transport and urban environments
 \subsection{Front-end Interface}
 \label{subsec:front-end}
 
+The front-end side of the visualization tool consists of an interface which sends user requests to the API located in the back-end server and receives back responses containing data with the corresponding modes of transport or urban environments labels based on the classification methods the user chooses to apply. The interface consists of three main parts which are further described in the following paragraphs. The general design of the interface and the navigation menu between the three parts has been made using the \texttt{Semantic-UI} library \cite{semantic-ui}.
+
 \subsubsection*{Map Interface}
 
+The map interface is the main part where the results are displayed based on the spatial information that the data contains.  The map interface is built using the \texttt{LeafletJS} library \cite{leaflet}. Each data point is represented as a circle with the radius proportional to the total sum of bin counts. Each circle is coloured differently based on the corresponding mode of transport or urban environment that has been attached to each data point in the API response.
+
 \subsubsection*{Classifiers Menu}
+
+The classifiers menu represents the main interface which offers the user the ability to customise their own classification model, either for the task of modes of transport classification or urban environments detection. Moreover, the user is able to either apply K-Fold cross validation with a custom number of folds on the training dataset and test the classification accuracy or select an entire dataset for validation and predict the corresponding labels based on the chosen classification task.
 
 \subsubsection*{New Data Upload Tool}
 
@@ -554,8 +560,6 @@ The new data upload tool is responsible for handling new data that is uploaded b
 
 
 \chapter{Results}
-
-
 
 \section{Detection of Urban Environments}
 

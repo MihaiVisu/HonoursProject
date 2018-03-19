@@ -1,8 +1,7 @@
 $(function() {
 
-  var env_colors = ["green", "yellow", "orange", "red", "brown"];
-  var londonColors = ["red", "purple", "yellow", "cyan", "brown", "orange", "grey", "pink"];
-  var unsupervisedLondonColors = ["red", "yellow", "brown", "orange", "grey", "pink"];
+  var envColors = ["green", "yellow", "orange", "red", "brown"];
+  var transportColors = ['pink','red','yellow','purple','orange','gray'];
 
   // -----JQUERY VARIABLES-----
   var $classifyAttrsDropdown = $('.classification-form .attributes .ui.dropdown');
@@ -15,6 +14,8 @@ $(function() {
   var $foldsNumberInput = $('.folds-number input');
   var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
   var $normaliseBinCounts = $('.normalise-bins input:checked');
+
+  var $pusher = $('.pusher')
 
   var url = "http://localhost:8080";
 
@@ -29,6 +30,35 @@ $(function() {
   var currentAttrs;
 
   var map = L.map('map');
+
+  // -----LEGENDS FOR MAP-------
+
+  var urbanEnvironmentsLegend = L.control({position: 'bottomright'});
+  var transportLegend = L.control({position: 'bottomright'});
+
+  urbanEnvironmentsLegend.onAdd = function(map) {
+    var div = L.DomUtil.create('div', 'legend'),
+        labels = ['park path', 'pedestrian road', 'quiet area', 'medium traffic area', 'high traffic area'];
+
+    for (var i = 0; i < labels.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + envColors[i] + '"></i> ' + labels[i] + '<br>';
+    }
+    map.removeControl(transportLegend);
+    return div;
+  };
+
+  transportLegend.onAdd = function(map) {
+    var div = L.DomUtil.create('div', 'legend'),
+        labels = ['on foot', 'car', 'train', 'bicycle', 'bus', 'subway'];
+
+    for (var i = 0; i < labels.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + transportColors[i] + '"></i> ' + labels[i] + '<br>';
+    }
+    map.removeControl(urbanEnvironmentsLegend);
+    return div;
+  };
 
   // -----SEMANTIC UI INIT-----
 
@@ -96,11 +126,6 @@ $(function() {
     maxZoom: 18
   }).addTo(map);
 
-  // add static sensors on map
-  // for (var i = 0; i < staticSensors.length; i++) {
-  //   var marker = L.marker(staticSensors[i]).addTo(map);
-  //   marker.bindPopup('Static Sensor s'+(i+1));
-  // }
 
   map.addControl(new menuControl());
 
@@ -122,11 +147,12 @@ $(function() {
     "unsupervisedLondonData": {}
   };
 
-  var binScale = 0.1, pmScale = 2;
+  var binScale = 0.05;
 
   var pmVals = ['pm1', 'pm2_5', 'pm10'];
 
   $('.sidebar-trigger').click(function(){
+    $pusher.css('height','');
     $('.ui.sidebar').sidebar({
       transition: 'scale down',
       dimPage: true,
@@ -136,6 +162,7 @@ $(function() {
 
   // hide the map initially
   $('.lmap').hide();
+  $('.upload-section').hide();
 
   // ----INTERFACE EVENTS-----
 
@@ -147,14 +174,28 @@ $(function() {
 
   $('.map-view').click(function(){
     $('.menu-section').hide();
+    $('.upload-section').hide();
     $('.lmap').show();
     $('.menu a.item').removeClass('active');
     $('.map-view').addClass('active');
+    // add height for pusher
+    $pusher.css('height', '100%');
   });
 
   $('.menu-view').click(function() {
     $('.menu-section').show();
+    $('.upload-section').hide();
     $('.lmap').hide();
+    $('.menu a.item').removeClass('active');
+    $('.menu-view').addClass('active');
+  });
+
+  $('.upload-view').click(function() {
+    $('.menu-section').hide();
+    $('.upload-section').show();
+    $('.lmap').hide();
+    $('.menu a.item').removeClass('active');
+    $('.upload-view').addClass('active');
   });
 
   // -----REQUESTS-----
@@ -171,17 +212,16 @@ $(function() {
     var locationClustersNumber = $locationClustersInput.val();
     var environmentClustersNumber = $environmentClustersInput.val();
     var attrs = $clusterAttrsDropdown.dropdown('get value');
-    var colors = env_colors;
+    var colors = envColors;
 
-    if (dataset == 2) {
-      colors = unsupervisedLondonColors;
-    }
+
+    urbanEnvironmentsLegend.addTo(map);
 
     requestData(url+'/api_mihai/labelled_clustered_data/' + 
       (dataset+1) + '/' +
       locationClustersNumber + '/' +
-      environmentClustersNumber, 
-      circles.unsupervisedLondonData, 'pm2_5', colors, pmScale, "label", attrs, map);
+      5, // 5 environment clusters 
+      circles.unsupervisedLondonData, 'total', colors, binScale, "label", attrs, map);
   });
 
   $('#classify-data-button').click(function() {
@@ -201,10 +241,11 @@ $(function() {
     var includeUrbanEnvironments = $includeUrbanEnvironments.length;
     var normaliseBinCounts = $normaliseBinCounts.length;
 
+    transportLegend.addTo(map);
+
     requestData(url+'/api_mihai/labelled_classified_data/' +
       (dataset+1) + '/' +
       classifier + '/' +
-      validationCriterion + '/' +
       normaliseBinCounts + '/' +
       includeUrbanEnvironments + '/' +
       foldsNumber, circles.londonData, 'pm2_5', colors, pmScale, "label", attrs, map);

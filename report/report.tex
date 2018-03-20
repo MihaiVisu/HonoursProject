@@ -544,7 +544,9 @@ The classifiers are initialised in the modes of transport and urban environments
 \subsection{Front-end Interface}
 \label{subsec:front-end}
 
-The front-end side of the visualization tool consists of an interface which sends user requests to the API located in the back-end server and receives back responses containing data with the corresponding modes of transport or urban environments labels based on the classification methods the user chooses to apply. The interface consists of three main parts which are further described in the following paragraphs. The general design of the interface and the navigation menu between the three parts has been made using the \texttt{Semantic-UI} library \cite{semantic-ui}.
+The front-end side of the visualization tool consists of an interface which sends user requests to the API located in the back-end server and receives back responses containing data with the corresponding modes of transport or urban environments labels based on the classification methods the user chooses to apply. As it runs separately from the back-end, a different server configuration needed to be set up for the front-end to run. During development, the interface was firstly running on a simple Python server using the \texttt{http.server} module from Python 3. However, this solution was throwing errors while testing the new data upload tool, as the server was unable to send POST requests remotely. Therefore, the interface structure was reorganised and configured to run on a Flask server \cite{flask} which has the ability to send both POST and GET requests to the Django back-end server remotely.
+
+The front-end consists of three main parts which are further described in the following paragraphs. The general design of the interface and the navigation menu between the three parts have been developed using the \texttt{Semantic-UI} library \cite{semantic-ui}.
 
 \subsubsection*{Map Interface}
 
@@ -562,6 +564,8 @@ The new data upload tool is responsible for handling new data that is uploaded b
 \chapter{Results}
 
 \section{Detection of Urban Environments}
+
+[RESULTS FOR URBAN ENVIRONMENTS DETECTION EXPERIMENTS TO WRITE]
 
 
 

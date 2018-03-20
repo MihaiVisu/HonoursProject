@@ -33,7 +33,7 @@ $(function() {
 
   var map = L.map('map');
 
-  // -----LEGENDS FOR MAP-------
+  // -----LEGENDS FOR MAP INITIALISATION-------
 
   var urbanEnvironmentsLegend = L.control({position: 'bottomright'});
   var transportLegend = L.control({position: 'bottomright'});
@@ -65,7 +65,15 @@ $(function() {
   // -----SEMANTIC UI INIT-----
 
   // enable the dropdown
-  $('.ui.dropdown').dropdown();
+  $('.menu-section .ui.dropdown').dropdown();
+  $('.upload-section .ui.dropdown').dropdown({
+    allowAdditions: true,
+    forceSelection: false,
+    hideAdditions: false, // this line
+    onChange: function(value, text) {
+      $('.upload-section input[name="dataset"]').val(text);
+    },
+  });
 
   $('.kmeans-form .include-all-bins input').change(function() {
 
@@ -103,6 +111,15 @@ $(function() {
     data.forEach(function(val) {
       $('.attributes .ui.dropdown .menu').append(
         '<div class="item" data-value="'+val+'">'+val+'</div>'
+      );
+    });
+  });
+
+  // get datasets
+  $.getJSON(url+'/api_mihai/datasets/', function(data) {
+    data.forEach(function(val) {
+      $('.dataset .ui.dropdown .menu').append(
+        '<div class="item" data-value="'+val.name+'">'+val.name+'</div>'
       );
     });
   });

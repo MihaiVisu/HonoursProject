@@ -46,6 +46,18 @@
                 <div class="six wide column">
                   <div class="ui segment">
                     <form class="ui form upload-form" enctype="multipart/form-data" method="POST" action="http://localhost:8080/api_mihai/upload_file/">
+                      
+
+                      <div class="field dataset">
+                        <label>Select Dataset</label>
+                        <div class="ui fluid search selection dropdown">
+                          <input type="hidden" name="dataset"/>
+                          <i class="dropdown icon"></i>
+                          <div class="default text">Dataset</div>
+                          <div class="menu">
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="field upload input">
                         <input type="file" name="upload_file" id="file-upload">

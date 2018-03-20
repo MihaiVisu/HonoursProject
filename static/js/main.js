@@ -15,7 +15,9 @@ $(function() {
   var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
   var $normaliseBinCounts = $('.normalise-bins input:checked');
 
-  var $pusher = $('.pusher')
+  var $pusher = $('.pusher');
+
+  var $fileUploadInput = $('#file-upload');
 
   var url = "http://localhost:8080";
 
@@ -250,5 +252,18 @@ $(function() {
       includeUrbanEnvironments + '/' +
       foldsNumber, circles.londonData, 'pm2_5', colors, pmScale, "label", attrs, map);
   });
+
+//   var file = null;
+
+//   $(':file').on('change', function() {
+//     file = this.files[0];
+// });
+
+//   $('#upload-file-button').click(function() {
+//     var file = $fileUploadInput.val();
+
+//     console.log(file.indexOf('csv') !== -1);
+//     uploadFile(url+'/api_mihai/upload_file/', file);
+//   });
 
 });

@@ -24,3 +24,10 @@ function requestData(dataUrl, circles, radiusProperty, colors, scale, index, att
     }
   });
 }
+
+// function uploadFile(url, file) {
+//   console.log(file)
+//   $.post(url, file, function(data) {
+//     console.log(data);
+//   });
+// }

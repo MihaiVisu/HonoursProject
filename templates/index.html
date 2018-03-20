@@ -3,11 +3,11 @@
   <head>
     <!-- LIBS -->
 
-    <link rel="stylesheet" href="./libs/semantic-ui/semantic.min.css"/>
-    <link rel="stylesheet" href="./libs/leaflet/leaflet.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename = './libs/semantic-ui/semantic.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename = './libs/leaflet/leaflet.css') }}"/>
 
     <!-- CUSTOM FILES -->
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename = './main.css') }}">
 
   </head>
   <body>
@@ -45,7 +45,7 @@
               <div class="ui grid">
                 <div class="six wide column">
                   <div class="ui segment">
-                    <form class="ui form upload-form" enctype="multipart/form-data" action="POST">
+                    <form class="ui form upload-form" enctype="multipart/form-data" method="POST" action="http://localhost:8080/api_mihai/upload_file/">
 
                       <div class="field upload input">
                         <input type="file" name="upload_file" id="file-upload">
@@ -266,11 +266,11 @@
       </div>
     </div>
 
-    <script src="./libs/cookies/js.cookie.js"></script>
-    <script src="./libs/jquery/jquery-3.3.1.min.js"></script>
-    <script src="./libs/semantic-ui/semantic.min.js"></script>
-    <script src="./js/requests.js"></script>
-    <script src="./js/main.js"></script>
-    <script src="./libs/leaflet/leaflet.js"></script>
+    <script src="{{ url_for('static', filename = './libs/cookies/js.cookie.js') }}"></script>
+    <script src="{{ url_for('static', filename = './libs/jquery/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = './libs/semantic-ui/semantic.min.js') }}"></script>
+    <script src="{{ url_for('static', filename = './js/requests.js') }}"></script>
+    <script src="{{ url_for('static', filename = './js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename = './libs/leaflet/leaflet.js') }}"></script>
   </body>
 </html>

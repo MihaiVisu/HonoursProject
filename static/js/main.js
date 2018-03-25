@@ -14,6 +14,7 @@ $(function() {
   var $foldsNumberInput = $('.folds-number input');
   var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
   var $normaliseBinCounts = $('.normalise-bins input:checked');
+  var $datasetDropdown = $('.classification-form .dataset .ui.dropdown');
 
   var $pusher = $('.pusher');
 
@@ -22,7 +23,7 @@ $(function() {
   var url = "http://localhost:8080";
 
   // local variables
-  var dataset = 2;
+  var dataset = 1;
 
   var binVals = [];
   for (var i = 0; i < 16; i++) {
@@ -75,6 +76,7 @@ $(function() {
     },
   });
 
+
   $('.kmeans-form .include-all-bins input').change(function() {
 
     if (this.checked) {
@@ -99,13 +101,6 @@ $(function() {
     }
   });
 
-  // on dataset radios change change dataset variable
-  $('.dataset .checkbox').checkbox({
-    onChecked: function() {
-      dataset = $(this).data('val');
-    }
-  });
-
   // get attributes
   $.getJSON(url+'/api_mihai/attributes/', function(data) {
     data.forEach(function(val) {
@@ -119,7 +114,7 @@ $(function() {
   $.getJSON(url+'/api_mihai/datasets/', function(data) {
     data.forEach(function(val) {
       $('.dataset .ui.dropdown .menu').append(
-        '<div class="item" data-value="'+val.name+'">'+val.name+'</div>'
+        '<div class="item" data-value="'+val.id+'">'+val.name+'</div>'
       );
     });
   });
@@ -171,7 +166,9 @@ $(function() {
   var pmVals = ['pm1', 'pm2_5', 'pm10'];
 
   $('.sidebar-trigger').click(function(){
-    $pusher.css('height','');
+    if (!$('.map-view').hasClass('active')) {
+      $pusher.css('height','');
+    }
     $('.ui.sidebar').sidebar({
       transition: 'scale down',
       dimPage: true,
@@ -232,12 +229,13 @@ $(function() {
     var environmentClustersNumber = $environmentClustersInput.val();
     var attrs = $clusterAttrsDropdown.dropdown('get value');
     var colors = envColors;
+    var dataset = $datasetDropdown.dropdown('get value');
 
 
     urbanEnvironmentsLegend.addTo(map);
 
     requestData(url+'/api_mihai/labelled_clustered_data/' + 
-      (dataset+1) + '/' +
+      (dataset) + '/' +
       locationClustersNumber + '/' +
       5, // 5 environment clusters 
       circles.unsupervisedLondonData, 'total', colors, binScale, "label", attrs, map);
@@ -263,11 +261,11 @@ $(function() {
     transportLegend.addTo(map);
 
     requestData(url+'/api_mihai/labelled_classified_data/' +
-      (dataset+1) + '/' +
+      (dataset) + '/' +
       classifier + '/' +
       normaliseBinCounts + '/' +
       includeUrbanEnvironments + '/' +
-      foldsNumber, circles.londonData, 'pm2_5', colors, pmScale, "label", attrs, map);
+      foldsNumber, circles.londonData, 'total', colors, binScale, "label", attrs, map);
   });
 
 //   var file = null;

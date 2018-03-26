@@ -701,11 +701,87 @@ In consequence, the number of discontinuities on a certain route has been taken 
 \subsection{Urban Environments Detection Applied on Other Modes of Transport}
 \label{subsec:urban-envs-on-modes-of-transport}
 
+Apart from the walking data gathered on the route around Meadows Park described in section \ref{sec:data-collection}, the urban environments detection method presented in \ref{subsec:generic-clustering} has been applied on other modes of transport, more exactly on cycling routes and bus journeys.
+
 \subsubsection*{Urban Environments Detection on a Bus Journey}
+
+Urban environments detection has been applied using both PM values and bin counts separately on the return bus journey from St Andrews Square in the city centre to Queensferry bridges. Figure \ref{fig:queensferry-urban-environments} shows the route taken and the data points labelled with their corresponding urban environments after applying clustering using the bin counts and PM values separately.
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{bus_envs_pm.png}
+    \caption{Urban environments detection when PM values were used for clustering.}
+    \label{fig:south-clerk-afternoon-pm}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{bus_envs_bins.png}
+    \caption{Urban environments detection when bin counts were used for clustering .}
+    \label{fig:south-clerk-afternoon-bins}
+  \end{subfigure}
+  \caption{Comparison between results obtained on the Queensferry bus route when PM values and bin counts were used for clustering separately.}
+  \label{fig:queensferry-urban-environments}
+\end{figure}
+
+As it could be observed, in the case of bin counts usage on the environments detection model, the transitions are smooth and clustering results are closer to a real scenario, as Princes Street and the junction between Princes Street and Queensferry Street are crowded zones that are often transited by buses. Moreover, there is a large number of bus stops on Queensferry Road and thus, corresponding data points were tagged as high traffic areas as the doors were held open at every stop and the traffic congestion created by the buses queueing increased pollution levels significantly and thus, the number of particles in each bin count.
+
 
 \subsubsection*{Urban Environments Detection on Cycling Routes}
 
+Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 and the second created by myself on the 26th of February.
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{urban_envs_aart_meijer_pm.png}
+    \caption{Urban environments detection using PM values for clustering on Aart Meijer's cycling route over the summer.}
+    \label{fig:feb-bike-urban-envs-pm}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{urban_envs_aart_meijer_bins.png}
+    \caption{Urban environments detection using bin counts for clustering on Aart Meijer's cycling route over the summer.}
+    \label{fig:feb-bike-urban-envs-bins}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{urban_env_feb_bike_pm.png}
+    \caption{Urban environments detection using PM values for clustering on the data collected on the february cycling route.}
+    \label{fig:feb-bike-urban-envs-pm}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{urban_env_feb_bike_bins.png}
+    \caption{Urban environments detection using bin counts for clustering on the data obtained on the february cycling route.}
+    \label{fig:feb-bike-urban-envs-bins}
+  \end{subfigure}
+  \caption{Comparison between results obtained on two different cycling routes when PM values and bin counts were used for clustering separately.}
+  \label{fig:bike-urban-envs}
+\end{figure}
+
+As it could be seen, in the case of the February cycling route, the clustering method using bin counts produced again smooth results that are also closer to a real scenario as opposed to the clustering method using PM values. More precisely, the entire zone outlined by Leamington Walk (a cycling path crossing through the park) has been labelled as a pedestrian path. Moreover, in the case of Aart Meijer's cycling route, Middle Meadow Walk was entirely labelled as a park path with edges tagged as pedestrian zones, while in the case of the PM values, a discontinuity in the transition between urban environments occurred in the same area.
+
+
 \subsubsection*{Number of Discontinuities}
+
+As to the case of the bus journey to the Queensferry bridges, there are again significantly less transition discontinuities from an environment to another when clustering on bin counts was applied compared to the case in which the PM values were used. Hence, usage of bin counts in the urban environments detection model proves to be again more robust as opposed to the usage of PM values. Furthermore, in the case of the cycling paths, there are less transition discontinuities between urban environments when applying clustering based on the bin counts as opposed to the case when PM values were utilised. Table \ref{table:discontinuities-bike-bus} presents the number of discontinuities for each dataset obtained when PM values and bin counts were used for the clustering problem separately.
+
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c ||} 
+ \hline
+ Dataset & PM Values Clustering & Bin Counts Clustering \\ [0.5ex] 
+ \hline\hline
+ Return Bus Journey to Queensferry & 2 & 0 \\ 
+ \hline
+ February Cycling Route & 3 & 4 \\
+ \hline
+ Aart Meijer's Cycling Route & 9 & 2 \\
+ \hline
+\end{tabular}
+\caption{This table presents the number of transition discontinuities occurring in the labels of the pedestrian dataset after applying unsupervised learning for urban environments detection.}
+\label{table:discontinuities-meadows}
+\end{table}
 
 
 \section{Comparison of Personal Exposure with Different Modes of Transport}

@@ -250,13 +250,14 @@ $(function() {
       }
     });
 
-    var colors = londonColors;
+    var colors = transportColors;
     var classifier = $classifierDropdown.dropdown('get value');
     var attrs = $classifyAttrsDropdown.dropdown('get value');
     var validationCriterion = $validationCriterionDropdown.dropdown('get value');
     var foldsNumber = $foldsNumberInput.val();
     var includeUrbanEnvironments = $includeUrbanEnvironments.length;
     var normaliseBinCounts = $normaliseBinCounts.length;
+    var dataset = $datasetDropdown.dropdown('get value');
 
     transportLegend.addTo(map);
 

@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{url}
+\usepackage{subcaption}
 
 \begin{document}
 
@@ -620,14 +621,9 @@ On the other hand, the classifier detected more polluted areas on the northern s
 
 In this set of experiments regarding urban environment detection, the PM 1, PM 2.5 and PM 10 values collected on the same route were taken into consideration. Figures \ref{fig:urban_midday_pm} and \ref{fig:urban_afternoon_pm} present the urban environments that were detected for the midday and afternoon datasets respectively, after applying the generalised classifier based on locality preservation, also mentioned in \ref{subsec:locality-preservation-results}.
 
-In the case of the southern part of the route, the majority of the data points were again tagged as park paths and pedestrian areas for both times of the day. 
+In the case of the southern part of the route, the majority of the data points were again tagged as park paths and pedestrian areas for both times of the day. However, on the left side of the North Meadow Walk there are more data points labelled as pedestrian zones in the afternoon dataset compared to one created during midday. This situation outlined similar results to the ones when the bin counts were used for clustering instead. This suggests that in overall, over the 5 days of scanning, that part of the route is more polluted in the afternoon than at lunch time. Moreover, higher pollution results were registered at the crossroads between Melville Drive and Argyle Place during the afternoon scanning sessions, as most of the labels in that place were tagged as pedestrian area.
 
 As to the northern part of the route, the results outlined areas that were on average more polluted in the afternoon than at midday (the crossroads between Nicholson Street and West Nicholson Street, along with Tollcross area). However, some parts such as the upper side of the Middle Meadow Walk and the north-western side of George Square were labelled as high traffic medium and areas, which in reality are pedestrian alleys. Moreover, the crossroads between Earl Grey Street, Home Street, Lauriston Place and Broughton Street in Tollcross were labelled as pedestrian areas at lunch time and quiet areas in the afternoon.
-
-\subsubsection*{Bin Counts Against PM Values Classification}
-
-As the results obtained by the unsupervised model after classifying the inputs based on the bin counts and PM values respectively differ significantly, a debate discussing the differences is necessary. First, it could be observed that in the case of the afternoon dataset, the bin counts prove to be much more sensitive as for the northern side of the route, the classifier detected areas of higher pollution (medium traffic areas on Lauriston Place and Broughton Street and high traffic zones around crowded bus stations on Lauriston Place).  In addition, the upper side of Melville Drive has been classified entirely as a medium traffic area when PM values were taken into consideration, in contrast with the case when the bin counts were used and the alley was labelled as a quiet area. Moreover, the path crossing along the edge of St. Patrick square (between Nicholson Street and Clerk Street), which is usually a medium traffic street at peak times has been labelled as a pedestrian area in the case of the PM values. In contrast, the same area has been tagged as a quiet to medium traffic zone when the clustering model used the bin values as main attributes.
-
 
 
 \begin{figure}[h!]
@@ -643,6 +639,74 @@ As the results obtained by the unsupervised model after classifying the inputs b
   \caption{This map presents the urban environments detected on the afternoon dataset after applying K-means clustering first on the coordinates and then on the PM values of the data points.}
   \label{fig:urban_afternoon_pm}
 \end{figure}
+
+\subsubsection*{General Difference of Results at Different Day Times}
+
+From the results obtained regarding urban environment detection at different times of the day, it could be observed that the moment of the day at which the data collection process is performed represents a major factor in a realistic detection of urban environments in key areas of a route. For instance, it has been shown that a certain part of a street, such as a crowded bus station or a junction can be more crowded at peak times (17:30-18:30) than during midday (13:30-14:30) and hence, the pollution levels are much higher, which results in data points tagged as medium and high traffic areas.
+
+The following subsection (\ref{subsec:bin-counts-pm-vals}) outlines the differences in the results obtained when the bin counts were considered for clustering as opposed to the case when the PM values were used instead.
+
+\subsection{Bin Counts Against PM Values Classification}
+\label{subsec:bin-counts-pm-vals}
+
+As the results obtained by the unsupervised model after classifying the inputs based on the bin counts and PM values respectively differ significantly, a debate discussing the differences is necessary. 
+
+\subsubsection*{Afternoon Dataset}
+
+First, it could be observed that in the case of the afternoon dataset, the bin counts prove to be much more sensitive as for the northern side of the route, the classifier detected areas of higher pollution (medium traffic areas on Lauriston Place and Broughton Street and high traffic zones around crowded bus stations on Lauriston Place).  In addition, the upper side of Middle Meadow Walk has been classified entirely as a medium traffic area when PM values were taken into consideration, in contrast with the case when the bin counts were used and the alley was labelled as a quiet area. Moreover, the path crossing along the edge of St. Patrick square (between Nicholson Street and Clerk Street), which is usually a medium traffic street at peak times has been labelled as a pedestrian area in the case of the PM values (Figure \ref{fig:south-clerk-afternoon-pm}). In contrast, the same area has been tagged as a quiet to medium traffic zone when the clustering model used the bin values as main attributes (Figure \ref{fig:south-clerk-afternoon-bins}).
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{south_clerk_afternoon_pm.png}
+    \caption{Urban environments detection when PM values were used for clustering.}
+    \label{fig:south-clerk-afternoon-pm}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{south_clerk_afternoon_bins.png}
+    \caption{Urban environments detection when bin counts were used for clustering .}
+    \label{fig:south-clerk-afternoon-bins}
+  \end{subfigure}
+  \caption{Comparison between results on South Clerk Street when PM values and bin counts were used for clustering on the afternoon dataset separately.}
+  \label{fig:south-clerk-comparison}
+\end{figure}
+
+
+\subsubsection*{Midday Dataset}
+
+In the case of the midday dataset, it could be observed that the bin counts are again more sensitive in the norther side of the route as results representing higher pollution levels have been registered. More precisely, Tollcross junction outlined pedestrian areas (low pollution level) and Lauriston Place outlined mostly medium traffic zones around crowded bus stations when PM values were used for clustering. On the other hand, when bin counts were utilised, higher pollution levels were registered in the same area, namely medium traffic area in Tollcross and high traffic zones around crowded bus stations on Lauriston Place. The latter results obtained are closer to a real scenario on average, as Lauriston Place and the crossroads in Tollcross are usually crowded zones.
+
+\subsubsection*{Number of Discontinuities as a Validation Measure}
+
+As it could be observed in Figure \ref{fig:south-clerk-comparison}, a discontinuity in the resulted labels has been obtained in the case of urban environments clustering when PM values were used for the evening dataset. More precisely, a discontinuous transition from a medium and high polluted environment to a low pollution zone (pedestrian area in this case) occurred on a main street of the city which is frequently transited by buses. Moreover, considering the sensor reading rate of 10 inputs per second and the walking speed at which data was collected, a transition from an urban environment to another should be smooth and generally all pollution levels should be detected within a certain interval.
+
+In consequence, the number of discontinuities on a certain route has been taken into account as a validation measure for urban environments detection when using different attributes. Table \ref{table:discontinuities-meadows} presents the number of discontinuities occurring on the midday and evening datasets after performing urban environments detection using PM values and bin counts as clustering attributes separately after applying location clustering for locality preservation. As it could be observed, the number of discontinuities is significantly higher in the case of PM values. Hence, this measure shows that bin counts are more reliable and produce more robust results regarding urban environments clustering on pedestrian data.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c | c | c ||} 
+ \hline
+ Dataset & PM Values Clustering & Bin Counts Clustering \\ [0.5ex] 
+ \hline\hline
+ Midday Dataset & 6 & 3 \\ 
+ \hline
+ Evening Dataset & 4 & 2 \\
+ \hline
+\end{tabular}
+\caption{This table shows the classification accuracies obtained after training the models using the specified attributes and classification methods for training separately. K-Fold cross validation with 5 folds was used for obtaining the validation accuracy values.}
+\label{table:discontinuities-meadows}
+\end{table}
+
+
+\subsection{Urban Environments Detection Applied on Other Modes of Transport}
+\label{subsec:urban-envs-on-modes-of-transport}
+
+\subsubsection*{Urban Environments Detection on a Bus Journey}
+
+\subsubsection*{Urban Environments Detection on Cycling Routes}
+
+\subsubsection*{Number of Discontinuities}
+
 
 \section{Comparison of Personal Exposure with Different Modes of Transport}
 

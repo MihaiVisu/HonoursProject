@@ -359,7 +359,7 @@ As it could be observed in Figure \ref{fig:norm-bins}, after normalising the val
 
 \subsection{Spatial Analysis of PM Data}
 
-As GPS information is made available by the Android application that collects readings of sensors, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualization tool described thoroughly in \ref{sec:data-visualisation-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
+As GPS information is made available by the Android application that collects readings of sensors, a spatial analysis has also been performed on all datasets in order to ease visualisation of urban environment clusters, as well as modes of transport classification predictions performed by the models. The visualisation is performed through a data visualization tool described thoroughly in \ref{sec:data-visualization-tool}. The tool consists of a web interface containing a map which plots the predictions of the data points, as well as a menu allowing the user to tweak custom classification models by choosing between different classification methods and attributes. Moreover, GPS data was used for a more generic approach of detecting urban environments described in \ref{subsec:generic-clustering}.
 
 
 \section{Unsupervised Learning for Urban Environments Detection}
@@ -378,7 +378,7 @@ There might be cases in which only the absolute values and counts of particulate
 
 \subsubsection*{Description of Methodology involving Locality Preservation}
 
-K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points and hence, all points within close proximity of each other will be aggregated. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points and Algorithm \ref{alg:k-means-locality} outlines the pseudo-code utilised.
+In a similar project involving urban environments detection in Edinburgh, \cite{Kotsev2015} proposes a solution in which K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points and hence, all points within close proximity of each other will be aggregated. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points and Algorithm \ref{alg:k-means-locality} outlines the pseudo-code utilised.
 
 \begin{figure}[h!]
   \center
@@ -404,9 +404,11 @@ K-means clustering is applied twice in a row. First, location-based clustering i
  \label{alg:k-means-locality}
 \end{algorithm}
 
+In his project, \cite{Kotsev2015} utilises only the values of bin 0 for the urban environments detection as it represents the most dominant values among all 16 bin counts. However, relying on only one attribute among the 16 bin counts would reduce the information provided from the sensors significantly and hence, misleading results would be produced in certain cases. Thus, experiments utilising all 16 bin counts and PM values respectively are performed separately and obtained results are compared with each other in \ref{subsec:locality-preservation-results}.
+
 \subsubsection*{Decision on the Optimal Number of Location Clusters}
 
-With the latest firmware installed on the AirSpeck device, the sensors collect air quality related information at a rate of one input every 10 seconds. Hence
+With the latest firmware installed on the AirSpeck device, the sensors collect air quality related information at a rate of one input every 10 seconds. Moreover, in his thesis, \cite{Kotsev2015} uses 50 location clusters on a dataset of around 1846 inputs, so he was sampling the area by using approximately 36 data points per location cluster. However, the firmware installed in the OPC device at that point was registering sensor readings every second, namely one input per second was registered and hence, the density of points in a location was higher ten times higher. Hence,  in the current case regarding the experiments carried out at walking speed around the Meadows route, each area was sampled by using around 15 data points per location cluster instead, because the same route had been crossed for 5 consecutive days during the data collection session. Therefore, at an average walking speed of 1.4 m/s, a journey would be sampled in smaller parts of around 15 metres length each.
 
 \section{Supervised Learning for Modes of Transport Classification}
 
@@ -704,17 +706,17 @@ In the case of the midday dataset, it could be observed that the bin counts are 
 
 As it could be observed in Figure \ref{fig:south-clerk-comparison}, a discontinuity in the resulted labels has been obtained in the case of urban environments clustering when PM values were used for the evening dataset. More precisely, a discontinuous transition from a medium and high polluted environment to a low pollution zone (pedestrian area in this case) occurred on a main street of the city which is frequently transited by buses. Moreover, considering the sensor reading rate of 10 inputs per second and the walking speed at which data was collected, a transition from an urban environment to another should be smooth and generally all pollution levels should be detected within a certain interval.
 
-In consequence, the number of discontinuities on a certain route has been taken into account as a validation measure for urban environments detection when using different attributes. Table \ref{table:discontinuities-meadows} presents the number of discontinuities occurring on the midday and evening datasets after performing urban environments detection using PM values and bin counts as clustering attributes separately after applying location clustering for locality preservation. As it could be observed, the number of discontinuities is significantly higher in the case of PM values. Hence, this measure shows that bin counts are more reliable and produce more robust results regarding urban environments clustering on pedestrian data.
+In consequence, the number of discontinuities on a certain route has been taken into account as a validation measure for urban environments detection when using different attributes. Table \ref{table:discontinuities-meadows} presents the number of discontinuities occurring on the midday and evening datasets after performing urban environments detection using PM values and bin counts as clustering attributes separately , as well as values of bin 0 alone as proposed by Konstantin Kotsev in \cite{Kotsev2015}after applying location clustering for locality preservation. As it could be observed, the number of discontinuities is significantly higher in the case of PM values. Moreover, in the case when only bin 0 was used for clustering, the number of discontinuities increased for both datasets. Hence, this measure shows that the usage of all bin counts is more reliable and produces more robust results regarding urban environments clustering on pedestrian data.
 
 \begin{table}[h!]
 \centering
- \begin{tabular}{||c | c | c ||} 
+ \begin{tabular}{||c | c | c | c||} 
  \hline
- Dataset & PM Values Clustering & Bin Counts Clustering \\ [0.5ex] 
+ Dataset & PM Values & All Bin Counts & Bin 0 \\ [0.5ex] 
  \hline\hline
- Midday Dataset & 6 & 3 \\ 
+ Midday Dataset & 6 & 3  & 4 \\ 
  \hline
- Evening Dataset & 4 & 2 \\
+ Evening Dataset & 6 & 4 & 5 \\
  \hline
 \end{tabular}
 \caption{This table presents the number of transition discontinuities occurring in the labels of the pedestrian dataset after applying unsupervised learning for urban environments detection.}
@@ -735,13 +737,13 @@ Urban environments detection has been applied using both PM values and bin count
   \begin{subfigure}[t]{\textwidth}
     \includegraphics[width=\textwidth]{bus_envs_pm.png}
     \caption{Urban environments detection when PM values were used for clustering.}
-    \label{fig:south-clerk-afternoon-pm}
+    \label{fig:queensferry-env-pm}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{\textwidth}
     \includegraphics[width=\textwidth]{bus_envs_bins.png}
     \caption{Urban environments detection when bin counts were used for clustering .}
-    \label{fig:south-clerk-afternoon-bins}
+    \label{fig:queensferry-env-bins}
   \end{subfigure}
   \caption{Comparison between results obtained on the Queensferry bus route when PM values and bin counts were used for clustering separately.}
   \label{fig:queensferry-urban-environments}
@@ -758,13 +760,13 @@ Furthermore, urban environments clustering has also been applied on two datasets
   \begin{subfigure}[t]{0.5\textwidth}
     \includegraphics[width=\textwidth]{urban_envs_aart_meijer_pm.png}
     \caption{Urban environments detection using PM values for clustering on Aart Meijer's cycling route over the summer.}
-    \label{fig:feb-bike-urban-envs-pm}
+    \label{fig:meijer-bike-urban-envs-pm}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.5\textwidth}
     \includegraphics[width=\textwidth]{urban_envs_aart_meijer_bins.png}
     \caption{Urban environments detection using bin counts for clustering on Aart Meijer's cycling route over the summer.}
-    \label{fig:feb-bike-urban-envs-bins}
+    \label{fig:meijer-bike-urban-envs-bins}
   \end{subfigure}
   \hfill
   \begin{subfigure}[t]{0.5\textwidth}

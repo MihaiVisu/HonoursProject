@@ -1,9 +1,10 @@
 
 % to choose your degree
 % please un-comment just one of the following
-\documentclass[bsc,frontabs,twoside,singlespacing,parskip,deptreport]{infthesis}     % for BSc, BEng etc.
+\documentclass[bsc,frontabs,twoside,singlespacing, parskip,deptreport]{infthesis}     % for BSc, BEng etc.
 % \documentclass[minf,frontabs,twoside,singlespacing,parskip,deptreport]{infthesis}  % for MInf
 
+\usepackage[boxruled]{algorithm2e}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{url}
@@ -375,7 +376,9 @@ As a first version of the method, a K-means clustering algorithm is proposed as 
 
 There might be cases in which only the absolute values and counts of particulate matter would not be sufficient for a robust clustering of urban environments. As it could be seen in Figure \ref{fig:time_series_meadows}, there is a significant number of individual spikes in both the PM values and bin counts  from time to time, which would lead to a misclassification of the specific data points. Therefore, in order to generalise the environment type detection, a new approach is proposed with the aim of addressing these edge cases of misclassified points and preserving the same urban environment in a certain area. 
 
-Thus, K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points.
+\subsubsection*{Description of Methodology involving Locality Preservation}
+
+K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points and hence, all points within close proximity of each other will be aggregated. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points and Algorithm \ref{alg:k-means-locality} outlines the pseudo-code utilised.
 
 \begin{figure}[h!]
   \center
@@ -383,6 +386,27 @@ Thus, K-means clustering is applied twice in a row. First, location-based cluste
   \caption{This diagram shows the pipeline of the unsupervised learning method for urban environments detection, applied twice on the dataset.}
   \label{fig:clustering-twice}
 \end{figure}
+
+\begin{algorithm}[h!]
+ \KwData{input data points from the environment in CSV format}
+ \KwResult{data points with corresponding urban environment labels}
+ initialization\;
+ set \texttt{numberOfLocationClusters}\;
+ set \texttt{attributes} to perform clustering on\;
+ \tcp{Label the points with corresponding location clusters}
+ \texttt{clusteredPoints} $ \leftarrow $ \texttt{KMeans}(coordinates of data points)\;
+ calculate means of attributes for all points in each location cluster\;
+ environmentClusters $\leftarrow$ \texttt{KMeans}(mean attributes of \texttt{clusteredPoints})\;
+ \For{\texttt{cluster} in \texttt{clusteredPoints}}{
+   apply the environment label to each point in \texttt{cluster}
+ }
+ \caption{Pseudo-code of methodology used for urban environments clustering.}
+ \label{alg:k-means-locality}
+\end{algorithm}
+
+\subsubsection*{Decision on the Optimal Number of Location Clusters}
+
+With the latest firmware installed on the AirSpeck device, the sensors collect air quality related information at a rate of one input every 10 seconds. Hence
 
 \section{Supervised Learning for Modes of Transport Classification}
 
@@ -780,7 +804,7 @@ As to the case of the bus journey to the Queensferry bridges, there are again si
  \hline
 \end{tabular}
 \caption{This table presents the number of transition discontinuities occurring in the labels of the pedestrian dataset after applying unsupervised learning for urban environments detection.}
-\label{table:discontinuities-meadows}
+\label{table:discontinuities-bike-bus}
 \end{table}
 
 

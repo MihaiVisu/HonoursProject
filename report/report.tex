@@ -195,7 +195,7 @@ To begin with, the Mobile Exposure Monitor transmits sensor readings to the Andr
 
 During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
-Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the afternoon between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
+Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the evening between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
 
 \begin{figure}[h]
   \center
@@ -342,7 +342,7 @@ As it could be observed in the third diagram of Figure \ref{fig:time_series_lond
   \label{fig:time_series_meadows}
 \end{figure}
 
-As it could be observed in Figure \ref{fig:time_series_meadows}, there are more frequent spikes in the afternoon dataset than in midday, meaning that traffic intensity was on average higher at that time of the day. Moreover, the bin values time series diagrams show longer intervals of time when the values are high, after which they suddenly decrease and stay at a certain level both in the afternoon and during midday. For instance, between 17:17:00 and 17:22:00, the average values of bin 0 are much higher than the values between 17:22:00 and 17:37:00. After that point, they begin to slowly increase again, which suggest that a change in the urban environment is occurring. As to the values of PM1, PM2.5 and PM10, the latter has the most dominant values, however no detectable change of the pattern in time could be observed, especially in the dataset containing data collected during midday, where most of the data points present values between 0 and 20 with a spike at about 13:07:00.
+As it could be observed in Figure \ref{fig:time_series_meadows}, there are more frequent spikes in the evening dataset than in midday, meaning that traffic intensity was on average higher at that time of the day. Moreover, the bin values time series diagrams show longer intervals of time when the values are high, after which they suddenly decrease and stay at a certain level both in the evening and during midday. For instance, between 17:17:00 and 17:22:00, the average values of bin 0 are much higher than the values between 17:22:00 and 17:37:00. After that point, they begin to slowly increase again, which suggest that a change in the urban environment is occurring. As to the values of PM1, PM2.5 and PM10, the latter has the most dominant values, however no detectable change of the pattern in time could be observed, especially in the dataset containing data collected during midday, where most of the data points present values between 0 and 20 with a spike at about 13:07:00.
 
 \subsection{Pattern Comparison for Different Modes of Transport}
 
@@ -593,18 +593,18 @@ The new data upload tool is responsible for handling new data that is uploaded b
 
 \section{Detection of Urban Environments}
 
-One main set of experiments regarding detection of urban environments has been performed mostly using the dataset created during the one week data collection session around the Meadows in December (Figure \ref{fig:december_route}). First, the entire dataset was split in two subsets, the former one consisting of all data collected during midday and the latter one containing all data points gathered in the afternoon, as described in subsection \ref{subsec:training-dataset}.
+One main set of experiments regarding detection of urban environments has been performed mostly using the dataset created during the one week data collection session around the Meadows in December (Figure \ref{fig:december_route}). First, the entire dataset was split in two subsets, the former one consisting of all data collected during midday and the latter one containing all data points gathered in the evening, as described in subsection \ref{subsec:training-dataset}.
 
 \subsection{K-Means Clustering on PM Data}
 
 As presented in subsection \ref{subsec:k-means-methodology}, an unsupervised learning approach using K-means clustering has been taken into account for urban environment detection. At first, clustering has been applied directly on the raw values of the bin counts and particulate matter values separately.
 
-Figure \ref{fig:urban_afternoon_bins_no_loc.png} shows a spatial representation of the urban environments obtained on the afternoon dataset after applying a K-means classifier on the bin counts directly. As it could be observed, no visible pattern is obtained and the points are randomly clustered based on the values of the bin counts. The majority of the data points are labelled as pedestrian areas with quiet,  medium and high traffic area-tagged inputs in between.
+Figure \ref{fig:urban_afternoon_bins_no_loc.png} shows a spatial representation of the urban environments obtained on the evening dataset after applying a K-means classifier on the bin counts directly. As it could be observed, no visible pattern is obtained and the points are randomly clustered based on the values of the bin counts. The majority of the data points are labelled as pedestrian areas with quiet,  medium and high traffic area-tagged inputs in between.
 
 \begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{urban_afternoon_bins_no_loc.png}
-  \caption{This map presents the urban environments detected on the afternoon dataset after applying K-means directly on the bin counts of the data points.}
+  \caption{This map presents the urban environments detected on the evening dataset after applying K-means directly on the bin counts of the data points.}
   \label{fig:urban_afternoon_bins_no_loc.png}
 \end{figure}
 
@@ -612,21 +612,21 @@ Figure \ref{fig:urban_afternoon_bins_no_loc.png} shows a spatial representation 
 \subsection{Generalisation of Clustering Approach through Locality Preservation}
 \label{subsec:locality-preservation-results}
 
-In order to obtain a more solid visual representation of an urban environment in a specific area, locality preservation has been added (method is described in subsection \ref{subsec:generic-clustering}) by using another K-means classifier prior to the urban environments clustering on the coordinates obtained from the spatial information of the data points. Figure \ref{fig:urban_afternoon_bins} shows the new visual representation of the urban environments after applying locality preservation prior to clustering of the bin counts on the afternoon dataset (same dataset as the one represented in Figure \ref{fig:urban_afternoon_bins_no_loc.png}). In this case, the labelled points visually outline urban environments as parts of the roads contained in the route taken. Further discussion on the obtained environments and a comparison between clustering on PM values against bin counts are presented in subsection \ref{subsec:afternoon-midday-results}.
+In order to obtain a more solid visual representation of an urban environment in a specific area, locality preservation has been added (method is described in subsection \ref{subsec:generic-clustering}) by using another K-means classifier prior to the urban environments clustering on the coordinates obtained from the spatial information of the data points. Figure \ref{fig:urban_afternoon_bins} shows the new visual representation of the urban environments after applying locality preservation prior to clustering of the bin counts on the evening dataset (same dataset as the one represented in Figure \ref{fig:urban_afternoon_bins_no_loc.png}). In this case, the labelled points visually outline urban environments as parts of the roads contained in the route taken. Further discussion on the obtained environments and a comparison between clustering on PM values against bin counts are presented in subsection \ref{subsec:afternoon-midday-results}.
 
 
-\subsection{Comparison between Afternoon and Midday Environments}
+\subsection{Comparison between Evening and Midday Environments}
 \label{subsec:afternoon-midday-results}
 
-This subsection presents an analysis of the results obtained after performing urban environments detection on the midday and afternoon datasets separately, taking into consideration different sets of attributes.
+This subsection presents an analysis of the results obtained after performing urban environments detection on the midday and evening datasets separately, taking into consideration different sets of attributes.
 
 \subsubsection*{Clustering on Bin Counts}
 
-Figures \ref{fig:urban_afternoon_bins} and \ref{fig:urban_midday_bins} present the urban environments detected based on bin counts clustering for the afternoon and midday datasets respectively, after applying the generalised classifier using locality preservation.
+Figures \ref{fig:urban_afternoon_bins} and \ref{fig:urban_midday_bins} present the urban environments detected based on bin counts clustering for the evening and midday datasets respectively, after applying the generalised classifier using locality preservation.
 
 As it could be observed, the south side of the route is similar in both cases, with the majority of inputs labelled as pedestrian areas and park paths. This result might be due to the fact that traffic was not as intense on Melville Drive as in other parts of the route and the road crosses along the border of the Meadows Park. Moreover, the central area between Middle Meadow Walk and North Meadow Walk (two separate alleys crossing the Meadows Park) has been labelled as park path in the case of both times of the day, which shows that pollution was always low in the middle of the park during the data collection session.
 
-On the other hand, the classifier detected more polluted areas on the northern side of the route in the case of the afternoon dataset compared to inputs gathered during midday, namely on Tollcross, Lauriston Place and Teviot Place. This result emphasises the higher pollution during a peak hour (between 17:30 and 18:30) when most people commute from work. In addition, at both times of the day, medium and high traffic areas have been detected around crowded bus stations both on Nicholson Street and Lauriston Place. Furthermore, pollution spikes can be visualised at street junctions such as the Tollcross area (crossroads between Earl Grey Street, Home Street and Lauriston Place), Teviot Place and the crossroads between South Clerk Street and Bernard Terrace.
+On the other hand, the classifier detected more polluted areas on the northern side of the route in the case of the evening dataset compared to inputs gathered during midday, namely on Tollcross, Lauriston Place and Teviot Place. This result emphasises the higher pollution during a peak hour (between 17:30 and 18:30) when most people commute from work. In addition, at both times of the day, medium and high traffic areas have been detected around crowded bus stations both on Nicholson Street and Lauriston Place. Furthermore, pollution spikes can be visualised at street junctions such as the Tollcross area (crossroads between Earl Grey Street, Home Street and Lauriston Place), Teviot Place and the crossroads between South Clerk Street and Bernard Terrace.
 
 
 \begin{figure}[h!]
@@ -639,17 +639,17 @@ On the other hand, the classifier detected more polluted areas on the northern s
 \begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{urban_afternoon_bins.png}
-  \caption{This map presents the urban environments detected on the afternoon dataset after applying K-means clustering first on the coordinates of the data points and then on the bin counts of the data points.}
+  \caption{This map presents the urban environments detected on the evening dataset after applying K-means clustering first on the coordinates of the data points and then on the bin counts of the data points.}
   \label{fig:urban_afternoon_bins}
 \end{figure}
 
 \subsubsection*{Clustering on PM Values}
 
-In this set of experiments regarding urban environment detection, the PM 1, PM 2.5 and PM 10 values collected on the same route were taken into consideration. Figures \ref{fig:urban_midday_pm} and \ref{fig:urban_afternoon_pm} present the urban environments that were detected for the midday and afternoon datasets respectively, after applying the generalised classifier based on locality preservation, also mentioned in \ref{subsec:locality-preservation-results}.
+In this set of experiments regarding urban environment detection, the PM 1, PM 2.5 and PM 10 values collected on the same route were taken into consideration. Figures \ref{fig:urban_midday_pm} and \ref{fig:urban_afternoon_pm} present the urban environments that were detected for the midday and evening datasets respectively, after applying the generalised classifier based on locality preservation, also mentioned in \ref{subsec:locality-preservation-results}.
 
-In the case of the southern part of the route, the majority of the data points were again tagged as park paths and pedestrian areas for both times of the day. However, on the left side of the North Meadow Walk there are more data points labelled as pedestrian zones in the afternoon dataset compared to one created during midday. This situation outlined similar results to the ones when the bin counts were used for clustering instead. This suggests that in overall, over the 5 days of scanning, that part of the route is more polluted in the afternoon than at lunch time. Moreover, higher pollution results were registered at the crossroads between Melville Drive and Argyle Place during the afternoon scanning sessions, as most of the labels in that place were tagged as pedestrian area.
+In the case of the southern part of the route, the majority of the data points were again tagged as park paths and pedestrian areas for both times of the day. However, on the left side of the North Meadow Walk there are more data points labelled as pedestrian zones in the evening dataset compared to one created during midday. This situation outlined similar results to the ones when the bin counts were used for clustering instead. This suggests that in overall, over the 5 days of scanning, that part of the route is more polluted in the evening than at lunch time. Moreover, higher pollution results were registered at the crossroads between Melville Drive and Argyle Place during the evening scanning sessions, as most of the labels in that place were tagged as pedestrian area.
 
-As to the northern part of the route, the results outlined areas that were on average more polluted in the afternoon than at midday (the crossroads between Nicholson Street and West Nicholson Street, along with Tollcross area). However, some parts such as the upper side of the Middle Meadow Walk and the north-western side of George Square were labelled as high traffic medium and areas, which in reality are pedestrian alleys. Moreover, the crossroads between Earl Grey Street, Home Street, Lauriston Place and Broughton Street in Tollcross were labelled as pedestrian areas at lunch time and quiet areas in the afternoon.
+As to the northern part of the route, the results outlined areas that were on average more polluted in the evening than at midday (the crossroads between Nicholson Street and West Nicholson Street, along with Tollcross area). However, some parts such as the upper side of the Middle Meadow Walk and the north-western side of George Square were labelled as high traffic medium and areas, which in reality are pedestrian alleys. Moreover, the crossroads between Earl Grey Street, Home Street, Lauriston Place and Broughton Street in Tollcross were labelled as pedestrian areas at lunch time and quiet areas in the evening.
 
 
 \begin{figure}[h!]
@@ -662,7 +662,7 @@ As to the northern part of the route, the results outlined areas that were on av
 \begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{urban_afternoon_pm.png}
-  \caption{This map presents the urban environments detected on the afternoon dataset after applying K-means clustering first on the coordinates and then on the PM values of the data points.}
+  \caption{This map presents the urban environments detected on the evening dataset after applying K-means clustering first on the coordinates and then on the PM values of the data points.}
   \label{fig:urban_afternoon_pm}
 \end{figure}
 
@@ -677,9 +677,9 @@ The following subsection (\ref{subsec:bin-counts-pm-vals}) outlines the differen
 
 As the results obtained by the unsupervised model after classifying the inputs based on the bin counts and PM values respectively differ significantly, a debate discussing the differences is necessary. 
 
-\subsubsection*{Afternoon Dataset}
+\subsubsection*{Evening Dataset}
 
-First, it could be observed that in the case of the afternoon dataset, the bin counts prove to be much more sensitive as for the northern side of the route, the classifier detected areas of higher pollution (medium traffic areas on Lauriston Place and Broughton Street and high traffic zones around crowded bus stations on Lauriston Place).  In addition, the upper side of Middle Meadow Walk has been classified entirely as a medium traffic area when PM values were taken into consideration, in contrast with the case when the bin counts were used and the alley was labelled as a quiet area. Moreover, the path crossing along the edge of St. Patrick square (between Nicholson Street and Clerk Street), which is usually a medium traffic street at peak times has been labelled as a pedestrian area in the case of the PM values (Figure \ref{fig:south-clerk-afternoon-pm}). In contrast, the same area has been tagged as a quiet to medium traffic zone when the clustering model used the bin values as main attributes (Figure \ref{fig:south-clerk-afternoon-bins}).
+First, it could be observed that in the case of the evening dataset, the bin counts prove to be much more sensitive as for the northern side of the route, the classifier detected areas of higher pollution (medium traffic areas on Lauriston Place and Broughton Street and high traffic zones around crowded bus stations on Lauriston Place).  In addition, the upper side of Middle Meadow Walk has been classified entirely as a medium traffic area when PM values were taken into consideration, in contrast with the case when the bin counts were used and the alley was labelled as a quiet area. Moreover, the path crossing along the edge of St. Patrick square (between Nicholson Street and Clerk Street), which is usually a medium traffic street at peak times has been labelled as a pedestrian area in the case of the PM values (Figure \ref{fig:south-clerk-afternoon-pm}). In contrast, the same area has been tagged as a quiet to medium traffic zone when the clustering model used the bin values as main attributes (Figure \ref{fig:south-clerk-afternoon-bins}).
 
 \begin{figure}[h!]
   \begin{subfigure}[t]{0.5\textwidth}
@@ -693,7 +693,7 @@ First, it could be observed that in the case of the afternoon dataset, the bin c
     \caption{Urban environments detection when bin counts were used for clustering .}
     \label{fig:south-clerk-afternoon-bins}
   \end{subfigure}
-  \caption{Comparison between results on South Clerk Street when PM values and bin counts were used for clustering on the afternoon dataset separately.}
+  \caption{Comparison between results on South Clerk Street when PM values and bin counts were used for clustering on the evening dataset separately.}
   \label{fig:south-clerk-comparison}
 \end{figure}
 

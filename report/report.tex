@@ -229,13 +229,13 @@ Furthermore, Aart Meijer, an MSc student whose honours project involved air qual
 
 Apart from data gathered from different urban environments and by using different modes of transport with the aim of creating a balanced and annotated training dataset used in supervised learning methods for classification of means of transport, more data has been collected and labelled by other users of the AirSpeck device with the purpose of further validating the classification methods created. The classification results for the validation dataset are thoroughly described in \ref{subsec:results-urban-env-use}.
 
-As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry, Edinburgh, was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation. The final validation dataset created during this data collection session consists of 501 data points.
+As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry, Edinburgh, was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation. The final validation dataset created during this data collection session consists of 501 data points. In order to avoid any possible confusions in references to the validation sets, this dataset will be referred to as \textit{bus\_queensferry\_data}.
 
-Moreover, walking data was collected on the 28th of February by different subjects during the night around the Meadows Park and Nicholson Street in Edinburgh. The dataset created after this gathering session has a total number of 640 data points and all the inputs gathered were used for validation.
+Moreover, walking data was collected on the 28th of February by a different subject during the night around the Meadows Park and Nicholson Street in Edinburgh. The dataset created after this gathering session has a total number of 640 data points and all the inputs gathered were used for validation. In future experiments regarding modes of transport classification, this dataset will be referred to as \textit{night\_walk\_data}.
 
-Furthermore, new inputs were collected for validation on a train journey to London for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation.
+Furthermore, new inputs were collected for validation on a train journey to London by a different subject for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation. In future, this dataset will be referenced as \textit{train\_london\_march}.
 
-A separate set of 1278 bike tagged inputs that were collected by Aart Meijer during the summer of 2015 was taken only for validation. The route chosen for this data gathering session is highlighted in Figure \ref{fig:bike-validation-route}.
+A separate set of 1278 bike tagged inputs that were collected by Aart Meijer during the summer of 2015 was taken only for validation. The route chosen for this data gathering session is highlighted in Figure \ref{fig:bike-validation-route}. For further reference, this dataset will be nicknamed as \textit{bike\_summer\_route}.
 
 \begin{figure}[h!]
   \center
@@ -365,7 +365,7 @@ As GPS information is made available by the Android application that collects re
 \section{Unsupervised Learning for Urban Environments Detection}
 
 This section emphasises on the methodology performed for detection of different urban environments based on data analysis results explained in section \ref{sec:data-analysis}. The approach is done using unsupervised machine learning technique on several groups of attributes retrieved from sensor readings of the AirSpeck device.
-
+t
 \subsection{K-means Clustering on Particulate Matter Data}
 \label{subsec:k-means-methodology}
 
@@ -578,15 +578,44 @@ The front-end consists of three main parts which are further described in the fo
 
 \subsubsection*{Map Interface}
 
-The map interface is the main part where the results are displayed based on the spatial information that the data contains.  The map interface is built using the \texttt{LeafletJS} library \cite{leaflet}. Each data point is represented as a circle with the radius proportional to the total sum of bin counts. Each circle is coloured differently based on the corresponding mode of transport or urban environment that has been attached to each data point in the API response.
+The map interface is the main part where the results are displayed based on the spatial information that the data contains.  The map interface is built using the \texttt{LeafletJS} library \cite{leaflet}. Each data point is represented as a circle with the radius proportional to the total sum of bin counts. Each circle is coloured differently based on the corresponding mode of transport or urban environment that has been attached to each data point in the API response. Figure \ref{fig:map-interface} outlines the map interface which is used to visualise the results obtained based on the GPS information of the input data, after performing classification and clustering tasks from the classifiers interface.
+
+\begin{figure}[h!]
+  \includegraphics[width=\textwidth]{map-interface.png}
+  \caption{The main interface which implements a map tool used to visualize the results of the classification and clustering tasks based on the GPS information of the input data.}
+  \label{fig:map-interface}
+\end{figure}
 
 \subsubsection*{Classifiers Menu}
 
-The classifiers menu represents the main interface which offers the user the ability to customise their own classification model, either for the task of modes of transport classification or urban environments detection. Moreover, the user is able to either apply K-Fold cross validation with a custom number of folds on the training dataset and test the classification accuracy or select an entire dataset for validation and predict the corresponding labels based on the chosen classification task.
+The classifiers menu represents the main interface which offers the user the ability to customise their own classification model, either for the task of modes of transport classification or urban environments detection. Moreover, the user is able to either apply K-Fold cross validation with a custom number of folds on the training dataset and test the classification accuracy or select an entire dataset for validation and predict the corresponding labels based on the chosen classification task. Figure \ref{fig:classifiers-interface} presents the main interface which allows the user to configure the settings for the classification and clustering models and obtain visual results which are made visible on the map interface, as well as accuracy results in the case of modes of transport classification.
+
+\begin{figure}[h!]
+  \includegraphics[width=\textwidth]{classifiers-interface.png}
+  \caption{The main interface which allows the user to configure the classification and clustering models and perform both modes of transport classification and urban environment detection tasks on datasets.}
+  \label{fig:classifiers-interface}
+\end{figure}
 
 \subsubsection*{New Data Upload Tool}
 
-The new data upload tool is responsible for handling new data that is uploaded by the user in CSV format. The user is able to upload either unlabelled or labelled data with modes of transport tags. In the case of labelled inputs, the new dataset will be stored in the database as training data and the user has the ability to name it for future referencing. On the other hand, if the inputs are unlabelled, the user will be able to decide whether to perform clustering for urban environment detection or classification of modes of transport on the new data points. In the latter case, the CSV file will be uploaded from the classifiers menu and the data will be loaded on the back-end through \texttt{pandas} dataframes \cite{pandas}.
+The new data upload tool is responsible for handling new data that is uploaded by the user in CSV format. The user is able to upload either unlabelled or labelled data with modes of transport tags. In the case of labelled inputs, the new dataset will be stored in the database as training data and the user has the ability to name it for future referencing. On the other hand, if the inputs are unlabelled, the user will be able to decide whether to perform clustering for urban environment detection or classification of modes of transport on the new data points. In the latter case, the CSV file will be uploaded from the classifiers menu and the data will be loaded on the back-end through \texttt{pandas} dataframes \cite{pandas}. Figure \ref{fig:upload-tool} presents the interface of the data upload tool. The first input allows the user to either select a dataset which already exists to add the new data to or create a new one. Then, a file upload input is implemented which allows the user to upload new files containing data points in CSV format. In addition, by pressing on the sidebar icon situated on the left side of the title in this case, the main menu of the data visualisation tool will appear (FIgure \ref{fig:menu}).
+
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{menu.png}
+    \caption{The main menu of the interface which is accessed by pressing on the menu icon situated on the left side of the titles.}
+    \label{fig:menu}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{upload-tool.png}
+    \caption{Data upload tool implemented on the front-end interface which is used to upload new data points in the database and label the inputs to a corresponding dataset.}
+    \label{fig:upload-tool}
+  \end{subfigure}
+  \caption{New data upload tool and the general menu of the interface.}
+  \label{fig:upload-tool-and-menu}
+\end{figure}
 
 
 \chapter{Results}
@@ -955,18 +984,26 @@ As it was presented in subsection \ref{subsec:test-data-collection}, more data t
  \hline
  Validation Dataset & Dataset Size & Accuracy 1 & Accuracy 2 \\ [0.5ex] 
  \hline\hline
- Bicycle Dataset & 1278 &  91.8\% & 91.6\% \\ 
+ \textit{bike\_summer\_route} & 1278 &  91.8\% & 91.6\% \\ 
  \hline
- Queensferry Bus Dataset & 501 & 95.6\% & 90.3\% \\ 
+ \textit{bus\_queensferry\_data} & 501 & 95.6\% & 90.3\% \\ 
  \hline
- Night Walk Dataset & 640 & 93.8\% & 93.3\% \\
+ \textit{night\_walk\_data} & 640 & 93.8\% & 93.3\% \\
  \hline
- London Train Dataset & 600 & 93.9\% & 94.3\% \\ 
+ \textit{train\_london\_march} & 600 & 93.9\% & 94.3\% \\ 
  \hline
 \end{tabular}
 \caption{This table shows the results obtained after predicting the mean of transport labels for data points from the validation datasets separately. \textit{Accuracy 1} represents the validation accuracy obtained by utilising the methodology which normalises the bin counts. \textit{Accuracy 2} shows the validation accuracy obtained by utilising the default methodology which uses the raw values of the bin counts.}
 \label{table:validation-results}
 \end{table}
+
+\section{Data Related Issues Encountered}
+
+During data collection sessions there were several edge cases regarding input labelling with the corresponding modes of transport, which would lead to a decrease of the final classification accuracy. More exactly, the transition moment of switching from a mode of transport to another is hard to interpret in many cases and makes labelling of data points with the corresponding means of transport harder. For instance, during the bus journey to Queensferry bridges, the bus stood at one stop with doors open for approximately 10 minutes and the sensor was placed at the entrance while I was queueing to enter. In this case, it would be hard for the classifier to predict the mode of transport label correctly. 
+
+Furthermore, during labelling procedures carried out for new data points gathered by other subjects, it was difficult to detect the exact moments when a switch between two different modes of transport happened as switching times were approximated. Hence, there is a high probability of having a small number inputs being incorrectly labelled in the training and validation sets.
+
+
 
 \chapter{Conclusions}
 

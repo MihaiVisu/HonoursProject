@@ -176,7 +176,7 @@ In order to study personal exposure in all cases, six different exposure situati
 
 \item Train - data was also gathered while travelling by train on different routes (From Edinburgh to London and Manchester respectively).
 
-\item Bicycle - bicycle data is composed of two different datasets. One represents data that was collected during the summer of 2015 by Aart Meijer, an MSc student while commuting to university by bicycle. Another dataset was gathered in February, during the snow storm. More details regarding the paths are emphasised in \ref{sec:data-collection}.
+\item Bicycle - bicycle data is composed of two different datasets. One represents data that was collected during the summer of 2015 by Aart Meijer \cite{Meijer2015}, an MSc student while commuting to university by bicycle. Another dataset was gathered in February, during the snow storm. More details regarding the paths are emphasised in \ref{sec:data-collection}.
 
 \item Bus - data was also collected while travelling by bus on different routes around Edinburgh which will be further detailed in \ref{sec:data-collection}. One of the bus routes on which scanning was performed is shown in Figure \ref{fig:bus_route}.
 
@@ -193,14 +193,14 @@ To begin with, the Mobile Exposure Monitor transmits sensor readings to the Andr
 \subsection{Training Dataset Creation}
 \label{subsec:training-dataset}
 
-During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
+During the project development, an annotated dataset with modes of transport used at each point was created for data analysis. Each data point contains information about the temperature, humidity, GPS coordinates and accuracy, along with PM1, PM2.5, PM10 values and particulate matter counts split into 16 bins. Most of the data was collected in the first semester, more exactly during November and December 2017. First data collection was performed during a train journey from Edinburgh to Manchester, on a route between several train stations for one hour.
 
-Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the evening between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
+Moreover, a major phase of data collection involving the analysis of different types of urban environments occurred between the 3rd and the 8th of December 2017. More precisely, data capturing particulate matter counts had been collected using the MEM, by walking on a fixed route around meadows based on a daily schedule for a week (Figure \ref{fig:december_route}). The route was scanned twice a day, both during lunch time between 13:00 and 14:00 and in the evening between 17:30 and 18:30, so that the same path would be examined at different times of the day involving different intensities of the traffic.
 
 \begin{figure}[h]
   \center
   \includegraphics[width=\columnwidth]{december_route.png} 
-  \caption{This map of Meadows region emphasises the route that was scanned while walking in December based on the schedule mentioned.}
+  \caption{This map of Meadows region emphasises the route that was scanned while walking in December 2017 based on the schedule mentioned.}
   \label{fig:december_route}
 \end{figure}
 
@@ -220,7 +220,7 @@ Furthermore, Aart Meijer, an MSc student whose honours project involved air qual
 \begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{bike_feb.png} 
-  \caption{This map emphasises the route that was scanned while taking the bicycle on the 26th of February, during the beginning of the snow storm.}
+  \caption{This map emphasises the route that was scanned while taking the bicycle on the 26th of February 2018, during the beginning of the snow storm.}
   \label{fig:february-bike}
 \end{figure}
 
@@ -233,7 +233,7 @@ As previously mentioned in \ref{subsec:training-dataset}, a part of the data poi
 
 Moreover, walking data was collected on the 28th of February by a different subject during the night around the Meadows Park and Nicholson Street in Edinburgh. The dataset created after this gathering session has a total number of 640 data points and all the inputs gathered were used for validation. In future experiments regarding modes of transport classification, this dataset will be referred to as \textit{night\_walk\_data}.
 
-Furthermore, new inputs were collected for validation on a train journey to London by a different subject for about three hours on the 15th of March. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation. In future, this dataset will be referenced as \textit{train\_london\_march}.
+Furthermore, new inputs were collected for validation on a train journey to London by a different subject for about three hours on the 15th of March 2018. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation. In future, this dataset will be referenced as \textit{train\_london\_march}.
 
 A separate set of 1278 bike tagged inputs that were collected by Aart Meijer during the summer of 2015 was taken only for validation. The route chosen for this data gathering session is highlighted in Figure \ref{fig:bike-validation-route}. For further reference, this dataset will be nicknamed as \textit{bike\_summer\_route}.
 
@@ -622,7 +622,7 @@ The new data upload tool is responsible for handling new data that is uploaded b
 
 \section{Detection of Urban Environments}
 
-One main set of experiments regarding detection of urban environments has been performed mostly using the dataset created during the one week data collection session around the Meadows in December (Figure \ref{fig:december_route}). First, the entire dataset was split in two subsets, the former one consisting of all data collected during midday and the latter one containing all data points gathered in the evening, as described in subsection \ref{subsec:training-dataset}.
+One main set of experiments regarding detection of urban environments has been performed mostly using the dataset created during the one week data collection session around the Meadows in December 2017 (Figure \ref{fig:december_route}). First, the entire dataset was split in two subsets, the former one consisting of all data collected during midday and the latter one containing all data points gathered in the evening, as described in subsection \ref{subsec:training-dataset}.
 
 \subsection{K-Means Clustering on PM Data}
 
@@ -783,7 +783,7 @@ As it could be observed, in the case of bin counts usage on the environments det
 
 \subsubsection*{Urban Environments Detection on Cycling Routes}
 
-Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 and the second created by myself on the 26th of February.
+Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 (Figure \ref{fig:meijer-bike-urban-envs}) and the second created by myself on the 26th of February 2018 (Figure \ref{fig:feb-bike-urban-envs}).
 
 \begin{figure}[h!]
   \begin{subfigure}[t]{0.5\textwidth}
@@ -794,23 +794,27 @@ Furthermore, urban environments clustering has also been applied on two datasets
   \hfill
   \begin{subfigure}[t]{0.5\textwidth}
     \includegraphics[width=\textwidth]{urban_envs_aart_meijer_bins.png}
-    \caption{Urban environments detection using bin counts for clustering on Aart Meijer's cycling route over the summer.}
+    \caption{Urban environments detection using bin counts for clustering on Aart Meijer's cycling route over the summer in 2015.}
     \label{fig:meijer-bike-urban-envs-bins}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.5\textwidth}
+  \caption{Urban environments detection on Aart Meijer's cycling route over the summer in 2015}
+  \label{fig:meijer-bike-urban-envs}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
     \includegraphics[width=\textwidth]{urban_env_feb_bike_pm.png}
-    \caption{Urban environments detection using PM values for clustering on the data collected on the february cycling route.}
+    \caption{Urban environments detection using PM values for clustering on the data collected on the February 2018 cycling route.}
     \label{fig:feb-bike-urban-envs-pm}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.5\textwidth}
+  \begin{subfigure}[t]{\textwidth}
     \includegraphics[width=\textwidth]{urban_env_feb_bike_bins.png}
-    \caption{Urban environments detection using bin counts for clustering on the data obtained on the february cycling route.}
+    \caption{Urban environments detection using bin counts for clustering on the data obtained on the February 2018 cycling route.}
     \label{fig:feb-bike-urban-envs-bins}
   \end{subfigure}
-  \caption{Comparison between results obtained on two different cycling routes when PM values and bin counts were used for clustering separately.}
-  \label{fig:bike-urban-envs}
+  \caption{Urban environments detection on the data obtained during the February 2018 cycling route.}
+  \label{fig:feb-bike-urban-envs}
 \end{figure}
 
 As it could be seen, in the case of the February cycling route, the clustering method using bin counts produced again smooth results that are also closer to a real scenario as opposed to the clustering method using PM values. More precisely, the entire zone outlined by Leamington Walk (a cycling path crossing through the park) has been labelled as a pedestrian path. Moreover, in the case of Aart Meijer's cycling route, Middle Meadow Walk was entirely labelled as a park path with edges tagged as pedestrian zones, while in the case of the PM values, a discontinuity in the transition between urban environments occurred in the same area.
@@ -1009,7 +1013,34 @@ Furthermore, during labelling procedures carried out for new data points gathere
 
 \section{Concluding Remarks}
 
+In overall, the project explored statistical differences between urban environments in the city of Edinburgh and the surroundings (the bus journey to Queensferry bridges) based on data collected with an AirSpeck device which represents a personal, mobile exposure monitor developed by the Centre for Speckled Computing. Furthermore, a thorough analysis regarding personal exposure with different modes of transport was conducted mainly in the city of Edinburgh and on train journeys to Manchester and London based on data collected with the same type of mobile exposure monitor.
+
+In order to ease the efficient configuration of clustering and classification models, as well as the spatial visualization of results obtained after conducting the relevant experiments, a data visualization tool was created. It contains a new data upload tool which uploads new data obtained from the sensor readings in CSV format, a map which displays the results based on GPS information provided by the AirSpeck device and Android app, as well as an interface through which various classification and clustering models can be configured.
+
+\subsection{Urban Environments Detection}
+
+As far as detection of urban environments is concerned, for this problem, an unsupervised learning approach based on K-means clustering algorithm has been taken into consideration. Data analysis regarding this problem has been performed on particulate matter counts in the range of 0.38 to 17 microns which are split by the Optical Particle Counter (OPC) into 16 size-resolved bins. Further analysis has been conducted on particulate matter values (PM1, PM2.5 and PM10) which are calculated by the AirSpeck device based on the bin counts detected, as well as only on particulate counts in bin 0 alone, as suggested by Konstantin Kotsev in \cite{Kotsev2015}. The first set of experiments was conducted on a dataset collected on a route around the Meadows Park in Edinburgh. The data collection session was based on a daily schedule, at two different peak times of the day (at lunch time between 13:30 and 14:30 and in the evening between 17:30 and 18:30) for a week. The final method proposed for urban environments detection included locality preservation by aggregating the data points based on the GPS information provided, prior to applying clustering on the particulate matter related attributes. The clusters obtained have been visualised with the help of the data visualisation tool created and the patterns of the urban environments detected after applying clustering on each set of particulate matter related attributes have been compared with each other on the same route. Moreover, the number of discontinuities occurring in transitions between urban environments have been counted and taken into consideration as a further validation measure for testing the performance of the models.
+
+Moreover, analysis regarding urban environments detection has been taken further by applying the method on different modes of transport, namely on diverse cycling routes, as well as a return bus journey between Queensferry bridges and St Andrews Square in Edinburgh. The resulted urban environments were again visualised on the map via the data visualisation tool and model performance was measured by taking the number of transition discontinuities into account.
+
+As a conclusion, the model implementing locality preservation and using all bin counts as clustering attributes performed the best in overall on all datasets.
+
+\subsection{Personal Exposure with Different Modes of Transport}
+
+As to personal exposure with different modes of transport, a supervised learning approach has been taken into consideration in order to expose differences in particulate matter related data when using different modes of transport. Several experiments were conducted with the purpose of testing the performance of different classifiers trained on different particulate matter related attributes. Classification accuracy has been measured by first using K-Fold cross validation with 5 folds on the training dataset (hence, 20\% of the dataset would be considered for validation). Then, the best performing models have been taken for further testing on separate datasets collected by various subjects as test data. 
+
+As a conclusion of the results obtained, a mixed model which uses two random forest classifiers trained on separate attributes of the dataset, which were grouped by their importance provided the highest classification accuracy results on average (above 95\% on the training dataset which consists of above 5400 inputs). In consequence, it is shown with the help of mobile exposure monitors that the usage of different modes of transport have a significant impact on personal exposure to air pollution.
+
+
 \section{Future Work}
+
+Future work on these issues could first represent an improvement of modes of transport classification models by collecting even more data while using different modes of transport such that the final dataset would be balanced and would include more edge cases that would be correctly classified by the models. Moreover, a more robust locality preservation solution could be implemented in the best performing classification models, assuming that sudden switches between modes of transport used on a certain route do not occur. This would improve the classification accuracy further on a small number of edge cases.
+
+Further improvements could be performed on the data visualisation tool which implements the classification and clustering models on the back-end side. First, the front-end could be re-factored and integrated in a web framework such as \texttt{ReactJs} \cite{angular} or \texttt{Angular} \cite{angular} so that it would be more scalable and easier to integrate with larger platforms.
+
+As to urban environments detection, further work could be conducted by researching for more precise validation methods in order to improve the patterns of the results and make the unsupervised model more scalable to larger areas.
+
+
 
 % use the following and \cite{} as above if you use BibTeX
 % otherwise generate bibtem entries

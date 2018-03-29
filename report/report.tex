@@ -9,6 +9,9 @@
 \usepackage{float}
 \usepackage{url}
 \usepackage{subcaption}
+\usepackage[toc, page]{appendix}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
 
 \begin{document}
 
@@ -42,26 +45,27 @@
 \date{\today}
 
 \abstract{
-This is an example of {\tt infthesis} style.
-The file {\tt skeleton.tex} generates this document and can be 
-used to get a ``skeleton'' for your thesis.
-The abstract should summarise your report and fit in the space on the 
-first page.
-%
-You may, of course, use any other software to write your report,
-as long as you follow the same style. That means: producing a title
-page as given here, and including a table of contents and bibliography.
+In this project, a statistical analysis on air quality data collected with the help of mobile exposure monitors which include Optical Particle Counters (OPC) developed by the Centre for Speckled Computing was conducted with a strong focus on personal exposure to air pollution with different modes of transport and detection of urban environments in the city of Edinburgh, Scotland and the surroundings. Data analysis was mostly performed on particulate matter counts in the range of 0.38 to 17 microns which are split by the OPC into 16 size-resolved bins, as well as on temperature, humidity and particulate matter values (PM1, PM2.5, PM10), calculated by the AirSpeck device based on the bin counts detected. For the problem regarding detection of urban environments, an unsupervised approach based on K-means clustering algorithm was taken into consideration detect 5 different environments based on pollution levels. The final model was able to distinguish effectively between high, medium and low traffic intensity areas, as well as low pollution areas such as park paths. As to the problem regarding personal exposure to different modes of transport, a supervised learning approach was considered in which all sensor readings would be classified into categories corresponding to modes of transport used at a certain point. After conducting several experiments, the best performing model consisting of two different random forest classifiers obtained a classification accuracy of 95.8\% on a training dataset of 5409 inputs. The accuracy score was calculated using K-Fold cross validation with 5 folds, thus 20\% of the dataset would be taken for validation.
 }
 
 \maketitle
 
 \section*{Acknowledgements}
 
+First, I would like to thank my family, especially my parents and grandparents for supporting me during the four years of undergraduate study and inspiring me to strive forwards.
+
 I would like to thank my supervisor, professor D K Arvind for his main support in helping me work thoroughly on a project of such high complexity and importance in the real world. I would also like to thank him for his valuable advice and guidance.
 
-Furthermore, I would like to thank Andrew Bates for his support in providing equipment and helping with maintenance of sensors and servers.
+Furthermore, I would like to thank Andrew Bates for his support in providing training with equipment usage and helping with maintenance of sensors and servers.
 
-More acknowledgements to follow.....
+Next, I would like to thank Darius Fischer for his help and advice given when I was in lack of ideas during project research and development.
+
+Furthermore, I would like to thank Vlad Buzatu for his cooperation in project research, data collection and development of joint back-end platform for the final product.
+
+Moreover, I would like to thank Stefan Ivanov and Ivan Angelinin for their cooperation in the project and their volunteering work regarding data collection.
+
+Then, I would like to thank all members from the Centre for Speckled Computing for providing equipment and support regarding sensors installation. In particular I would also like to thank Mark Miller for his contribution in data collection with different modes of transport during his commuting trips by car and train.
+
 
 \tableofcontents
 
@@ -1013,15 +1017,13 @@ Furthermore, during labelling procedures carried out for new data points gathere
 
 \section{Concluding Remarks}
 
-In overall, the project explored statistical differences between urban environments in the city of Edinburgh and the surroundings (the bus journey to Queensferry bridges) based on data collected with an AirSpeck device which represents a personal, mobile exposure monitor developed by the Centre for Speckled Computing. Furthermore, a thorough analysis regarding personal exposure with different modes of transport was conducted mainly in the city of Edinburgh and on train journeys to Manchester and London based on data collected with the same type of mobile exposure monitor.
-
-In order to ease the efficient configuration of clustering and classification models, as well as the spatial visualization of results obtained after conducting the relevant experiments, a data visualization tool was created. It contains a new data upload tool which uploads new data obtained from the sensor readings in CSV format, a map which displays the results based on GPS information provided by the AirSpeck device and Android app, as well as an interface through which various classification and clustering models can be configured.
+In overall, the project explored statistical differences between urban environments in the city of Edinburgh and the surroundings (the bus journey to Queensferry bridges) based on data collected with an AirSpeck device which represents a personal, mobile exposure monitor developed by the Centre for Speckled Computing. Furthermore, a thorough analysis regarding personal exposure with different modes of transport was conducted mainly in the city of Edinburgh and on train journeys to Manchester and London based on data collected with the same type of mobile exposure monitor. Spatial results were visualised via the data visualization tool that was created with the purpose of easing configurations of classification and clustering models.
 
 \subsection{Urban Environments Detection}
 
-As far as detection of urban environments is concerned, for this problem, an unsupervised learning approach based on K-means clustering algorithm has been taken into consideration. Data analysis regarding this problem has been performed on particulate matter counts in the range of 0.38 to 17 microns which are split by the Optical Particle Counter (OPC) into 16 size-resolved bins. Further analysis has been conducted on particulate matter values (PM1, PM2.5 and PM10) which are calculated by the AirSpeck device based on the bin counts detected, as well as only on particulate counts in bin 0 alone, as suggested by Konstantin Kotsev in \cite{Kotsev2015}. The first set of experiments was conducted on a dataset collected on a route around the Meadows Park in Edinburgh. The data collection session was based on a daily schedule, at two different peak times of the day (at lunch time between 13:30 and 14:30 and in the evening between 17:30 and 18:30) for a week. The final method proposed for urban environments detection included locality preservation by aggregating the data points based on the GPS information provided, prior to applying clustering on the particulate matter related attributes. The clusters obtained have been visualised with the help of the data visualisation tool created and the patterns of the urban environments detected after applying clustering on each set of particulate matter related attributes have been compared with each other on the same route. Moreover, the number of discontinuities occurring in transitions between urban environments have been counted and taken into consideration as a further validation measure for testing the performance of the models.
+As far as detection of urban environments is concerned, for this problem, an unsupervised learning approach based on K-means clustering algorithm has been taken into consideration. The first set of experiments was conducted on a dataset collected on a route around the Meadows Park in Edinburgh. The data collection session was based on a daily schedule, at two different peak times of the day (at lunch time between 13:30 and 14:30 and in the evening between 17:30 and 18:30) for a week. The final method proposed for urban environments detection included locality preservation by aggregating the data points based on the GPS information provided, prior to applying clustering on the particulate matter related attributes. The clusters obtained have been visualised with the help of the data visualisation tool created and the patterns of the urban environments detected after applying clustering on each set of particulate matter related attributes have been compared with each other on the same route. Moreover, the number of discontinuities occurring in transitions between urban environments have been counted and taken into consideration as a further validation measure for testing the performance of the models.
 
-Moreover, analysis regarding urban environments detection has been taken further by applying the method on different modes of transport, namely on diverse cycling routes, as well as a return bus journey between Queensferry bridges and St Andrews Square in Edinburgh. The resulted urban environments were again visualised on the map via the data visualisation tool and model performance was measured by taking the number of transition discontinuities into account.
+Moreover, analysis regarding urban environments detection has been taken further by applying the method to different modes of transport, namely on diverse cycling routes, as well as a return bus journey between Queensferry bridges and St Andrews Square in Edinburgh. The resulted urban environments were again visualised on the map via the data visualisation tool and model performance was measured by taking the number of transition discontinuities into account.
 
 As a conclusion, the model implementing locality preservation and using all bin counts as clustering attributes performed the best in overall on all datasets.
 
@@ -1047,5 +1049,117 @@ As to urban environments detection, further work could be conducted by researchi
 
 \bibliographystyle{plain}
 \bibliography{mybibfile}
+
+\begin{appendices}
+
+\chapter{AirSpeck Device}
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.6\columnwidth]{airspeck_on_me.jpg}
+  \caption{This image presents the way the AirSpeck device set up with the running belt and wore during a normal data collection session.}
+  \label{fig:airspeck_on_me}
+\end{figure}
+
+\chapter{Data Visualisation Tool}
+
+\lstset{
+   backgroundcolor=\color{GreenYellow},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=8pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\begin{lstlisting}[caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "environment\_label" key represents the id corresponding to a certain urban environment}]
+{
+	"type": "Feature", 
+	"geometry": {
+		"type": "Point",
+		 "coordinates": ["-3.1892407", "55.9464430"]
+	},
+	"properties": {
+		"id": 18352, 
+		"environment_label": "2", 
+		"phone_timestamp": "20150723182228",
+		"pm1": "0.8987573",
+		"pm2_5": "16.0555000", 
+		"pm10": "16.0555000",
+		"temperature": "22.9800000", 
+		"humidity": "47.4285549",
+		"bin0": 6, "bin1": 0, 
+		"bin2": 3, 
+		"bin3": 1, 
+		"bin4": 0, 
+		"bin5": 2, 
+		"bin6": 2, 
+		"bin7": 0, 
+		"bin8": 0, 
+		"bin9": 0, 
+		"bin10": 0, 
+		"bin11": 0, 
+		"bin12": 0, 
+		"bin13": 0, 
+		"bin14": 0, 
+		"bin15": 0, 
+		"total": 14, 
+		"altitude": null, 
+		"accuracy": null, 
+		"lux_level": "0E-7", 
+		"motion": "0E-7", 
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing modes of transport classification. The "transport\_label" key represents the id corresponding to a certain mode of transport}]
+{
+	"type": "Feature", 
+	"geometry": {
+		"type": "Point",
+		 "coordinates": ["-3.1840602", "55.9452297"]
+	}, 
+	"properties": {
+		"id": 19812, 
+		"transport_label": "0", 
+		"phone_timestamp": "1520967264200", 
+		"pm1": "3.9272920", 
+		"pm2_5": "5.1627407", 
+		"pm10": "5.3184643", 
+		"temperature": "8.6000000", 
+		"humidity": "68.1000000", 
+		"bin0": 198, 
+		"bin1": 32, 
+		"bin2": 31, 
+		"bin3": 10, 
+		"bin4": 4, 
+		"bin5": 8, 
+		"bin6": 1, 
+		"bin7": 0, 
+		"bin8": 0, 
+		"bin9": 0, 
+		"bin10": 0, 
+		"bin11": 0, 
+		"bin12": 0, 
+		"bin13": 0, 
+		"bin14": 0, 
+		"bin15": 0, 
+		"total": 284, 
+		"altitude": "141.2955505", 
+		"accuracy": "10.0000000", 
+		"lux_level": "1.0000000", 
+		"motion": "2828.0000000", 
+	}
+}
+\end{lstlisting}
+
+
+\end{appendices}
 
 \end{document}

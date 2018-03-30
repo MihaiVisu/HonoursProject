@@ -41,7 +41,12 @@ $(function() {
 
   urbanEnvironmentsLegend.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'legend'),
-        labels = ['park path', 'pedestrian road', 'quiet area', 'medium traffic area', 'high traffic area'];
+        labels = [
+        'Low Vehicular Traffic Density', 
+        'Low to Medium Vehicular Traffic Density', 
+        'Medium Traffic Density', 
+        'Medium to High Traffic Density',
+        'High Traffic Density'];
 
     for (var i = 0; i < labels.length; i++) {
         div.innerHTML +=

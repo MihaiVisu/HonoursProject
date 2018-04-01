@@ -44,9 +44,9 @@ $(function() {
         labels = [
         'Low Vehicular Traffic Density', 
         'Low to Medium Vehicular Traffic Density', 
-        'Medium Traffic Density', 
-        'Medium to High Traffic Density',
-        'High Traffic Density'];
+        'Medium Vehicular Traffic Density', 
+        'Medium to High Vehicular Traffic Density',
+        'High Vehicular Traffic Density'];
 
     for (var i = 0; i < labels.length; i++) {
         div.innerHTML +=
@@ -78,6 +78,7 @@ $(function() {
     hideAdditions: false, // this line
     onChange: function(value, text) {
       $('.upload-section input[name="dataset"]').val(text);
+      console.log('fsfsf');
     },
   });
 
@@ -217,6 +218,19 @@ $(function() {
     $('.lmap').hide();
     $('.menu a.item').removeClass('active');
     $('.upload-view').addClass('active');
+  });
+
+  $classifierDropdown.click(function() {
+    console.log('fdsfsd');
+  });
+
+  $classifierDropdown.dropdown({
+    onChange: function(value) {
+      console.log(value);
+      if (value === 'mixed_model') {
+        $('.folds-number').hide();
+      }
+    }
   });
 
   // -----REQUESTS-----

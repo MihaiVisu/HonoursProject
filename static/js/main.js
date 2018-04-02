@@ -12,6 +12,7 @@ $(function() {
   var $classifierDropdown = $('.classifier .ui.dropdown');
   var $validationCriterionDropdown = $('.validation-criterion .ui.dropdown');
   var $foldsNumberInput = $('.folds-number input');
+  var $useForValidationCheckbox = $('.validation input');
   var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
   var $normaliseBinCounts = $('.normalise-bins input:checked');
   var $datasetDropdown = $('.classification-form .dataset .ui.dropdown');
@@ -78,7 +79,6 @@ $(function() {
     hideAdditions: false, // this line
     onChange: function(value, text) {
       $('.upload-section input[name="dataset"]').val(text);
-      console.log('fsfsf');
     },
   });
 
@@ -120,6 +120,9 @@ $(function() {
   $.getJSON(url+'/api_mihai/datasets/', function(data) {
     data.forEach(function(val) {
       $('.dataset .ui.dropdown .menu').append(
+        '<div class="item" data-value="'+val.id+'">'+val.name+'</div>'
+      );
+      $('.train-dataset .ui.dropdown .menu').append(
         '<div class="item" data-value="'+val.id+'">'+val.name+'</div>'
       );
     });
@@ -220,16 +223,25 @@ $(function() {
     $('.upload-view').addClass('active');
   });
 
-  $classifierDropdown.click(function() {
-    console.log('fdsfsd');
+  // classifier dropdown event for onchange
+  $classifierDropdown.dropdown('setting', 'onChange', function(value, text) {
+    if(value === 'mixed_model') {
+      $('.attributes-segment').hide();
+    }
+    else {
+      $('.attributes-segment').show();
+    }
   });
 
-  $classifierDropdown.dropdown({
-    onChange: function(value) {
-      console.log(value);
-      if (value === 'mixed_model') {
-        $('.folds-number').hide();
-      }
+  // use dataset for validation checkbox change event
+  $useForValidationCheckbox.change(function() {
+    if(this.checked) {
+      $('.folds-number').hide();
+      $('.train-dataset').show();
+    }
+    else {
+      $('.folds-number').show();
+      $('.train-dataset').hide();
     }
   });
 
@@ -273,7 +285,7 @@ $(function() {
     var classifier = $classifierDropdown.dropdown('get value');
     var attrs = $classifyAttrsDropdown.dropdown('get value');
     var validationCriterion = $validationCriterionDropdown.dropdown('get value');
-    var foldsNumber = $foldsNumberInput.val();
+    var foldsNumber = $foldsNumberInput.val() || 0;
     var includeUrbanEnvironments = $includeUrbanEnvironments.length;
     var normaliseBinCounts = $normaliseBinCounts.length;
     var dataset = $datasetDropdown.dropdown('get value');

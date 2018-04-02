@@ -107,7 +107,7 @@
                         </select>
                       </div>
 
-                      <div class="ui segment">
+                      <div class="ui segment attributes-segment">
                         <div class="field attributes">
                           <label>Attributes to Classify On</label>
                           <div class="ui fluid multiple search selection dropdown">
@@ -135,11 +135,6 @@
                           <option value="ho">Hold-out Validation</option>
                         </select>
                       </div> -->
-                      
-                      <div class="field folds-number">
-                        <label>Number of Folds</label>
-                        <input type="number" name="folds-number" placeholder="Number of Folds">
-                      </div>
 
                       <div class="field include-urban-environments">
                         <div class="ui slider checkbox">
@@ -161,10 +156,33 @@
                           <div class="ui fluid search selection dropdown">
                             <input type="hidden" name="dataset"/>
                             <i class="dropdown icon"></i>
-                            <div class="default text">Attributes</div>
+                            <div class="default text">Dataset</div>
                             <div class="menu">
                             </div>
                           </div>
+                        </div>
+
+                        <div class="field validation">
+                          <div class="ui slider checkbox">
+                            <input type="checkbox" name="validation" checked="checked">
+                            <label>Use Dataset for Validation</label>
+                          </div>
+                        </div>
+
+                        <div class="field train-dataset">
+                          <label>Dataset to Train</label>
+                          <div class="ui fluid search selection dropdown">
+                            <input type="hidden" name="train-dataset"/>
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Dataset</div>
+                            <div class="menu">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="field folds-number">
+                          <label>Number of Folds</label>
+                          <input type="number" name="folds-number" placeholder="Number of Folds">
                         </div>
                       </div>
 
@@ -176,7 +194,7 @@
 
                 <div class="eight wide column">
                   <div class="ui segment">
-                    <h3 class="ui header">Urban Environment Classification</h3>
+                    <h3 class="ui header">Urban Environment Clustering</h3>
 
                     <form class="ui form kmeans-form">
 
@@ -220,7 +238,7 @@
 
                     <h4 class="ui header total-features">
                       <i class="bar chart icon"></i>
-                        Total Features: 0
+                        Total Data Points: 0
                     </h4>
 
                     <h4 class="ui header accuracy">

@@ -565,7 +565,7 @@ There is no table for urban environments, as the method performed for environmen
 \subsection{Back-end Server}
 \label{subsec:back-end}
 
-A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of my API (Mihai's API).
+A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of the author's API (Mihai's API).
 
 \subsubsection*{Motivation for Framework Choice}
 
@@ -829,7 +829,7 @@ As it could be observed, in the case of bin counts usage on the environments det
 
 \subsubsection*{Urban Environments Detection on Cycling Routes}
 
-Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 (Figure \ref{fig:meijer-bike-urban-envs}) and the second created by myself on the 26th of February 2018 (Figure \ref{fig:feb-bike-urban-envs}).
+Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 (Figure \ref{fig:meijer-bike-urban-envs}) and the second created by the author on the 26th of February 2018 (Figure \ref{fig:feb-bike-urban-envs}).
 
 \begin{figure}[h!]
   \begin{subfigure}[t]{0.5\textwidth}
@@ -1127,7 +1127,6 @@ Further improvements could be performed on the data visualisation tool which imp
    basicstyle=\footnotesize\ttfamily,
    showstringspaces=false,
    showspaces=false,
-   numbers=left,
    numberstyle=\footnotesize,
    numbersep=8pt,
    tabsize=2,
@@ -1136,7 +1135,79 @@ Further improvements could be performed on the data visualisation tool which imp
    captionpos=b
 }
 
-\begin{lstlisting}[caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "environment\_label" key represents the id corresponding to a certain urban environment}]
+\section{Back-end API Setup}
+
+The repository containing the Python code for the back-end API is located on GitHub at \url{https://github.com/MihaiVisu/hons-backend.git}. The repository is currently private and access will be made available upon request.
+
+For development purposes, the back-end API can be installed by first installing Django and all necessary dependencies. In order to do this, a Python 3 virtual environment must be created. One way to create it is through miniconda \cite{miniconda}:
+
+\begin{lstlisting}[language=bash, backgroundcolor=\color{lightgray!20}, basicstyle=\ttfamily\bfseries] 
+	$ conda create -n <environment name> python=3.6
+\end{lstlisting}
+
+After creating the environment, all the dependencies in regard to the framework used by the API must be installed. The libraries are listed in the \texttt{requirements.txt} file and can be installed after activating the virtual environment:
+
+\begin{lstlisting}[language=bash, backgroundcolor=\color{lightgray!20}, basicstyle=\ttfamily\bfseries] 
+	$ source activate <environment name>
+	$ pip install -r requirements.txt
+\end{lstlisting}
+
+Then, the server can be started by entering the main project folder and typing:
+
+\begin{lstlisting}[language=bash, backgroundcolor=\color{lightgray!20}, basicstyle=\ttfamily\bfseries] 
+	$ python manage.py runserver <port number>
+\end{lstlisting}
+
+\section{Classifiers Menu Usage}
+
+The main menu varies depending on the type of classifier chosen and the validation method used. For instance, if the mixed model is chosen, then two different dropdown fields for two different sets of input attributes corresponding to each random forest classifier are displayed. Otherwise, only one field will be shown, as presented in Figure \ref{fig:classification-interface}.
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{appendix-classifiers-interface-mixed-model.png}
+    \caption{Two dropdown fields corresponding to each random forest classifier are shown when the mixed model is used for classification. The user has the ability to select different sets of attributes for each classifier.}
+    \label{fig:mixed-model-interface}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{appendix-classifiers-interface-simple-classifier.png}
+    \caption{One dropdown field corresponding to the classifier chosen is displayed. The user has the ability to select different attributes from the ones provided.}
+    \label{fig:simple-classifier-interface}
+  \end{subfigure}
+  \caption{Varying attribute selection menu based on the model chosen for the modes of transport classification task.}
+  \label{fig:classification-interface}
+\end{figure}
+
+For each dropdown field from the main classifiers menu, the user will be able to choose any attributes from the ones provided. A list of available attributes appears once the field is clicked, as Figure \ref{fig:attributes-interface} presents. A search by typing option is included in the functionality of the form via Semantic UI library (Figure \ref{fig:add-attributes-interface}).
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{appendix-classifiers-interface-include-bins.png}
+    \caption{A quick way to include all bin counts for a certain classification or clustering task through the checkbox provided.}
+    \label{fig:include-bins-interface}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{appendix-classifiers-interface-add-attributes.png}
+    \caption{Option to add new attributes for a certain classification or clustering task via searching for a specific name in the list of features provided.}
+    \label{fig:add-attributes-interface}
+  \end{subfigure}
+  \caption{Functionality of dropdown fields regarding configuration of attributes to be considered for classification or clustering tasks.}
+  \label{fig:attributes-interface}
+\end{figure}
+
+The user has the option to choose of whether to utilise a specific dataset for validation or not. If the checkbox is unchecked, then K-Fold cross validation will be used as a validation measure and an option specifying the number of folds to be used will be provided (Figure \ref{fig:classifiers-interface}). On the other hand, an option regarding the choice of the training dataset on which the configured model will be fitted is given, as presented in Figure \ref{fig:validation-checkbox}.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.8\columnwidth]{appendix-classifiers-interface-validation.png}
+  \caption{An option of whether to utilise a certain dataset for validation is provided via the checkbox field shown in the image.}
+  \label{fig:validation-checkbox}
+\end{figure}
+
+\section{Format of Input Response from the Back-end API}
+
+\begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "environment\_label" key represents the id corresponding to a certain urban environment}]
 {
 	"type": "Feature", 
 	"geometry": {

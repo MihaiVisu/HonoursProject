@@ -83,7 +83,7 @@ $(function() {
   });
 
 
-  $('.kmeans-form .include-all-bins input').change(function() {
+  $('.kmeans-form .include-all-bins input[name="all-bins"]').change(function() {
 
     if (this.checked) {
       currentAttrs = $clusterAttrsDropdown.dropdown('get value');
@@ -95,7 +95,7 @@ $(function() {
     }
   });
 
-  $('.classification-form .include-all-bins input').change(function() {
+  $('.classification-form .include-all-bins input[name="all-bins"]').change(function() {
 
     if (this.checked) {
       currentAttrs = $classifyAttrsDropdown.dropdown('get value');
@@ -107,10 +107,40 @@ $(function() {
     }
   });
 
+  $('.classification-form .mixed-model-attributes .include-all-bins input[name="all-bins-one"]').change(function() {
+
+    if (this.checked) {
+      currentAttrs = $('.attributes-one .ui.dropdown').dropdown('get value');
+      $('.attributes-one .ui.dropdown').dropdown('set selected', binVals);
+    }
+    else {
+      $('.attributes-one .ui.dropdown').dropdown('clear');
+      $('.attributes-one .ui.dropdown').dropdown('set selected', currentAttrs);
+    }
+  });
+
+  $('.classification-form .mixed-model-attributes .include-all-bins input[name="all-bins-two"]').change(function() {
+
+    if (this.checked) {
+      currentAttrs = $('.attributes-two .ui.dropdown').dropdown('get value');
+      $('.attributes-two .ui.dropdown').dropdown('set selected', binVals);
+    }
+    else {
+      $('.attributes-two .ui.dropdown').dropdown('clear');
+      $('.attributes-two .ui.dropdown').dropdown('set selected', currentAttrs);
+    }
+  });
+
   // get attributes
   $.getJSON(url+'/api_mihai/attributes/', function(data) {
     data.forEach(function(val) {
       $('.attributes .ui.dropdown .menu').append(
+        '<div class="item" data-value="'+val+'">'+val+'</div>'
+      );
+      $('.attributes-one .ui.dropdown .menu').append(
+        '<div class="item" data-value="'+val+'">'+val+'</div>'
+      );
+      $('.attributes-two .ui.dropdown .menu').append(
         '<div class="item" data-value="'+val+'">'+val+'</div>'
       );
     });
@@ -227,9 +257,11 @@ $(function() {
   $classifierDropdown.dropdown('setting', 'onChange', function(value, text) {
     if(value === 'mixed_model') {
       $('.attributes-segment').hide();
+      $('.mixed-model-attributes').show();
     }
     else {
       $('.attributes-segment').show();
+      $('.mixed-model-attributes').hide();
     }
   });
 

@@ -565,7 +565,7 @@ There is no table for urban environments, as the method performed for environmen
 \subsection{Back-end Server}
 \label{subsec:back-end}
 
-A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of the author's API (Mihai's API).
+A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of the API of the author (Mihai's API). A setup guide for the API and its dependencies is outlined in section \ref{sec:api-setup}.
 
 \subsubsection*{Motivation for Framework Choice}
 
@@ -619,7 +619,7 @@ The map interface is the main part where the results are displayed based on the 
 
 \subsubsection*{Classifiers Menu}
 
-The classifiers menu represents the main interface which offers the user the ability to customise their own classification model, either for the task of modes of transport classification or urban environments detection. Moreover, the user is able to either apply K-Fold cross validation with a custom number of folds on the training dataset and test the classification accuracy or select an entire dataset for validation and predict the corresponding labels based on the chosen classification task. Figure \ref{fig:classifiers-interface} presents the main interface which allows the user to configure the settings for the classification and clustering models and obtain visual results which are made visible on the map interface, as well as accuracy results in the case of modes of transport classification.
+The classifiers menu represents the main interface which offers the user the ability to customise their own classification model, either for the task of modes of transport classification or urban environments detection. Moreover, the user is able to either apply K-Fold cross validation with a custom number of folds on the training dataset and test the classification accuracy or select an entire dataset for validation and predict the corresponding labels based on the chosen classification task. Figure \ref{fig:classifiers-interface} presents the main interface which allows the user to configure the settings for the classification and clustering models and obtain visual results which are made visible on the map interface, as well as accuracy results in the case of modes of transport classification. Section \ref{sec:menu-usage} presents a more detailed utilisation guide for the classifiers menu through which its functionality and flexibility are emphasised.
 
 \begin{figure}[h!]
   \includegraphics[width=\textwidth]{classifiers-interface.png}
@@ -868,7 +868,7 @@ As it could be seen, in the case of the February cycling route, the clustering m
 
 \subsubsection*{Number of Discontinuities}
 
-As to the case of the bus journey to the Queensferry bridges, there are again significantly less transition discontinuities from an environment to another when clustering on bin counts was applied compared to the case in which the PM values were used. Hence, usage of bin counts in the urban environments detection model proves to be again more robust as opposed to the usage of PM values. Furthermore, in the case of Aart Meijer's cycling route, there are less transition discontinuities between urban environments when applying clustering based on the bin counts as opposed to the case when PM values were utilised. On the other hand, the result is different in the case of the cycling route scanned on the 26th of February 2018. This result might occur due to exceptional snowy weather conditions, and hence, the low traffic intensity encountered in that period, which resulted in lower pollution levels detected when bin counts were taken into consideration for clustering. Table \ref{table:discontinuities-bike-bus} presents the number of discontinuities for each dataset obtained when PM values and bin counts were used for the clustering problem separately.
+As to the case of the bus journey to the Queensferry bridges, there are again significantly less transition discontinuities from an environment to another when clustering on bin counts was applied compared to the case in which the PM values were used. Hence, usage of bin counts in the urban environments detection model proves to be again more robust as opposed to the usage of PM values. Furthermore, in the case of Aart Meijer's cycling route, there are less transition discontinuities between urban environments when applying clustering based on the bin counts as opposed to the case when PM values were utilised. On the other hand, the result is different in the case of the cycling route scanned on the 26th of February 2018. This result might occur due to exceptional snowy weather conditions, and hence, the low traffic intensity encountered in that period, which resulted in lower pollution levels detected when bin counts were taken into consideration for clustering. In addition, the hysteresis effect present in the sensor readings cause a delay in particulate matter data scanning in ambient air which leads to certain areas being labelled with misleading environments (e.g. a part of Bruntsfield Place was tagged as a low vehicular traffic density area, straight after the lower portion being clustered as a medium traffic intensity zone). Table \ref{table:discontinuities-bike-bus} presents the number of discontinuities for each dataset obtained when PM values and bin counts were used for the clustering problem separately.
 
 
 \begin{table}[h!]
@@ -1061,13 +1061,6 @@ As it was presented in subsection \ref{subsec:test-data-collection}, more data t
 \label{table:validation-results}
 \end{table}
 
-\section{Data Related Issues Encountered}
-
-During data collection sessions there were several edge cases regarding input labelling with the corresponding modes of transport, which would lead to a decrease of the final classification accuracy. More exactly, the transition moment of switching from a mode of transport to another is hard to interpret in many cases and makes labelling of data points with the corresponding means of transport harder. For instance, during the bus journey to Queensferry bridges, the bus stood at one stop with doors open for approximately 10 minutes and the sensor was placed at the entrance while I was queueing to enter. In this case, it would be hard for the classifier to predict the mode of transport label correctly. 
-
-Furthermore, during labelling procedures carried out for new data points gathered by other subjects, it was difficult to detect the exact moments when a switch between two different modes of transport happened as switching times were approximated. Hence, there is a high probability of having a small number inputs being incorrectly labelled in the training and validation sets.
-
-
 
 \chapter{Conclusions}
 
@@ -1087,16 +1080,26 @@ As a conclusion, the model implementing locality preservation and using all bin 
 
 As to personal exposure with different modes of transport, a supervised learning approach has been taken into consideration in order to expose differences in particulate matter related data when using different modes of transport. Several experiments were conducted with the purpose of testing the performance of different classifiers trained on different particulate matter related attributes. Classification accuracy has been measured by first using K-Fold cross validation with 5 folds on the training dataset (hence, 20\% of the dataset would be considered for validation). Then, the best performing models have been taken for further testing on separate datasets collected by various subjects as test data. 
 
-As a conclusion of the results obtained, a mixed model which uses two random forest classifiers trained on separate attributes of the dataset, which were grouped by their importance provided the highest classification accuracy results on average (above 95\% on the training dataset which consists of above 5400 inputs). In consequence, it is shown with the help of mobile exposure monitors that the usage of different modes of transport have a significant impact on personal exposure to air pollution.
+As a conclusion of the results obtained, a mixed model which uses two random forest classifiers trained on separate attributes of the dataset, which were grouped by their importance provided the highest classification accuracy results on average (above 95\% on the training dataset which consists of above 5400 inputs).
+
+
+\section{System Limitations}
+\label{sec:limitations}
+
+During data collection sessions there were several edge cases regarding input labelling with the corresponding modes of transport, which would lead to a decrease of the final classification accuracy. More exactly, the transition moment of switching from a mode of transport to another is hard to interpret in many cases and makes labelling of data points with the corresponding means of transport harder. For instance, during the bus journey to Queensferry bridges, the bus stood at one stop with doors open for approximately 10 minutes and the sensor was placed at the entrance while the author was queueing at the bus entrance. In this case, it would be hard for the classifier to predict the mode of transport label correctly. 
+
+Furthermore, during labelling procedures carried out for new data points gathered by other subjects, it was difficult to detect the exact moments when a switch between two different modes of transport happened as switching times were approximated by users of the AirSpeck device. Hence, there is a high probability of having a small number inputs being incorrectly labelled in the training and validation sets.
+
+An additional system limitation that affects final results regarding both classification of modes of transport and detection of urban environments represents the hysteresis effect existent in the sensor readings. For instance, the AirSpeck device requires additional time to adjust particulate matter related values accordingly to the current ambient air conditions. This cause leads to misclassified inputs in several cases when frequent switches between urban environments and modes of transport occur.
 
 
 \section{Future Work}
 
-Future work on these issues could first represent an improvement of modes of transport classification models by collecting even more data while using different modes of transport such that the final dataset would be balanced in regard to a wider variety of modes of transport and would include more edge cases that would be correctly classified by the models. Moreover, a more robust locality preservation solution could be implemented in the best performing classification models, assuming that sudden switches between modes of transport used on a certain route do not occur. This would improve the classification accuracy further on a small number of edge cases.
+Future work on personal exposure with different modes of transport could be conducted by collecting more data in different cities and even countries while using different modes of transport such that the final dataset would be balanced in regard to a wider variety of modes of transport in various environments and would include more edge cases that would be correctly classified by the models. Moreover, a more robust locality preservation solution could be implemented in the best performing classification models, assuming that sudden switches between modes of transport used on a certain route do not occur. This would further improve the classification accuracy on a small number of edge cases.
 
-As the AirSpeck devices were updated in March with new light and motion sensors, light data could be examined and used as an additional attribute for classification between different modes of transport. For instance, during day time, the light
+As the AirSpeck devices were updated in March with new light and motion sensors, light data could be examined and used as an additional attribute for classification between different modes of transport. For instance, during day time, there may be a significant difference between light values captured inside vehicles compared to values in pedestrian or cycling data. Hence, this addition would improve the performance of the final model as a large number of misclassification errors between vehicles related data and cycling or pedestrian inputs would be addressed.
 
-As to urban environments detection, further work could be conducted by researching for more precise validation methods in order to improve the patterns of the results and make the unsupervised model more scalable to larger areas.
+As to urban environments detection, further work could be conducted by exploring more precise validation methods in order to improve the patterns of the results and make the unsupervised model more scalable to larger areas.
 
 Further improvements could be performed on the data visualisation tool which implements the classification and clustering models on the back-end side. First, the front-end could be re-factored and integrated in a web framework such as \texttt{ReactJs} \cite{angular} or \texttt{Angular} \cite{angular} so that it would be more scalable and easier to integrate with larger platforms.
 
@@ -1119,10 +1122,10 @@ Further improvements could be performed on the data visualisation tool which imp
   \label{fig:airspeck_on_me}
 \end{figure}
 
-\chapter{Data Visualisation Tool}
+\chapter{Software Related Information}
 
 \lstset{
-   backgroundcolor=\color{GreenYellow},
+   backgroundcolor=\color{GreenYellow!20},
    extendedchars=true,
    basicstyle=\footnotesize\ttfamily,
    showstringspaces=false,
@@ -1135,7 +1138,8 @@ Further improvements could be performed on the data visualisation tool which imp
    captionpos=b
 }
 
-\section{Back-end API Setup}
+\section{Data Visualisation Tool Setup}
+\label{sec:api-setup}
 
 The repository containing the Python code for the back-end API is located on GitHub at \url{https://github.com/MihaiVisu/hons-backend.git}. The repository is currently private and access will be made available upon request.
 
@@ -1158,7 +1162,25 @@ Then, the server can be started by entering the main project folder and typing:
 	$ python manage.py runserver <port number>
 \end{lstlisting}
 
+Furthermore, the repository containing the front-end interface is available at \url{https://github.com/MihaiVisu/HonoursProject.git}. The repository is private as well and access will be made available upon request. The user must first activate the virtual environment created in the previous steps in order to be able to run it. Then, the interface server can be started by entering the code directory and running the \texttt{server.py} file.
+
+\begin{lstlisting}[language=bash, backgroundcolor=\color{lightgray!20}, basicstyle=\ttfamily\bfseries] 
+	$ source activate <environment name>
+	$ python server.py
+\end{lstlisting}
+
+
+\section{Jupyter Notebooks Setup}
+
+The Jupyter notebooks are located in the same repository as the front-end interface, namely at \url{https://github.com/MihaiVisu/HonoursProject.git}. In order to run and view them, the virtual environment must be activated first:
+
+\begin{lstlisting}[language=bash, backgroundcolor=\color{lightgray!20}, basicstyle=\ttfamily\bfseries] 
+	$ source activate <environment name>
+	$ jupyter notebook
+\end{lstlisting}
+
 \section{Classifiers Menu Usage}
+\label{sec:menu-usage}
 
 The main menu varies depending on the type of classifier chosen and the validation method used. For instance, if the mixed model is chosen, then two different dropdown fields for two different sets of input attributes corresponding to each random forest classifier are displayed. Otherwise, only one field will be shown, as presented in Figure \ref{fig:classification-interface}.
 
@@ -1189,23 +1211,40 @@ For each dropdown field from the main classifiers menu, the user will be able to
   \hfill
   \begin{subfigure}[t]{\textwidth}
     \includegraphics[width=\textwidth]{appendix-classifiers-interface-add-attributes.png}
-    \caption{Option to add new attributes for a certain classification or clustering task via searching for a specific name in the list of features provided.}
+    \caption{An option to add new attributes for a certain classification or clustering task via searching for a specific name in the list of features provided is available.}
     \label{fig:add-attributes-interface}
   \end{subfigure}
   \caption{Functionality of dropdown fields regarding configuration of attributes to be considered for classification or clustering tasks.}
   \label{fig:attributes-interface}
 \end{figure}
 
-The user has the option to choose of whether to utilise a specific dataset for validation or not. If the checkbox is unchecked, then K-Fold cross validation will be used as a validation measure and an option specifying the number of folds to be used will be provided (Figure \ref{fig:classifiers-interface}). On the other hand, an option regarding the choice of the training dataset on which the configured model will be fitted is given, as presented in Figure \ref{fig:validation-checkbox}.
+The user has the option to choose of whether to utilise a specific dataset for validation or not. If the checkbox is unchecked, then K-Fold cross validation will be used as a validation measure and an option specifying the number of folds to be used will be provided (Figure \ref{fig:classifiers-interface}). On the other hand, an option regarding the choice of the training dataset on which the configured model will be fitted is given, as presented in Figure \ref{fig:validation-checkbox}. As an example, Figure \ref{fig:queensferry-return-transport} presents the classification results displayed on the map interface by utilising the spatial information provided after performing modes of transport classification on the return trip from Queesnferry.
 
 \begin{figure}[h!]
   \center
-  \includegraphics[width=0.8\columnwidth]{appendix-classifiers-interface-validation.png}
+  \includegraphics[width=\columnwidth]{appendix-classifiers-interface-validation.png}
   \caption{An option of whether to utilise a certain dataset for validation is provided via the checkbox field shown in the image.}
   \label{fig:validation-checkbox}
 \end{figure}
 
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{queensferry_transport_1.png}
+    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the first part of the route.}
+    \label{fig:queensferry-return-transport-1}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{queensferry_transport_2.png}
+    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the second part of the route.}
+    \label{fig:queensferry-return-transport-2}
+  \end{subfigure}
+  \caption{Results obtained after utilising the best performing modes of transport classification model on the validation set of the return trip between Queensferry and Princes Street. The starting point is the bus stop in Queensferry and the ending point of the bus trip is on Princes Street, followed by a walking journey to Nicholson Street. Classification accuracy obtained was 96\%.}
+  \label{fig:queensferry-return-transport}
+\end{figure}
+
 \section{Format of Input Response from the Back-end API}
+
 
 \begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "environment\_label" key represents the id corresponding to a certain urban environment}]
 {
@@ -1247,7 +1286,8 @@ The user has the option to choose of whether to utilise a specific dataset for v
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing modes of transport classification. The "transport\_label" key represents the id corresponding to a certain mode of transport}]
+
+\begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing modes of transport classification. The "transport\_label" key represents the id corresponding to a certain mode of transport}]
 {
 	"type": "Feature", 
 	"geometry": {

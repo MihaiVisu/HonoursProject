@@ -1179,6 +1179,51 @@ The Jupyter notebooks are located in the same repository as the front-end interf
 	$ jupyter notebook
 \end{lstlisting}
 
+
+\section{Format of Input Response from the Back-end API}
+
+\begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "label" key represents the id corresponding to either a certain urban environment or a specific mode of transport, depending on the type of request received by the API from the front-end interface.}]
+{
+	"type": "Feature", 
+	"geometry": {
+		"type": "Point",
+		 "coordinates": ["-3.1892407", "55.9464430"]
+	},
+	"properties": {
+		"id": 18352, 
+		"label": "2", 
+		"phone_timestamp": "20150723182228",
+		"pm1": "0.8987573",
+		"pm2_5": "16.0555000", 
+		"pm10": "16.0555000",
+		"temperature": "22.9800000", 
+		"humidity": "47.4285549",
+		"bin0": 6, "bin1": 0, 
+		"bin2": 3, 
+		"bin3": 1, 
+		"bin4": 0, 
+		"bin5": 2, 
+		"bin6": 2, 
+		"bin7": 0, 
+		"bin8": 0, 
+		"bin9": 0, 
+		"bin10": 0, 
+		"bin11": 0, 
+		"bin12": 0, 
+		"bin13": 0, 
+		"bin14": 0, 
+		"bin15": 0, 
+		"total": 14, 
+		"altitude": null, 
+		"accuracy": null, 
+		"lux_level": "0E-7", 
+		"motion": "0E-7", 
+	}
+}
+\end{lstlisting}
+
+
+
 \section{Classifiers Menu Usage}
 \label{sec:menu-usage}
 
@@ -1242,92 +1287,6 @@ The user has the option to choose of whether to utilise a specific dataset for v
   \caption{Results obtained after utilising the best performing modes of transport classification model on the validation set of the return trip between Queensferry and Princes Street. The starting point is the bus stop in Queensferry and the ending point of the bus trip is on Princes Street, followed by a walking journey to Nicholson Street. Classification accuracy obtained was 96\%.}
   \label{fig:queensferry-return-transport}
 \end{figure}
-
-\section{Format of Input Response from the Back-end API}
-
-
-\begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing urban environments clustering. The "environment\_label" key represents the id corresponding to a certain urban environment}]
-{
-	"type": "Feature", 
-	"geometry": {
-		"type": "Point",
-		 "coordinates": ["-3.1892407", "55.9464430"]
-	},
-	"properties": {
-		"id": 18352, 
-		"environment_label": "2", 
-		"phone_timestamp": "20150723182228",
-		"pm1": "0.8987573",
-		"pm2_5": "16.0555000", 
-		"pm10": "16.0555000",
-		"temperature": "22.9800000", 
-		"humidity": "47.4285549",
-		"bin0": 6, "bin1": 0, 
-		"bin2": 3, 
-		"bin3": 1, 
-		"bin4": 0, 
-		"bin5": 2, 
-		"bin6": 2, 
-		"bin7": 0, 
-		"bin8": 0, 
-		"bin9": 0, 
-		"bin10": 0, 
-		"bin11": 0, 
-		"bin12": 0, 
-		"bin13": 0, 
-		"bin14": 0, 
-		"bin15": 0, 
-		"total": 14, 
-		"altitude": null, 
-		"accuracy": null, 
-		"lux_level": "0E-7", 
-		"motion": "0E-7", 
-	}
-}
-\end{lstlisting}
-
-
-\begin{lstlisting}[numbers=left, caption={This code listing represents an example of a data input in GeoJSON format, which is sent from the back-end to the front-end of the data visualization tool after performing modes of transport classification. The "transport\_label" key represents the id corresponding to a certain mode of transport}]
-{
-	"type": "Feature", 
-	"geometry": {
-		"type": "Point",
-		 "coordinates": ["-3.1840602", "55.9452297"]
-	}, 
-	"properties": {
-		"id": 19812, 
-		"transport_label": "0", 
-		"phone_timestamp": "1520967264200", 
-		"pm1": "3.9272920", 
-		"pm2_5": "5.1627407", 
-		"pm10": "5.3184643", 
-		"temperature": "8.6000000", 
-		"humidity": "68.1000000", 
-		"bin0": 198, 
-		"bin1": 32, 
-		"bin2": 31, 
-		"bin3": 10, 
-		"bin4": 4, 
-		"bin5": 8, 
-		"bin6": 1, 
-		"bin7": 0, 
-		"bin8": 0, 
-		"bin9": 0, 
-		"bin10": 0, 
-		"bin11": 0, 
-		"bin12": 0, 
-		"bin13": 0, 
-		"bin14": 0, 
-		"bin15": 0, 
-		"total": 284, 
-		"altitude": "141.2955505", 
-		"accuracy": "10.0000000", 
-		"lux_level": "1.0000000", 
-		"motion": "2828.0000000", 
-	}
-}
-\end{lstlisting}
-
 
 \end{appendices}
 

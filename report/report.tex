@@ -15,7 +15,7 @@
 
 \begin{document}
 
-\title{Sensing Spaces: Personal Exposure to Air Pollution with Different Modes of Transport and Urban Environments Using Wearable Sensors}
+\title{Sensing Spaces: Air quality based classification of urban environments and modes of transport using the wearable Airspeck personal exposure monitor}
 
 \author{Mihai Visuian}
 
@@ -45,7 +45,7 @@
 \date{\today}
 
 \abstract{
-This project presents a statistical analysis on air quality data, with a focus on personal exposure to air pollution in regard to different modes of transport and variations in urban environment. The air quality data was collected using mobile exposure monitors in the city of Edinburgh, Scotland and the surrounding areas. The monitors (referenced throughout as AirSpeck devices) are developed by the Centre for Speckled Computing \cite{speckled-computing} and include Optical Particle Counters (OPC) utilised to scan particles in the ambient air. Data analysis was performed on particulate matter counts in the range of 0.38 to 17 microns which are split by the OPC into 16 size-resolved bins, as well as on temperature, humidity and particulate matter values (PM1, PM2.5, PM10) which are calculated by the AirSpeck device based on the bin counts detected. For the problem regarding detection of urban environments, an unsupervised approach based on K-means clustering algorithm was taken into consideration to detect 5 different environments based on pollution levels detected by the AirSpeck device. The final model was able to distinguish effectively between high, medium and low traffic intensity areas, as well as transitional environments with variable vehicular traffic density. Validation performance was measured by finding the number of transitional discontinuities between the clustered environments along a certain route. Furthermore, the results obtained were compared with live traffic speed information from Google Maps. As to the problem regarding personal exposure to air pollutants with different modes of transport, a supervised learning approach was considered in which all sensor readings would be classified into categories corresponding to modes of transport used at a certain point. After conducting several experiments, the best performing model consisting of two different random forest classifiers obtained a classification accuracy of 95.8\% on a curated training dataset of 5409 inputs. The accuracy score was calculated using K-Fold cross validation with 5 folds, thus 20\% of the dataset would be taken for validation.
+This project is concerned with the use of machine learning techniques to analyse airborne particulates concentration data gathered by wearable Airspeck personal exposure monitors. The aims of the analyses are two-fold:  to classify the route taken by the subjects (mainly in Edinburgh, Scotland) into five categories of urban environments and to identify the subject’s mode of transport as one of walking, cycling, or travelling by bus, train, car or the underground.  The personal Airspeck gathers data on particulate concentrations in terms of PM10, PM2.5 and PM1 values and particulate matter counts in the range of 0.38 to 17 microns which are split into 16 size-resolved bins, as well as temperature and relative humidity. An unsupervised machine learning approach based on the K-means clustering algorithm is used to classify the urban environments. The results compared favourably with the congestion data based on traffic flow speeds provided by Google Maps, as the principal source of pollution was due to vehicular traffic. One of the metrics employed to gauge the quality of the classification  was based on transitional discontinuities between the clustered environments along the routes. A supervised learning approach was considered for the problem of identifying the modes of transport employed by the subject. The best performing model consisting of two different random forest classifiers resulted in a classification accuracy of 95.8\% on a curated training dataset of 5409 inputs based on k-fold cross validation with 5 folds (20\% of the dataset was used for validation). The classification accuracy reduced to 87\% when this method was applied to a dataset collected on a journey from Edinburgh to London with walking, and travel by bus, train and metro. The accuracy was improved to 93\% by employing additional data on speed of movement inferred from the GPS data collected by the Airspeck.
 }
 
 \maketitle
@@ -58,13 +58,13 @@ I would like to thank my supervisor, professor D K Arvind for his main support i
 
 Furthermore, I would like to thank Andrew Bates for his support in providing training with equipment usage and helping with maintenance of sensors and servers.
 
-Next, I would like to thank Darius Fischer for his help and advice given when I was in lack of ideas during project research and development.
+I would also like to thank Darius Fischer for his help and advice given when I was in lack of ideas during project research and development.
 
-Furthermore, I would like to thank my friend and colleague Vlad Buzatu, who worked on an AirSpeck related honours project, for his cooperation in project research, data collection and development of joint back-end platform for the final product.
+Furthermore, I would like to thank my friend and colleague Vlad Buzatu, who worked on an Airspeck related honours project, for his cooperation in project research, data collection and development of joint back-end platform for the final product.
 
-Moreover, I would like to thank Stefan Ivanov and Ivan Angelinin, who worked on AirSpeck related honours projects, for their cooperation in the project and their volunteering work regarding data collection.
+Moreover, I would like to thank Stefan Ivanov and Ivan Angelinin, who worked on Airspeck related honours projects, for their cooperation in the project and their voluntary work regarding data collection.
 
-Then, I would like to thank all members from the Centre for Speckled Computing for providing equipment and support regarding sensors installation. In particular I would also like to thank Mark Miller for his contribution in data collection with different modes of transport during his commuting trips by car and train.
+I would also like to thank all members from the Centre for Speckled Computing for providing equipment and support regarding sensors installation. In particular I would also like to thank Dr. Mark Miller for his contribution in data collection with different modes of transport during his commuting trips by car and train.
 
 
 \tableofcontents
@@ -76,34 +76,90 @@ Then, I would like to thank all members from the Centre for Speckled Computing f
 
 \section{Motivation}
 
-Air pollution in large urban environments is a controversial topic nowadays and pollution sources along with their distribution and effect on human health have been widely studied. Particulate matter (PM) represents the sum of all solid particles and liquid droplets of small sizes that are suspended in the air. It has been discovered that exposure to such particles of size less than 10 microns can be hazardous for the human body and it has been associated with increased mortality rates in areas labelled as highly polluted \cite{Dockery1994}.
+Air pollution in large cities and its health effects is of growing public interest and concern.  Airborne particulates consist of solid particles and liquid droplets which coalesce around them suspended in the air. It has been discovered that exposure to such particles of size less than 10 microns can be hazardous to human health and has been associated with increased mortality rates in areas labelled as highly polluted \cite{Dockery1994}.
 
-Air quality is mostly measured through stationary Air Quality Monitoring Stations (AQMS). They measure air quality at a fixed location on a certain radius with high precision. Data collected from such networks of stations distributed strategically within urban environments is used to determine exposure to pollutants and is used for checking if a specific area meets requirements set by legislation. One drawback of this approach is that monitoring a large fixed region through a stationary sensor would not always suffice to obtain accurate information about air quality and pollution sources, as parameters vary from a corner of the region to another and other external factors such as wind speed and terrain type affect the results.
+Air quality is mostly measured through stationary Air Quality Monitoring Stations (AQMS). They measure air quality at a fixed location up to a certain radius with high precision. Data collected from such networks of stations distributed strategically within urban environments is used to determine exposure to pollutants and is used for checking if a specific area meets requirements set by legislation. One drawback of this approach is that monitoring a large fixed region through a stationary sensor would not always suffice to obtain accurate information about air quality and pollution sources, as parameters vary from a corner of the region to another and other external factors such as wind speed and terrain type affect the results.
 
-One approach to solve this issue and obtain more accurate data from the environment would be to deploy low-cost mobile sensors on people, such as drivers, pedestrians and cyclists in order to obtain a more precise spatial representation of the air quality. On the other hand, these sensors must first be calibrated in correlation with the Air Quality Monitoring Stations to ensure high precision of gathered information.
+One approach to address this issue and obtain more accurate data from the environment would be to deploy low-cost mobile sensors on people, such as drivers, pedestrians and cyclists in order to obtain a more precise spatial representation of the air quality. On the other hand, these sensors must first be calibrated in correlation with the Air Quality Monitoring Stations to ensure high precision of gathered information.
 
 \section{Objectives}
 
-This project mainly focuses on mobile exposure monitors (MEM) developed by the 
-Centre for Speckled Computing \cite{speckled-computing}. These wearable devices are equipped with sensors measuring humidity, temperature and particulate matter. Data is transmitted to an Android device via Bluetooth Low Energy. The mobile exposure monitors will be referenced throughout as AirSpeck devices \cite{airspeck}. The project presents several study methods for detection of urban environments and personal exposure with different means of transport, based on air quality data collected with the wearable sensors. The objectives of the project are:
+The focus is on the analysis of data collected by mobile exposure monitors called Airspecks \cite{airspeck} \cite{airspeck2} \cite{airspeck3} developed by the Centre for Speckled Computing \cite{speckled-computing}. These wearable devices are equipped with sensors measuring humidity, temperature and concentrations of airborne particulate matter. Data is transmitted to an Android device via Bluetooth Low Energy where it is time - and GPS location - stamped for storage and onward transmission to the server for analysis and curation. The aim of this project is to classify urban environments in terms of the air quality data collected by the Airspeck personal exposure monitors  and the exposure encountered in different modes of travel such as walking, cycling, car, bus, train and metro. The project involved the following tasks to achieve the aims of the project:
 
-\begin{itemize}
-\item Collect data at specific times on a daily basis and on a fixed route in regard to urban environments detection.
-\item Collect data for different modes of transport and create a supervised, balanced corpus containing data points tagged with the corresponding mean of transport used at a certain point in time.
-\item Perform analysis on data gathered for various modes of transport and urban environments and research machine learning techniques to detect personal exposure on a specific mode of transport or urban environment based on particulate matter and other air quality related attributes obtained from the sensor readings.
-\item Build a data visualization tool for a more accurate spatial representation of data gathered and results obtained after applying statistical and machine learning methods for tasks regarding both urban environments detection and classification of personal exposure to different means of transport.
-\item Collect more data with the purpose of further validating the best performing machine learning models discovered after conducting experiments on the training datasets created.
-\end{itemize}
+\begin{enumerate}
+\item The collection of data over several days at specific times by walking along a predefined route in the centre of Edinburgh wearing the Airspeck monitor.
+
+\item The creation of a corpus of Airspeck data when travelling in different modes of transport tagged with time and GPS location.
+
+\item The use of machine learning techniques to analyse the Airspeck data for two purposes:
+
+\begin{enumerate} 
+\item classification of the urban environment in terms of airborne particulate concentrations;
+\item characterisation of the personal exposure in different  modes of transport.
+\end{enumerate}
+
+\item Development of a data visualization tool for a more accurate spatial representation of data gathered and results obtained after applying statistical and machine learning methods for tasks regarding both urban environments detection and classification of personal exposure to different means of transport.
+
+\item Validation on the methods developed in item 3 above on datasets collected independently.
+\end{enumerate}
 
 \section{Method}
 
-Data collection has been performed in several phases, using a monitoring device worn around the chest, measuring particulate matter (PM1, PM2.5 and PM10 values along with particle counts of different sizes), as well as temperature and humidity. The sensor communicates with an Android device via Bluetooth to which gathered data is sent. As far as investigation of personal exposure with different modes of transport is concerned, one set of data collected was obtained from commuting journeys by car around Edinburgh city centre, a train trip from Edinburgh to London King's Cross, including a bus trip to Edinburgh Waverley, as well as walking trips in Edinburgh, London and one journey on which the subway was used in London Underground. This data collection session was conducted by Mark Miller, a member of the Centre for Speckled Computing. Moreover, various datasets were created on bus and train journeys, along with cycling routes with the purpose of further validating the best performing classification models.
+Data collection has been performed in several phases, using a monitoring device worn around the waist as a belt, measuring particulate matter (PM1, PM2.5 and PM10 values along with particle counts of different sizes), as well as temperature and humidity. The sensor communicates with an Android device via Bluetooth to which gathered data is sent.
 
-Data analysis regarding personal exposure to different modes of transport has been performed using Python 3 and Jupyter Notebooks \cite{jupyter}. First, the raw data was labelled accordingly in terms of the mean of transport used at each point in time. Secondly, raw data was examined for any outliers existing in all values of interest. After removing all irrelevant outliers, a supervised machine learning approach was considered for this task. Thus, several classification methods have been used on particulate matter related data, along with temperature and humidity, in order to perform detection of means of transport used during personal exposure experiments. The purpose of taking this problem as a supervised learning task was to detect differences in patterns of air pollution related data gathered with the help of sensor readings from the AirSpeck device, so the classification accuracies obtained would emphasize how significantly the patterns differ from a mode of transport to another.
+Table: \ref{table:training-datasets} lists the data collected and utilised during this project to create the training dataset using the Airspeck device.
 
-As far as personal exposure with different urban environments is concerned, a data collection schedule was organised between the 3rd and 8th of December 2017, on a route in Edinburgh, including Nicholson Street, Melville Drive, Middle Meadow Walk, Tollcross and Lauriston Place, so that all types of urban environments would be detected. More exactly, the same route was covered over a week at two different times of the day, first at midday, during lunchtime between 13:30 and 14:30 and then in the evening, between 17:30 and 18:30, when a traffic peak hour was most probable to occur.
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|| p{0.3\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} ||} 
+ \hline
+ Data Nature & Collection Period & Travel Mode & Airspeck User\\ [0.5ex] 
+ \hline\hline
+ Driving Journeys via City Centre & 20 and 21 November 2017 & Car & Dr. Mark Miller \\ 
+ \hline
+ Journey to London & 22 November 2017 &  Bus, Pedestrian, Train, Metro & Dr. Mark Miller \\
+ \hline
+ Cycling Route Around Meadows Park &  18 June 2015 & Bicycle & Aart Meijer \\
+  \hline
+ Cycling Route Around Meadows Park & 26 February 2018 & Bicycle & The author \\
+  \hline
+ Pedestrian Route Around Meadows Park & 3-8 December 2017 & Pedestrian & The author \\
+ \hline
+ Pedestrian Data Around Princes Street, Nicholson Street and Meadows Park & 28 February 2018 Midday & Pedestrian & Vlad Buzatu \\
+ \hline
+ Train Journey To Manchester & 13 October 2017 & Train & The author \\
+ \hline
+ \end{tabular}
+\caption{Table presenting the data collected and utilised to create the training dataset using the Airspeck Device}
+\label{table:training-datasets}
+\end{table}
 
-As in the previous set of experiments, Jupyter Notebooks have been used for analysis of the dataset regarding detection of different urban environments. In this case, unsupervised machine learning methods have been applied for classification of data, as ranges of PM values corresponding to each urban environment type vary from a region to another. Thus, as an initial approach, K-means clustering was applied on particulate matter related values in order to form 5 clusters corresponding to 5 different urban environments described more thoroughly in section \ref{sec:urban-environments}. Then, in order to preserve locality and detect urban environments more accurately in a certain region, K-means clustering was performed first on the coordinates of the inputs, such that all samples would be grouped into compact clusters and the mean values of the PM related values would be computed for each cluster. Then, a second K-means clustering was applied to the mean values of the clusters obtained in the previous step in order to detect different types of urban environments. Moreover, the task regarding detection of urban environments has been further applied to datasets collected on bus journeys and cycling routes in order to examine how the procedure would behave on inputs collected while using other modes of transport different from the pedestrian case.
+Table \ref{table:validation-datasets} lists the Airspeck data collected  and used in this project for validation purposes.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|| p{0.3\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} ||} 
+ \hline
+ Data Nature & Collection Period & Travel Mode & Airspeck User\\ [0.5ex] 
+ \hline\hline
+ Return Bus Journey to Queensferry Bridges & 13 March 2018 & Bus, Pedestrian & The author \\ 
+ \hline
+ Pedestrian Data Around Nicholson Street and Meadows Park & 28 February 2018 Night & Pedestrian & Independent Subject \\
+ \hline
+ Cycling Route Around Meadows Park &  11 July 2015 & Bicycle & Aart Meijer \\
+  \hline
+ Spring Journey to London & 15 March 2018 & Train & Stefan Ivanov \\
+ \hline
+ \end{tabular}
+\caption{Table presenting the data collected and utilised for validation purposes using the Airspeck Device}
+\label{table:validation-datasets}
+\end{table}
+
+Data analysis was performed using Python 3 and Jupyter Notebooks \cite{jupyter}. First, the raw data was labelled with the means of transport used at each point in time. Secondly, the raw data was checked for outliers and any removed.  Supervised machine learning techniques were considered for this task and several classification methods have been used on the PM data, along with temperature and humidity, in order to perform detection of means of transport used during personal exposure experiments. The purpose of taking this problem as a supervised learning task was to detect differences in patterns of air pollution related data gathered with the help of sensor readings from the Airspeck devices so the classification accuracies obtained would emphasize how significantly the patterns differ from a mode of transport to another.
+
+As far as personal exposure in different urban environments is concerned, a data collection schedule was organised between 3 – 8  December, 2017, along a walking route in central Edinburgh which included Nicolson Street, Melville Drive, Middle Meadow Walk, Tollcross and Lauriston Place,  which represented the different types of urban environment to be detected by the analysis method. The same route was traversed  for  a week, twice a day - 13:30 to 14:30 and 17:30 to 18:30 - representing light and heavy traffic periods, respectively.
+
+As in the previous set of experiments, Jupyter Notebooks have been used for analysis of the dataset for detection of different urban environments. In this case, unsupervised machine learning methods have been applied for classification of data, as ranges of PM values corresponding to each urban environment type vary from one region to another. Initially K-means clustering was applied on particulate matter related values  to form five clusters corresponding to different urban environments, as described in section \ref{sec:urban-environments}. Then, in order to preserve locality and detect urban environments more accurately in a particular region, K-means clustering was performed first on the coordinates of the dataset features, such that all samples would be grouped into compact clusters and the mean values of the PM related values would be computed for each cluster. Then, a second K-means clustering was applied to the mean values of the clusters obtained in the previous step in order to detect the different types of urban environments. Furthermore, the  urban environments classification has been applied to datasets collected on bus and cycling  journeys  to validate the method when applied to Airspeck data collected from different modes of transport other than walking.
 
 \section{Structure of the Report}
 
@@ -128,7 +184,7 @@ There are past studies concerning exposure of cyclists to air pollution and traf
 
 \subsection{Relationship Between Mortality Rate and Exposure to Particulate Matter }
 
-Most research regarding particulate matter has been performed in terms of values of PM2.5 and PM10, namely measurements of mass particulates with lower dimensions than 2.5 and 10 microns. A study \cite{Cho2008} is concerned about the relationship between mortality rate and particulate matter measured in Seoul, South Korea by using an Optical Particle Counter (OPC) and a national monitoring station. Particulate matter (PM2.5 and PM10) and particle counts from 0.3 to 25 microns were measured. The results concerning particle counts were associated with a 5.73\% and 5.82\% in mortality caused by respiratory diseases.
+Most research regarding particulate matter has been performed in terms of values of PM2.5 and PM10, namely measurements of mass particulates with lower dimensions than 2.5 and 10 microns. A study \cite{Cho2008} is concerned about the relationship between mortality rate and concentrations of airborne particulate matter measured in Seoul, South Korea by using an Optical Particle Counter (OPC) and a national monitoring station. Particulate matter (PM2.5 and PM10) and particle counts from 0.3 to 25 microns were measured. The results concerning particle counts were associated with a 5.73\% and 5.82\% in mortality caused by respiratory diseases.
 
 
 \subsection{Personal Exposure to Carbon Monoxide using Different Modes of Transport}
@@ -149,16 +205,16 @@ A thorough discussion regarding urban environments categories inspired from this
 
 \subsection{Indoor-Outdoor Localisation and Indoor Pollution Sources Detection}
 
-Another relevant study regarding personal exposure to air pollution using mobile exposure monitors was focused on indoor and outdoor localisation, as well as detection of indoors pollution sources based on particulate matter counts from 0.38 to 17 microns \cite{buzatu2018}. The mobile exposure monitor utilised in the project was an AirSpeck device, developed by the Centre for Speckled Computing. Several supervised machine learning approaches were used for both tasks (indoor-outdoor localisation and detection of pollution sources) and classification accuracies above 95\% were obtained in both cases, by using classification models based on random forest classifiers \cite{randomForest}.
+Another relevant study \cite{buzatu2018} regarding personal exposure to air pollution using mobile exposure monitors was focused on indoor and outdoor localisation, as well as detection of indoors pollution sources based on particulate matter counts from 0.38 to 17 microns. The mobile exposure monitor utilised in the project was an Airspeck device, developed by the Centre for Speckled Computing. Several supervised machine learning approaches were used for both tasks (indoor-outdoor localisation and detection of pollution sources) and classification accuracies above 95\% were obtained in both cases, by using classification models based on random forest classifiers \cite{randomForest}.
 
 \section{Mobile Exposure Monitor}
 
-The Mobile Exposure Monitor (MEM), called AirSpeck-P is a wearable device developed by the Centre for Speckled Computing with the purpose of quality of environment measurement. It is equipped with sensors measuring particulate matter counts and mass (Alphasense OPC-N2), as well as temperature and humidity (Sensirion SHT-75). The device transmits sensor readings via Bluetooth Low Energy (BLE) technology to an Android app installed on a smart phone or tablet \cite{airspeck}. It will be further referenced throughout as the AirSpeck app and initial prototypes of the app were first developed by Aart Meijer \cite{Meijer2015} and Konstantin Kotsev \cite{Kotsev2015} in past related projects. The latest firmware of the device is also equipped with a light sensor, measuring light intensity. The MEM is adapted to a running belt, so that it could be easily worn during data collection. Figure \ref{fig:airspeck} presents the AirSpeck device attached to the running belt, along with the placement of each sensor.
+The Mobile Exposure Monitor (MEM), called Airspeck-P is a wearable device developed by the Centre for Speckled Computing with the purpose of quality of environment measurement. It is equipped with sensors measuring particulate matter counts and mass (Alphasense OPC-N2), as well as temperature and humidity (Sensirion SHT-75). The device transmits sensor readings via Bluetooth Low Energy (BLE) technology to an Android app installed on a smart phone or tablet \cite{airspeck}. It will be further referenced throughout as the Airspeck app and initial prototypes of the app were first developed by Aart Meijer \cite{Meijer2015} and Konstantin Kotsev \cite{Kotsev2015} in past related projects. The latest firmware of the device is also equipped with a light sensor, measuring light intensity. The MEM is adapted to a running belt, so that it could be easily worn during data collection. Figure \ref{fig:airspeck} presents the Airspeck device attached to the running belt, along with the placement of each sensor.
 
 \begin{figure}[h!]
   \center
   \includegraphics[width=\columnwidth]{airspeck.jpeg} 
-  \caption{This picture presents the AirSpeck mobile exposure monitor along with the layout of all the sensors attached to a running belt.}
+  \caption{This picture presents the Airspeck mobile exposure monitor along with the layout of all the sensors attached to a running belt.}
   \label{fig:airspeck}
 \end{figure}
 
@@ -170,18 +226,18 @@ The data gathered via the Alphasense OPC-N2 \cite{opc} represents the main subje
 
 \subsection*{Temperature Sensor}
 
-A Sensirion SHT-75 temperature and humidity sensor \cite{sensirion} is included on the AirSpeck printed circuit board (PCB) to enable temperature and humidity monitoring without the need to connect to external sensors. The sensor is contained in a waterproof (sintered metal) enclosure \cite{airspeck} and is placed to protrude outside the enclosure, so that an accurate reading of the temperature and humidity values in the ambient air is ensured.
+A Sensirion SHT-75 temperature and humidity sensor \cite{sensirion} is included on the Airspeck printed circuit board (PCB) to enable temperature and humidity monitoring without the need to connect to external sensors. The sensor is contained in a waterproof (sintered metal) enclosure \cite{airspeck} and is placed to protrude outside the enclosure, so that an accurate reading of the temperature and humidity values in the ambient air is ensured.
 
 
 \subsection*{Communication}
 
-The AirSpeck device has a built-in Bluetooth Low Energy (BLE) radio which communicates with the AirSpeck Android app installed on a mobile device, utilised for receiving and labelling the sensor readings with time and location (GPS) information. The sensor readings are saved locally in CSV files and are also forwarded to a remote server for analysis either via cellular network or WiFi.
+The Airspeck device has a built-in Bluetooth Low Energy (BLE) radio which communicates with the Airspeck Android app installed on a mobile device, utilised for receiving and labelling the sensor readings with time and location (GPS) information. The sensor readings are saved locally in CSV files and are also forwarded to a remote server for analysis either via cellular network or WiFi.
 
 
 \section{Urban Environments}
 \label{sec:urban-environments}
 
-As far as urban environments detection is concerned, three different urban environments were taken into account in \cite{rome2017} in terms of traffic intensities, as mentioned in section \ref{sec:literature-review}. However, taking only three different categories would not be sufficient to define more complex urban environments with varying traffic vehicular density. For instance, there are certain parts of streets such as bus stops or crossroads which are crowded at peak times of a regular workday, but moderately transited or almost empty during weekends. Another example could include streets edged by two crossroads with one end being crowded at a certain point and the other one being empty. In such situations, smooth transitions between urban environments are most likely to happen in areas approaching the ends of the road in question. In consequence, two additional environment types have been introduced in the current project as transitional urban environments, with the purpose of defining and exploring such areas with variable traffic intensity more accurately. Therefore, the five different urban environments used in this project are the following:
+As far as urban environments detection is concerned, three different urban environments were taken into account in \cite{rome2017} in terms of traffic intensities, as mentioned in section \ref{sec:literature-review}. However, taking only three different categories would not be sufficient to define more complex urban environments with varying vehicular traffic density. For instance, there are certain parts of streets such as bus stops or crossroads which are crowded at peak times during  working days but moderately busy or quiet during the weekends. Another example could include streets edged by two crossroads with one end being crowded at a certain point and the other one being empty. In such situations, smooth transitions between urban environments are most likely to happen in areas approaching the ends of the road in question. In consequence, two additional environment types have been introduced in the current project as transitional urban environments, with the purpose of defining and exploring such areas with variable traffic intensity more accurately. Therefore, the five different urban environments used in this project are the following:
 
 \begin{itemize}
 \item Low Vehicular Traffic Density - they are referred to areas with low or non-existent vehicular traffic density, such as park paths, pedestrian zones or quiet roads. One example that was constantly scanned with the purpose of studying personal exposure to different urban environments is the North Meadow Walk in the Meadows Park in Edinburgh, also highlighted in Figure \ref{fig:december_route}.
@@ -198,17 +254,17 @@ As far as urban environments detection is concerned, three different urban envir
 
 \section{Personal Exposure with Modes of Transport}
 
-In order to study personal exposure in all cases, six different exposure situations corresponding to six different modes of transport used have been taken into consideration during the data collection process:
+In order to study personal exposure in all cases, six different exposure scenarios corresponding to six different modes of transport used have been taken into consideration during the data collection process:
 
 \begin{itemize}
 
-\item Pedestrian Data - this represents sensor readings gathered from subjects wearing the AirSpeck device while walking around key areas in Edinburgh, described more thoroughly in \ref{sec:data-collection}.
+\item Pedestrian Data - this represents sensor readings gathered from subjects wearing the Airspeck device while walking around key areas in Edinburgh, described more thoroughly in section \ref{sec:data-collection}.
 
-\item Car - air quality data was collected by Mark Miller (a member of the Centre for Speckled Computing) with the AirSpeck while commuting to work by car in Edinburgh. More details about the routes are presented in \ref{sec:data-collection}.
+\item Car - air quality data was collected by Dr. Mark Miller (Centre for Cardiovascular Science, University of Edinburgh) with the Airspeck while commuting to work by car in Edinburgh. More details about the routes are presented in section \ref{sec:data-collection}.
 
-\item Train - data was also gathered while travelling by train on different routes (From Edinburgh to London and Manchester respectively).
+\item Train - data was also gathered while travelling by train on different routes, from Edinburgh to Manchester and from Edinburgh to London respectively. Two different journeys to London were scanned, first time by Dr. Mark Miller in November 2017 and second time, a portion of the route, by undergraduate student Stefan Ivanov \cite{ivanov} in March 2018.
 
-\item Bicycle - bicycle data is composed of two different datasets. One represents data that was collected during the summer of 2015 by Aart Meijer \cite{Meijer2015}, an MSc student while commuting to university by bicycle. Another dataset was gathered in February, during the snow storm. More details regarding the paths are emphasised in \ref{sec:data-collection}.
+\item Bicycle - bicycle data is composed of two different datasets: data  collected during the summer of 2015 by MSc student Aart Meijer \cite{Meijer2015}, as well as data gathered in February 2018, during a snow storm. More details regarding the paths are emphasised in section \ref{sec:data-collection}.
 
 \item Bus - data was also collected while travelling by bus on different routes around Edinburgh which will be further detailed in \ref{sec:data-collection}. One of the bus routes on which scanning was performed is shown in Figure \ref{fig:bus_route}.
 
@@ -236,9 +292,9 @@ Moreover, a major phase of data collection involving the analysis of different t
   \label{fig:december_route}
 \end{figure}
 
-More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from Mark Miller who commuted to work by car and had been wearing the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
+More data gathered and annotated with the purpose of studying personal exposure with different modes of transport has been obtained from Dr. Mark Miller who commuted to work by car and had been wearing the device for two consecutive days. He also used the sensors on a train journey to London and around the city centre, involving bus and subway transport. Hence, such a data addition helped balance the categories in the final dataset representing the modes of transport used.
 
-Additional data was collected on bus journeys several times. Firstly, a similar route as the one scanned by Mark Miller (Figure \ref{fig:bus_route}) was taken into account in order to test the types of environment encountered on the route and to balance the final training dataset with the addition of new bus tagged data points. Then, a second bus route between St Andrews Square in Edinburgh and Queensferry was taken into account for scanning. The latter data collection session involved the gathering of both pedestrian and bus labelled inputs and a part of these data points were included in the validation sets described in subsection \ref{subsec:test-data-collection}.
+Additional data was collected on bus journeys several times. Firstly, a similar route as the one scanned by Dr. Mark Miller (Figure \ref{fig:bus_route}) was taken into account in order to test the types of environment encountered on the route and to balance the final training dataset with the addition of new bus tagged data points. Then, a second bus route between St Andrews Square in Edinburgh and Queensferry was taken into account for scanning. The latter data collection session involved the gathering of both pedestrian and bus labelled inputs and a part of these data points were included in the validation sets described in subsection \ref{subsec:test-data-collection}.
 
 \begin{figure}[h!]
   \center
@@ -247,7 +303,7 @@ Additional data was collected on bus journeys several times. Firstly, a similar 
   \label{fig:bus_route}
 \end{figure}
 
-Furthermore, Aart Meijer, an MSc student whose honours project involved air quality prediction using wearable sensors on cyclists \cite{Meijer2015} collected data during the summer of 2015 on different routes around Meadows when he was commuting to university every day by bicycle. A part of the dataset containing approximately 1000 data points has been extracted and compared in \ref{subsec:different-weather} to a new set of data points collected in the evening of the 26th of February 2018 (Figure \ref{fig:february-bike}), during the beginning of the snow storm, in order to analyse how different weather conditions affect sensor readings of particulate matter related information.
+Furthermore, Aart Meijer, an MSc student whose project involved air quality predictions using wearable sensors on cyclists \cite{Meijer2015} collected data on a fixed route twice a day in the centre of Edinburgh. A part of the dataset representing one cycling route and containing 720 data points has been extracted and compared in subsection \ref{subsec:different-weather} to a new set of data points collected in the evening of the 26th of February 2018 (Figure \ref{fig:february-bike}), during the beginning of a snow storm, in order to analyse how different weather conditions affect sensor readings of particulate matter related information.
 
 \begin{figure}[h!]
   \center
@@ -259,13 +315,13 @@ Furthermore, Aart Meijer, an MSc student whose honours project involved air qual
 \subsection{Test Data Collection}
 \label{subsec:test-data-collection}
 
-Apart from data gathered from different urban environments and by using different modes of transport as described in the previous subsection (\ref{subsec:training-dataset}), additional data has been collected and labelled by other users of the AirSpeck device with the purpose of further validating the classification methods created. The classification results for the validation dataset are thoroughly described in \ref{subsec:results-urban-env-use}.
+Apart from data gathered from different urban environments and by using different modes of transport as described in the previous subsection (\ref{subsec:training-dataset}), additional data has been collected and labelled by other users of the Airspeck device with the purpose of further validating the classification methods created. The classification results for the validation dataset are thoroughly described in \ref{subsec:validation-performance}.
 
 As previously mentioned in \ref{subsec:training-dataset}, a part of the data points gathered along the bus route between St Andrews Square and Queensferry, Edinburgh, namely the return journey was used only for validation, along with pedestrian tagged inputs that were collected during the trip between bus stations on Princes Street and in Queensferry. Moreover, the trip also included a 12 minute bus journey from Nicholson Street to Princes Street, which was entirely used for validation. The final validation dataset created during this data collection session consists of 501 data points. In order to avoid any possible confusions in references to the validation sets, this dataset will be referred to as \textit{bus\_queensferry\_data}.
 
 Moreover, walking data was collected on the 28th of February by a different subject during the night around the Meadows Park and Nicholson Street in Edinburgh. The dataset created after this gathering session has a total number of 640 data points and all the inputs gathered were used for validation. In future experiments regarding modes of transport classification, this dataset will be referred to as \textit{night\_walk\_data}.
 
-Furthermore, new inputs were collected for validation on a train journey to London by a different subject for about three hours on the 15th of March 2018. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation. In future, this dataset will be referenced as \textit{train\_london\_march}.
+Furthermore, new inputs were collected for validation on a train journey to London by undergraduate student Stefan Ivanov, who worked on an Airspeck related project for about three hours on the 15th of March 2018. A percentage of 25\% of the data points were included in the training dataset with the purpose of balancing the distribution of the labelled inputs by adding more train tagged points. The rest of the data gathered consisting of 600 inputs was used entirely for validation. In future, this dataset will be referenced as \textit{train\_london\_march}.
 
 A separate set of 1278 bike tagged inputs that were collected by Aart Meijer during the summer of 2015 was taken only for validation. The route chosen for this data gathering session is highlighted in Figure \ref{fig:bike-validation-route}. For further reference, this dataset will be nicknamed as \textit{bike\_summer\_route}.
 
@@ -296,7 +352,7 @@ The entire training dataset contains initially a total of 6423 data points. Howe
 
 \subsubsection*{Temperature and Humidity Outliers}
 
-Data collected via the sensors from the AirSpeck devices was not always fully accurate and sometimes data errors were created. For instance, either null or unrealistically high values of the temperature and humidity were sometimes registered at the beginning of data collection sessions after the device had been initially started mainly due to a hysteresis effect present in the sensors. Figure \ref{fig:outliers} presents the values of the temperature expressed in Celsius degrees, along with the values of the humidity across the training dataset. In the case of the values of temperature data, the lower and upper thresholds were set at -15 and +35 degrees respectively (considering that average temperature in the UK did not exceed these values during data collection). Furthermore, in the case of humidity data, all outliers registering null values were removed.
+Data collected via the sensors from the Airspeck devices was not always fully accurate and sometimes data errors were created. For instance, either null or unrealistically high values of the temperature and humidity were sometimes registered at the beginning of data collection sessions after the device had been initially started mainly due to a hysteresis effect present in the sensors. Figure \ref{fig:outliers} presents the values of the temperature expressed in Celsius degrees, along with the values of the humidity across the training dataset. In the case of the values of temperature data, the lower and upper thresholds were set at -15 and +35 degrees respectively (considering that average temperature in the UK did not exceed these values during data collection). Furthermore, in the case of humidity data, all outliers registering null values were removed.
 
 \begin{figure}[h!]
   \center
@@ -332,10 +388,10 @@ First, all particulate matter counts have been taken into consideration for anal
 \end{figure}
 
 
-\subsection{Bin Count Means on Different Weather Conditions}
+\subsection{Bin Count Means During Different Weather Conditions}
 \label{subsec:different-weather}
 
-Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and on different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015, while the second one was collected on the 26th of February 2018, during the snow storm. Figure \ref{fig:bins_weather} displays the distribution of the bin counts for different weather conditions as previously mentioned. The means of the bin counts have been normalised as described in \ref{subsec:bin-count-normalisation} in order to visualise how the pattern, namely the percentage of each bin value is affected by weather changes.
+Raw data is stored in CSV format and analysis is performed using Python 3.6 and Jupyter Notebooks. In order to check how the weather conditions affect the bin counts, the mean count values of all particulates in the size-resolved bins from 0 to 15 have been calculated for two different datasets collected while using a bicycle on similar routes, but at different times and during different weather conditions. The first dataset was collected by Aart Meijer during the summer of 2015 and contains 720 data points, while the second one was collected on the 26th of February 2018, during the snow storm and contains 280 data points. Figure \ref{fig:bins_weather} displays the distribution of the bin counts for different weather conditions as previously mentioned. The means of the bin counts have been normalised as described in \ref{subsec:bin-count-normalisation} in order to visualise how the pattern, namely the percentage of each bin value is affected by weather changes.
 
 \begin{figure}[h!]
   \center
@@ -348,15 +404,15 @@ As it could be observed, the percentage of bin 0 decreased during winter while t
 
 \subsection{Time Series Analysis of PM Data}
 
-Time series analysis has been performed on the dataset obtained when walking around Meadows area (Figure \ref{fig:december_route}) in order to study the variance of the particulate matter counts in time while changing urban environments. First the dataset has been sorted in ascending order by the time of the day and it has been split in two halves. The first half contains the data collected at lunch time, while the second one consists of data gathered in the evening.
+Time series analysis has been performed on the dataset obtained when walking around the area surrounding Meadows Park in Edinburgh (Figure \ref{fig:december_route}) in order to study the variance of the particulate matter counts in time while changing urban environments. First, the dataset has been sorted in ascending order by the time of the day and it has been split in two halves. The first half contains the data collected at lunch time, while the second one consists of data gathered in the evening.
 
-Same analysis has also been performed on the dataset from the journey to and around London in order to analyse how the particulate matter values change in time while switching from a mode of transport to another.
+The same analysis has also been performed on the dataset from the journey to and around London conducted by Dr. Mark Miller in November 2017 in order to analyse how the particulate matter values change in time while switching from a mode of transport to another.
 
 As to the counts of particulate matter, bin 0 has the highest variance, followed by the next two bins, so the first three bins have been taken into consideration for this analysis. Moreover, exponential moving average (EMA), which is implemented in the scikit-learn Python library \cite{scikit-learn}, has been used for visualisation of bin counts (only first three bins as they are the most prominent ones), as well as PM1, PM2.5, and PM10 values respectively in order to ease any transitional event detection (either change of urban environment or mode of transport) by analysing the means of the attributes at each point. Figures \ref{fig:time_series_london} and \ref{fig:time_series_meadows} present the time series analysis of bin counts and PM values for the London journey and Meadows datasets respectively. Moreover, for the London journey dataset, the normalised bin counts have also been taken into consideration in order to discover whether normalisation would ease the detection of modes of transport for the time series analysis. The vertical dashed lines represent the moment when the use of one mean of transport ended during data collection and a new one began until the occurrence of a new line.
 
 \begin{figure}[h!]
   \center
-  \includegraphics[width=\columnwidth]{time_series_london.pdf} 
+  \includegraphics[angle=90, width=1.15\columnwidth]{time_series_london.pdf} 
   \caption{This set of diagrams represents the time series analysis of the first three bin counts and PM values for the dataset collected on the journey to London. The Exponential Moving Average is used to express the mean value at each point in time.}
   \label{fig:time_series_london}
 \end{figure}
@@ -378,7 +434,7 @@ As it could be observed in Figure \ref{fig:time_series_meadows}, there are more 
 
 \subsection{Pattern Comparison for Different Modes of Transport}
 
-The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated over the entire final dataset and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure with each mode of transport (Figure \ref{fig:norm-bins}).
+The relative values between all 16 bin counts have also been taken into consideration. Thus, the means for all bin counts corresponding to each mode of transport in particular have been calculated over the entire training dataset and plotted in order to observe any differences in the pattern between two or more modes of transport. Moreover, the same analysis has been performed after applying the bin counts normalisation explained in subsection \ref{subsec:bin-count-normalisation}, in order to visualise the percentage of each bin count that affects personal exposure to air pollution with each mode of transport (Figure \ref{fig:norm-bins}).
 
 \begin{figure}[h!]
   \center
@@ -387,7 +443,7 @@ The relative values between all 16 bin counts have also been taken into consider
   \label{fig:norm-bins}
 \end{figure}
 
-As it could be observed in Figure \ref{fig:norm-bins}, after normalising the values of the particulate matter counts by using the method described in \ref{subsec:bin-count-normalisation}, the patterns between specific modes of transport are visibly distinguishable. For instance, bins 4 and 5 have much smaller values in the case of the car data compared to walking and bicycle datasets. Moreover, bins 7, 8 and 9 have higher values in the case of the bus data compared to any other mean of transport.
+As it could be observed in Figure \ref{fig:norm-bins}, after normalising the values of the particulate matter counts by using the method described in subsection \ref{subsec:bin-count-normalisation}, the patterns between specific modes of transport are visibly distinguishable. For instance, bins 4 and 5 have much smaller values in the case of the car data compared to walking and bicycle datasets. Moreover, bins 7, 8 and 9 have higher values in the case of the bus data compared to any other mean of transport.
 
 \subsection{Spatial Analysis of PM Related Data}
 
@@ -396,12 +452,12 @@ As GPS information is made available by the Android application that collects re
 
 \section{Unsupervised Learning for Urban Environments Detection}
 
-This section emphasises on the methodology performed for detection of different urban environments based on data analysis results explained in section \ref{sec:data-analysis}. The approach is done using unsupervised machine learning technique on several groups of attributes retrieved from sensor readings of the AirSpeck device.
+This section emphasises on the methodology performed for detection of different urban environments based on data analysis results explained in section \ref{sec:data-analysis}. The approach is done by using unsupervised machine learning techniques on several groups of attributes retrieved from sensor readings of the Airspeck device.
 
 \subsection{K-means Clustering on Particulate Matter Data}
 \label{subsec:k-means-methodology}
 
-As a first version of the method, a K-means clustering algorithm is proposed as an approach for automatically detecting different urban environment types based on the distribution of particulate matter values, as well as particulate matter counts. In this way, the values that have a continuous pattern obtained during a certain time interval (Figure \ref{fig:time_series_meadows}) would be clustered in the same group. Particulate matter counts are firstly used as clustering attributes and spatial results obtained are analysed thoroughly in subsection \ref{subsec:k-means-straight-results}.
+As a first version of the method, a K-means clustering algorithm is proposed as an approach for automatically detecting different urban environment types based on the distribution of particulate matter values, as well as bin counts. In this way, the values that have a continuous pattern obtained during a certain time interval (Figure \ref{fig:time_series_meadows}) would be clustered in the same group. Particulate matter counts are firstly used as clustering attributes and spatial results obtained are analysed thoroughly in subsection \ref{subsec:k-means-straight-results}.
 
 \subsection{Generalising Clustering Approach by Preserving Locality}
 \label{subsec:generic-clustering}
@@ -410,7 +466,7 @@ There might be cases in which only the absolute values and counts of particulate
 
 \subsubsection*{Description of Methodology involving Locality Preservation}
 
-In a similar project involving urban environments detection in Edinburgh, \cite{Kotsev2015} proposes a solution in which K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points and hence, all points within close proximity of each other will be aggregated. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points and Algorithm \ref{alg:k-means-locality} outlines the pseudo-code utilised.
+In a similar project involving urban environments detection in Edinburgh \cite{Kotsev2015}, Kotsev proposes a solution in which K-means clustering is applied twice in a row. First, location-based clustering is performed based on the coordinates of the data points and hence, all points within close proximity of each other will be aggregated. The next step involves calculating the means of the attributes for each location cluster. Then, the new means are further clustered into 5 new clusters corresponding to the different urban environments specified in Section \ref{list:urban-environments}. In this way, the classification would be more continuous, as location groups created after the first clustering would be categorised in the same urban environment. Hence, locality preservation would be applied and  the visual representation of an urban environment would be constant in a larger area. Figure \ref{fig:clustering-twice} presents the pipeline of the unsupervised clustering method performed on the data points and Algorithm \ref{alg:k-means-locality} outlines the pseudo-code utilised.
 
 \begin{figure}[h!]
   \center
@@ -436,28 +492,28 @@ In a similar project involving urban environments detection in Edinburgh, \cite{
  \label{alg:k-means-locality}
 \end{algorithm}
 
-In his project, \cite{Kotsev2015} utilises only the values of bin 0 for the urban environments detection as it represents the most dominant values among all 16 bin counts. However, relying on only one attribute among the 16 bin counts would reduce the information provided from the sensors significantly and hence, misleading results would be produced in certain cases. Thus, experiments utilising all 16 bin counts and PM values respectively are performed separately and obtained results are compared with each other in \ref{subsec:locality-preservation-results}.
+In his project, \cite{Kotsev2015} utilises only the bin 0 values for classifying the urban environments as it represented the most dominant values among all the 16 bin counts. However, relying on only one attribute among the 16 bin counts would reduce the information provided from the sensors significantly and hence, misleading results would be produced in certain cases. Thus, experiments utilising all 16 bin counts and PM values respectively are performed separately and obtained results are compared with each other in \ref{subsec:locality-preservation-results}.
 
 \subsubsection*{Decision on the Optimal Number of Location Clusters}
 
-With the latest firmware installed on the AirSpeck device, the sensors collect air quality related information at a rate of one input every 10 seconds. Moreover, in his thesis, \cite{Kotsev2015} uses 50 location clusters on a dataset of around 1846 inputs, so he was sampling the area by using approximately 36 data points per location cluster. However, the firmware installed in the OPC device at that point was registering sensor readings every second, namely one input per second was registered and hence, the density of points in a location was higher ten times higher. Hence,  in the current case regarding the experiments carried out at walking speed around the Meadows route, each area was sampled by using around 15 data points per location cluster instead, because the same route had been crossed for 5 consecutive days during the data collection session. Therefore, at an average walking speed of 1.4 m/s, a journey would be sampled in smaller parts of around 15 metres length each.
+With the latest firmware installed on the Airspeck device, the sensors collect air quality related information at a rate of one input every 10 seconds. Moreover, in his thesis, \cite{Kotsev2015} uses 50 location clusters on a dataset of around 1846 inputs, so he was sampling the area by using approximately 36 data points per location cluster. However, the firmware installed in the OPC device at that point was registering sensor readings every second, namely one input per second was registered and hence, the density of points in a location was ten times higher. Hence,  in the current case regarding the experiments carried out at walking speed around the Meadows route, each area was sampled by using around 15 data points per location cluster instead, because the same route had been crossed for 5 consecutive days during the data collection session. Therefore, at an average walking speed of 1.4 m/s, a journey would be sampled in smaller parts of around 15 metres length each.
 
 \section{Supervised Learning for Modes of Transport Classification}
 
-This section is concerned about the methodology applied for the classification of different modes of transport by using supervised machine learning technique on annotated datasets, the label of each data point representing the mode of transport used at a certain moment.
+This section is concerned about the methodology applied for the classification of different modes of transport by using supervised machine learning techniques on annotated datasets, the label of each data point representing the mode of transport used at a certain moment.
 
 \subsection{Comparison of Models Performance}
 
-First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change of these two attributes in time affects classification accuracy on the validation sets. The models used include logistic regression classifiers (LRC), support vector machine classifiers (SVC), k-nearest neighbours (KNN), random forest classifiers (RFC) and multilayer perceptron classifiers (MLPC). All classification methods previously mentioned are implemented using scikit-learn Python library.
+First, several basic models have been trained using the absolute values of the particulate matter counts, as well as the PM1, PM2.5, PM10 values of several datasets containing balanced data points of two or more modes of transport. Moreover, temperature and humidity have been added to the training process in order to visualise how the change of these two attributes in time affects classification accuracy on the validation sets. The models used include logistic regression classifiers (LRC), support vector machine classifiers (SVC), k-nearest neighbours (KNN), random forest classifiers (RFC) and multilayer perceptron classifiers (MLPC). All classification methods previously mentioned are implemented using scikit-learn Python library \cite{scikit-learn}.
 
-Training of models and classification accuracy score calculations have been performed by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model. Moreover, the validation datasets that have been collected by other users of the AirSpeck have been used for testing of the models and the accuracy scores obtained have been compared. Then, the top three best performing models have been taken into consideration for further experiments involving model tweaking and data processing in order to increase the overall classification accuracy both over the entire dataset using K-Fold cross validation and the validation sets.
+Model training and classification accuracy score calculations have been performed by using K-Fold cross validation with 5 folds, so that the dataset would be split in 5 equally-sized sets, one of them representing the validation set and the other four being used for training each model. The results of the classification accuracies for each classifier are presented in subsection \ref{subsec:abs-values-models}. Moreover, the validation datasets that have been collected by other users of the Airspeck have been used for testing of the models and the accuracy scores obtained have been compared. Then, the best performing models have been taken into consideration for further experiments involving model tweaking and data processing in order to increase the overall classification accuracy both over the entire dataset using K-Fold cross validation and the validation sets.
 
 \subsection{Normalisation of Bin Counts}
 \label{subsec:bin-count-normalisation}
 
 Absolute values for the particulate matter counts when all 16 bins are taken into consideration differ significantly in different weather conditions or different urban environments. Hence, only taking the absolute values of the particulate matter counts into consideration in the training phase would produce over-fitting of the classification model on the training dataset.
 
-One first approach taken into consideration in order to address this issue was to normalise the bin counts by dividing each of the 16 counts by the total sum of the counts for each data point. Thus, the newly normalised attributes would emphasise the percentage that each particulate matter count would affect personal exposure to individuals when using a certain mode of transport in general.
+One first approach taken into consideration in order to address this issue was to normalise the bin counts by dividing each of the 16 counts by the total sum of the counts for each data point. Thus, the newly normalised attributes would emphasise the percentage that each particulate matter count would affect personal exposure to individuals when using a certain mode of transport in general. The classification accuracy results obtained after applying the normalisation of bin counts are presented in subsection \ref{subsec:norm-bin-counts-results}.
 
 \subsection{Usage of Urban Environments}
 
@@ -479,7 +535,7 @@ As an attempt to improve the classification of modes of transport accuracy and m
 \subsubsection{Feature Selection}
 \label{subsubsec:feat-selection}
 
-In order to train the model as accurately as possible and obtain a precise confidence level when deciding on the final predicted labels, the attributes were split in terms of their importance in the classification procedure and distributed along the classifiers. Feature selection and ranking was made in terms of the importance of attributes in the classification problem. The random forest classifier that was used in the classification problem was also utilised for ranking the attributes in terms of their importance (Table \ref{table:attr-rank}).
+In order to train the model as accurately as possible and obtain a precise confidence level when deciding on the final predicted labels, the attributes were split in terms of their importance in the classification procedure and distributed along the classifiers. Feature selection and ranking was made in terms of the importance of attributes in the classification problem. The random forest classifier that was used in the classification problem was also utilised for ranking the attributes in terms of their importance (Table \ref{table:attr-rank}). As it could be observed, the sum of bin counts for each input has the highest impact on the modes of transport classification problem, followed by the temperature, the environment type obtained from the urban environments detection task and the humidity. This emphasises that on the current training dataset, the attributes highlighted in Table \ref{table:attr-rank} present the most significant changes in their values when a switch between modes of transport occurs.
 
 \begin{table}[h!]
 \centering
@@ -507,7 +563,6 @@ In order to train the model as accurately as possible and obtain a precise confi
   \hline
  10 &  bin 4 \\
  \hline
- 
 \end{tabular}
 \caption{This table shows the ranking of the importance of each attribute in the classification of modes of transport problem for top ten attributes. The rankings have been obtained by fitting a random forest classifier on the training dataset.}
 \label{table:attr-rank}
@@ -533,7 +588,7 @@ After dividing the features in two groups, two random forest classifiers are cre
 \section{Data Visualization Tool}
 \label{sec:data-visualization-tool}
 
-This chapter focuses on the data visualization tool which has been implemented with the purpose of easing spatial visualization of results obtained after performing machine learning experiments with regards to urban environments detection and classification of modes of transport. Data is visualized with the help of GPS information provided by the mobile device through the AirSpeck Android app during data collection. Figure \ref{fig:vis-tool} describes briefly the main structure of the data visualization tool which will be further explained in the next three subsections.
+This chapter focuses on the data visualization tool which has been implemented with the purpose of easing spatial visualization of results obtained after performing machine learning experiments with regards to urban environments detection and classification of modes of transport. Data is visualized with the help of GPS information provided by the mobile device through the Airspeck Android app during data collection. Figure \ref{fig:vis-tool} describes briefly the main structure of the data visualization tool which will be further explained in the next three subsections.
 
 \begin{figure}[h!]
   \center
@@ -552,7 +607,7 @@ The training data is stored in a database which configured using \texttt{Postgre
 
 \subsubsection*{Database Structure}
 
-The structure of the database system is shown in Figure \ref{fig:database}. It consists of three tables. Table \texttt{mode\_of\_transport} contains the names and unique identifiers of all labels for the modes of transport. The \texttt{dataset} table contains the ids and names of the datasets that currently exist in the database and whose inputs are stored in one place as training data points. Finally, table \texttt{collected\_data} contains all the data points from all the datasets that have been uploaded by the user. In Figure \ref{fig:database}, \textit{[Airspeck Attributes]} refers to all attributes of the data points that exist in the CSV files created by the AirSpeck Android app during data collection. In addition, the table contains two mandatory foreign keys, one to the \texttt{mode\_of\_transport} table and the other one to the \texttt{dataset} table.
+The structure of the database system is shown in Figure \ref{fig:database}. It consists of three tables. Table \texttt{mode\_of\_transport} contains the names and unique identifiers of all labels for the modes of transport. The \texttt{dataset} table contains the ids and names of the datasets that currently exist in the database and whose inputs are stored in one place as training data points. Finally, table \texttt{collected\_data} contains all the data points from all the datasets that have been uploaded by the user. In Figure \ref{fig:database}, \textit{[Airspeck Attributes]} refers to all attributes of the data points that exist in the CSV files created by the Airspeck Android app during data collection. In addition, the table contains two mandatory foreign keys, one to the \texttt{mode\_of\_transport} table and the other one to the \texttt{dataset} table.
 
 There is no table for urban environments, as the method performed for environment type detection is unsupervised and classification results will always differ based on the training dataset taken in consideration and validation data that is queried. More information about handling urban environment indices is provided in subsection \ref{subsec:back-end}, which presents the back-end structure.
 
@@ -566,7 +621,7 @@ There is no table for urban environments, as the method performed for environmen
 \subsection{Back-end Server}
 \label{subsec:back-end}
 
-A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different AirSpeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of the API of the author (Mihai's API). A setup guide for the API and its dependencies is outlined in section \ref{sec:api-setup}.
+A back-end server has been developed as a common part with Vlad Buzatu, a student who works on a different Airspeck related honours project. Thus, as Figure \ref{fig:vis-tool} also shows, the back-end server functionality is divided in two parts corresponding to two different API's concerned about the two different projects. This section will focus on the implementation of the API of the author (Mihai's API). A setup guide for the API and its dependencies is outlined in section \ref{sec:api-setup}.
 
 \subsubsection*{Motivation for Framework Choice}
 
@@ -807,7 +862,7 @@ Apart from the walking data gathered on the route around Meadows Park described 
 
 \subsubsection*{Urban Environments Detection on a Bus Journey}
 
-Urban environments detection has been applied using both PM values and bin counts separately on the return bus journey from St Andrews Square in the city centre to Queensferry bridges. Figure \ref{fig:queensferry-urban-environments} shows the route taken and the data points labelled with their corresponding urban environments after applying clustering using the bin counts and PM values separately.
+Urban environments detection has been applied using both PM values and bin counts separately on the return bus journey from St Andrews Square in the city centre to Queensferry bridges. During the data collection session, the author was situated on the front seats, on the right side and on the lower level of the bus such that the sensors would efficiently capture increased particulate matter dosage in bus stops and high vehicular traffic intensity areas. Figure \ref{fig:queensferry-urban-environments} shows the route taken and the data points labelled with their corresponding urban environments after applying clustering using the bin counts and PM values separately.
 
 \begin{figure}[h!]
   \begin{subfigure}[t]{\textwidth}
@@ -830,22 +885,18 @@ As it could be observed, in the case of bin counts usage on the environments det
 
 \subsubsection*{Urban Environments Detection on Cycling Routes}
 
-Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 (Figure \ref{fig:meijer-bike-urban-envs}) and the second created by the author on the 26th of February 2018 (Figure \ref{fig:feb-bike-urban-envs}).
+Furthermore, urban environments clustering has also been applied on two datasets corresponding to two different cycling routes (section \ref{sec:data-collection}), one created by Aart Meijer in the summer of 2015 (Figures \ref{fig:meijer-bike-urban-envs-bins} and \ref{fig:meijer-bike-urban-envs-pm}) and the second created by the author on the 26th of February 2018 (Figure \ref{fig:feb-bike-urban-envs}).
 
 \begin{figure}[h!]
-  \begin{subfigure}[t]{0.5\textwidth}
     \includegraphics[width=\textwidth]{urban_envs_aart_meijer_pm.png}
     \caption{Urban environments detection using PM values for clustering on Aart Meijer's cycling route over the summer.}
     \label{fig:meijer-bike-urban-envs-pm}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.5\textwidth}
+\end{figure}
+
+\begin{figure}
     \includegraphics[width=\textwidth]{urban_envs_aart_meijer_bins.png}
     \caption{Urban environments detection using bin counts for clustering on Aart Meijer's cycling route over the summer in 2015.}
     \label{fig:meijer-bike-urban-envs-bins}
-  \end{subfigure}
-  \caption{Urban environments detection on Aart Meijer's cycling route over the summer in 2015}
-  \label{fig:meijer-bike-urban-envs}
 \end{figure}
 
 \begin{figure}[h!]
@@ -901,7 +952,7 @@ As in the case of the model validation on the dataset collected during the eveni
   \label{fig:queensferry-google-maps}
 \end{figure}
 
-As it could be observed, the section of Queensferry Road edging the crossroads with Maybury Road and Dean Village presents a slow traffic area on Google Traffic data. In addition, the unsupervised model labelled the inputs on the same part of the route as medium to high and high traffic intensity points respectively when bin counts were taken into consideration. Hence, the model was again able to detect a high traffic density environment accurately based on particulate matter counts retrieved from sensor readings of the AirSpeck device. Furthermore, the upper side of Queensferry Road located towards the suburbs of Edinburgh City presents fast traffic on Google Traffic data. At the same time, the inputs located on the same portion of the road were tagged as medium and low to medium vehicular traffic density points by the unsupervised model. This result emphasises the fact that pollution levels start to decrease as traffic becomes more fluid on the road.
+As it could be observed, the section of Queensferry Road edging the crossroads with Maybury Road and Dean Village presents a slow traffic area on Google Traffic data. In addition, the unsupervised model labelled the inputs on the same part of the route as medium to high and high traffic intensity points respectively when bin counts were taken into consideration. Hence, the model was again able to detect a high traffic density environment accurately based on particulate matter counts retrieved from sensor readings of the Airspeck device. Furthermore, the upper side of Queensferry Road located towards the suburbs of Edinburgh City presents fast traffic on Google Traffic data. At the same time, the inputs located on the same portion of the road were tagged as medium and low to medium vehicular traffic density points by the unsupervised model. This result emphasises the fact that pollution levels start to decrease as traffic becomes more fluid on the road.
 
 
 \section{Comparison of Personal Exposure with Different Modes of Transport}
@@ -913,7 +964,7 @@ This section presents the results obtained after training different models and t
 
 Several pairs of attributes have been used for training different models. First, all 16 particulate matter count bins have been taken into consideration. Then, the number of bin counts taken for training has been reduced to 3, as the first three bins proved to be the most dominant ones. Separately, the PM1, PM2.5 and PM10 values have been taken for training and the mode of transport classification accuracies obtained have been compared with the former case. 
 
-Table \ref{table:abs-values-models} presents the validation accuracies obtained using K-Fold cross validation for each classification method after training the models on the raw attribute values of the entire dataset. As it could be observed, the best performing model was the one implementing a random forest classifier on all bin 16 bin counts. Therefore, for the next experiments involving data processing and model optimisation, the 16 particulate matter counts have been taken into consideration for training and testing.
+Table \ref{table:abs-values-models} presents the validation accuracies obtained using K-Fold cross validation for each classification method after training the models on the raw attribute values of the entire dataset. As it could be observed, the best performing model was the one implementing a random forest classifier on all 16 bin counts. Therefore, for the next experiments involving data processing and model optimisation, the 16 particulate matter counts have been taken into consideration for training and testing.
 
 \begin{table}[h!]
 \centering
@@ -940,7 +991,7 @@ Table \ref{table:abs-values-models} presents the validation accuracies obtained 
 \subsection{Usage of Urban Environments}
 \label{subsec:results-urban-env-use}
 
-The next step was to find a data processing method that would improve the accuracy for modes of transport classification. One of them represented the usage of urban environment types using the method described in \ref{subsec:generic-clustering} as an additional attribute for means of transport classification. Thus, classification becomes more generalised and the model would eventually perform more accurately in different urban environments (e.g. a car driven on a crowded street compared to a car driven in a quiet area).
+The next step was to find a data processing method that would improve the accuracy for modes of transport classification. One of them represented the usage of urban environment types using the method described in subsection \ref{subsec:generic-clustering} as an additional attribute for means of transport classification. Thus, classification becomes more generalised and the model would eventually perform more accurately in different urban environments (e.g. a car driven on a crowded street compared to a car driven in a quiet area).
 
 Table \ref{table:urban-env-models} presents the new validation accuracy results obtained using the same classification methods as in Table \ref{table:abs-values-models} on all 16 bin counts, before and after applying detection of urban environments. As it could be observed, the validation accuracy has improved in the case of almost all classification methods. Moreover, the random forest classifier delivered the highest classification accuracy from this set of experiments, as in the previous section (\ref{subsec:abs-values-models}).
 
@@ -989,7 +1040,7 @@ Another step taken with the aim of generalising classification and improving the
 \label{table:norm-bin-counts}
 \end{table}
 
-As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in subsection \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an AirSpeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.3\% to 91.2\%. Even if the overall classification accuracy has not improved after normalisation of bin counts, this method will still be used for further validation on the testing datasets in order to verify the generalisation of the classification model in cases of new data points that have not been used for training before. 
+As it could be seen, the addition of urban environments in the supervised model performing modes of transport classification improved the validation accuracy again. However, the average performance decreased compared to the one obtained  in subsection \ref{subsec:results-urban-env-use} before normalising the particulate matter counts. This could be due to misclassification in situations when an Airspeck user switches from a mode of transport to another. In such cases, all data points from the time period when the switch happens would be most probably clustered in the same urban environment as they would be part of the same location cluster. Moreover, the pattern of the normalised bin counts would be similar between the data points, even if the numbers of the most dominant bins would be different. Therefore, the total number of particulate matter counts was added as an additional, distinctive attribute in the methods for modes of transport classification for each data point. Indeed, the sum of all particulate matter counts improved the classification accuracy result when random forests were used as classification methods from 89.3\% to 91.2\%. Even if the overall classification accuracy has not improved after normalisation of bin counts, this method will still be used for further validation on the testing datasets in order to verify the generalisation of the classification model in cases of new data points that have not been used for training before. 
 
 
 \subsection{Further Tuning of Classification Methods}
@@ -1029,7 +1080,7 @@ Up to this point, all methods that have been used for modes of transport classif
 
 As presented in subsection \ref{subsec:classifier-tweaking}, the random forest with 300 estimators provided the highest accuracy. Hence, the configuration of this classifier was utilised in the mixed model as described in subsection \ref{subsec:mixed-model-methodology}. As usage of urban environments and normalisation of bin counts increased the overall accuracy in previous experiments and ensured a generalisation of the model, making the classifier less dependent on the type of environment and weather conditions, they have been used in this case as well. 
 
-Firstly, overall performance has been tested on the training set using K-Fold cross validation with 5 folds, as in the other tests performed with models previously described in this section and the classification accuracy obtained was \textbf{95.8\%}. Figure \ref{fig:confusion_matrix} shows the confusion matrix obtained after applying this model on the training dataset. It could be observed that 8.3\% of the inputs that were labelled as subway were classified as train. This might be due to the fact that patterns of normalised bin counts between subway and train data are similar and the number of train tagged data points is much higher than the number of subway tagged inputs. Moreover, 5\% walking labelled inputs have been misclassified as train, bike and bus inputs respectively. The reason behind this result might be that walking data is the most dominant in the training dataset and a significant number of walking tagged data points were collected in all types of urban environments mentioned in \ref{sec:urban-environments}.
+Firstly, overall performance has been tested on the training set using K-Fold cross validation with 5 folds, as in the other tests performed with models previously described in this section and the classification accuracy obtained was \textbf{95.8\%}. Figure \ref{fig:confusion_matrix} shows the confusion matrix obtained after applying this model on the training dataset. It could be observed that 8.3\% of the inputs that were labelled as subway were classified as train. This might be due to the fact that patterns of normalised bin counts between subway and train data are similar and the number of train tagged data points is much higher than the number of subway tagged inputs. Moreover, 5\% of walking labelled inputs have been misclassified as train, bike and bus inputs respectively. The reason behind this result might be that walking data is the most dominant in the training dataset and a significant number of walking tagged data points were collected in all types of urban environments mentioned in \ref{sec:urban-environments}.
 
 \begin{figure}[h!]
   \center
@@ -1040,6 +1091,7 @@ Firstly, overall performance has been tested on the training set using K-Fold cr
 
 
 \subsection{Performance Results on Validation Sets}
+\label{subsec:validation-performance}
 
 As it was presented in subsection \ref{subsec:test-data-collection}, more data that was gathered by different subjects was taken into account with the purpose of further testing and validating the model that was performing the best on the training dataset. Hence, in this case, the mixed model described in subsection \ref{subsec:mixed-model-methodology} was fitted on the entire training dataset. Then, it was utilised to predict the mean of transport labels for the data points from each validation set separately. Moreover, the methodology involving normalisation of bin counts has been compared to the one using raw values. Table \ref{table:validation-results} presents the results obtained after the predictions had been made. The accuracy score is expressed in percentages and calculated by the following formula: $$ \frac{\texttt{\# of correctly predicted labels}}{\texttt{\# of validation data points}} $$
 
@@ -1062,18 +1114,59 @@ As it was presented in subsection \ref{subsec:test-data-collection}, more data t
 \label{table:validation-results}
 \end{table}
 
+\subsubsection*{Validation Sets with Several Modes of Transport Switches}
+
+As an additional validation step, two different datasets in which the Airspeck users utilised several modes of transport have been taken into consideration for the modes of transport classification task. Therefore, the behaviour of the best performing model would be tested in edge cases when switches between different modes of transport occur.
+
+Figure \ref{fig:queensferry-return-transport} shows the spatial results obtained after applying the best performing classification model to the dataset collected during the return trip between St Andrews Square and Queensferry bridges. The return trip from Queensferry bus stop to Princes Street was taken for validation along with the pedestrian data in Queensferry, as well as from Princes Street to Nicholson Street, the total validation set containing 635 data points. As presented in Table \ref{table:validation-results}, the accuracy obtained was 95.6\%. There are several pedestrian points that were misclassified as bus inputs. This result is due to the hysteresis effect of the sensors which influences the results negatively in edge scenarios when the subject enters or exits the bus (e.g queueing to buy a bus ticket from the driver or queueing to exit the bus).
+
+\begin{figure}[h!]
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{queensferry_transport_1.png}
+    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the first part of the route.}
+    \label{fig:queensferry-return-transport-1}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\textwidth}
+    \includegraphics[width=\textwidth]{queensferry_transport_2.png}
+    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the second part of the route.}
+    \label{fig:queensferry-return-transport-2}
+  \end{subfigure}
+  \caption{Results obtained after utilising the best performing modes of transport classification model on the validation set of the return trip between Queensferry and Princes Street. The starting point is the bus stop in Queensferry and the ending point of the bus trip is on Princes Street, followed by a walking journey to Nicholson Street. Classification accuracy obtained was 95.6\%.}
+  \label{fig:queensferry-return-transport}
+\end{figure}
+
+Furthermore, the dataset collected by Dr. Mark Miller in October 2017 has been taken separately for validation. More exactly, only 300 inputs from the middle of the train journey remained included in the training dataset and data intervals capturing transitions from a mode of transport to another were taken for validation. In addition, the train dataset collected by Stefan Ivanov in March 2018 was included in the training dataset such that train tagged data points would remain balanced in comparison to other modes of transport. Thus, for the current case, the validation set contains 559 inputs, while the training set contains 4585 data points. The accuracy obtained in this case was 87\%. Figure \ref{fig:val_london_conf} presents the confusion matrix obtained after applying the best performing model to the current validation set.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{val_london_conf.pdf}
+  \caption{Confusion matrix obtained after applying the best performing modes of transport classification method to the validation set collected by Dr. Mark Miller on his journey to London.}
+  \label{fig:val_london_conf}
+\end{figure}
+
+As it could be observed, most metro tagged inputs were misclassified as train inputs. This result could be improved by taking the GPS accuracy parameter as an additional classification attribute, as the accuracy in the underground is significantly lower than on flat terrain. However, GPS accuracy data was not included in the dataset with that particular firmware version of the Airspeck configuration. On the other hand, when GPS signal is lost, a large amount of consecutive data points are assigned with the same coordinates. In the case of the metro route, GPS signal is lost in the underground and the coordinates along the route are indeed the same, namely the points are placed at the entrance of the underground station. Hence, the classification accuracy between metro and train labelled points could be improved by taking the movement speed of the subject at every moment between two data points into consideration. The speed is calculated by dividing the distance between two inputs by the time interval at which each sample is generated, namely 10 seconds (the sampling rate of the current Airspeck device is one input every 10 seconds). In this way, the model would detect large intervals of points with no GPS signal but with similar environment parameters to the ones met in trains and it would classify them as metro tagged inputs. Figure \ref{fig:val_london_conf_speed} presents the confusion matrix of the new classification results after taking the movement speed of the Airspeck user into consideration. The classification accuracy for this set has increased to 93\%.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=\columnwidth]{val_london_conf_speed.pdf}
+  \caption{Confusion matrix obtained after applying the best performing modes of transport classification method to the validation set collected by Dr. Mark Miller on his journey to London and by taking the movement speed at each point into consideration.}
+  \label{fig:val_london_conf_speed}
+\end{figure}
+
+Figure \ref{fig:val_london_conf_speed} shows that the percentage of correctly classified metro data points increased significantly. In addition, the accuracy of pedestrian inputs classified correctly increased in comparison to the case in Figure \ref{fig:val_london_conf}. This is due to points with low movement speed in the train station being now correctly classified as pedestrian inputs.
 
 \chapter{Conclusions}
 
 \section{Concluding Remarks}
 
-In summary, the project explored statistical differences between urban environments in the city of Edinburgh and the surroundings (the bus journey to Queensferry bridges) based on data collected with an AirSpeck device which represents a personal, mobile exposure monitor developed by the Centre for Speckled Computing. Furthermore, a thorough analysis regarding personal exposure with different modes of transport was conducted mainly in the city of Edinburgh and on train journeys to Manchester and London based on data collected with the same type of mobile exposure monitor. Spatial results were visualised via the data visualization tool that was created with the purpose of easing configurations of classification and clustering models.
+In summary, the project explored statistical differences between urban environments in the city of Edinburgh and the surroundings (the bus journey to Queensferry bridges) based on data collected with an Airspeck device which represents a personal, mobile exposure monitor developed by the Centre for Speckled Computing. Furthermore, a thorough analysis regarding personal exposure with different modes of transport was conducted mainly in the city of Edinburgh and on train journeys to Manchester and London based on data collected with the same type of mobile exposure monitor. Spatial results were visualised via the data visualization tool that was created with the purpose of easing configurations of classification and clustering models.
 
 \subsection{Urban Environments Detection}
 
-As far as detection of urban environments is concerned, for this problem, an unsupervised learning approach based on K-means clustering algorithm has been taken into consideration. The final method proposed for urban environments detection included locality preservation by aggregating the data points based on the GPS information provided, prior to applying clustering on the particulate matter related attributes. The clusters obtained have been visualised with the help of the data visualisation tool created. The number of discontinuities occurring in transitions between urban environments, as well as a brief comparison of typical traffic speed with the environments obtained have been chosen as further validation measures for testing the performance of the models.
+As far as detection of urban environments is concerned, for this problem, an unsupervised learning approach has been taken into consideration. The final method proposed for urban environments detection included locality preservation by aggregating the data points based on the GPS information provided, prior to applying clustering on the particulate matter related attributes. The clusters obtained have been visualised with the help of the data visualisation tool created. The number of discontinuities occurring in transitions between urban environments, as well as a brief comparison of typical traffic speed with the environments obtained have been chosen as further validation measures for testing the performance of the models.
 
-Additional analysis regarding urban environments detection has been taken further by applying the method to different modes of transport. The resulted urban environments were again visualised on the map via the data visualisation tool and model performance was measured by taking the number of transition discontinuities and typical traffic speed into account.
+Additional analysis regarding urban environments detection has been taken further by applying the method to different modes of transport. The resulted urban environments were again visualised on the map via the data visualisation tool and model performance was measured by taking the number of transition discontinuities and typical traffic speed into account. Moreover, the results obtained compared favourably with the congestion data based on traffic flow speeds provided by Google Traffic, as the principal source of pollution was due to vehicular traffic.
 
 As a conclusion, the model implementing locality preservation and using all bin counts as clustering attributes performed the best on average on all datasets.
 
@@ -1089,16 +1182,16 @@ As a conclusion of the results obtained, a mixed model which uses two random for
 
 During data collection sessions there were several edge cases regarding input labelling with the corresponding modes of transport, which would lead to a decrease of the final classification accuracy. More exactly, the transition moment of switching from a mode of transport to another is hard to interpret in many cases and makes labelling of data points with the corresponding means of transport harder. For instance, during the bus journey to Queensferry bridges, the bus stood at one stop with doors open for approximately 10 minutes and the sensor was placed at the entrance while the author was queueing at the bus entrance. In this case, it would be hard for the classifier to predict the mode of transport label correctly. 
 
-Furthermore, during labelling procedures carried out for new data points gathered by other subjects, it was difficult to detect the exact moments when a switch between two different modes of transport happened as switching times were approximated by users of the AirSpeck device. Hence, there is a high probability of having a small number inputs being incorrectly labelled in the training and validation sets.
+Furthermore, during labelling procedures carried out for new data points gathered by other subjects, it was difficult to detect the exact moments when a switch between two different modes of transport happened as switching times were approximated by users of the Airspeck device. Hence, there is a high probability of having a small number inputs being incorrectly labelled in the training and validation sets.
 
-An additional system limitation that affects final results regarding both classification of modes of transport and detection of urban environments represents the hysteresis effect existent in the sensor readings. For instance, the AirSpeck device requires additional time to adjust particulate matter related values accordingly to the current ambient air conditions. This cause leads to misclassified inputs in several cases when frequent switches between urban environments and modes of transport occur.
+An additional system limitation that affects final results regarding both classification of modes of transport and detection of urban environments represents the hysteresis effect existent in the sensor readings. For instance, the Airspeck device requires additional time to adjust particulate matter related values accordingly to the current ambient air conditions. This cause leads to misclassified inputs in several cases when frequent switches between urban environments and modes of transport occur. Moreover, frequent losses in GPS signal may lead to incorrect classification results.
 
 
 \section{Future Work}
 
 Future work on personal exposure with different modes of transport could be conducted by collecting more data in different cities and even countries while using different modes of transport such that the final dataset would be balanced in regard to a wider variety of modes of transport in various environments and would include more edge cases that would be correctly classified by the models. Moreover, a more robust locality preservation solution could be implemented in the best performing classification models, assuming that sudden switches between modes of transport used on a certain route do not occur. This would further improve the classification accuracy on a small number of edge cases.
 
-As the AirSpeck devices were updated in March with new light and motion sensors, light data could be examined and used as an additional attribute for classification between different modes of transport. For instance, during day time, there may be a significant difference between light values captured inside vehicles compared to values in pedestrian or cycling data. Hence, this addition would improve the performance of the final model as a large number of misclassification errors between vehicles related data and cycling or pedestrian inputs would be addressed.
+As the Airspeck devices were updated in March with new light and motion sensors, light data could be examined and used as an additional attribute for classification between different modes of transport. For instance, during day time, there may be a significant difference between light values captured inside vehicles compared to values in pedestrian or cycling data. Hence, this addition would improve the performance of the final model as a large number of misclassification errors between vehicles related data and cycling or pedestrian inputs would be addressed. In addition, GPS accuracy is made available in the latest firmware and it could be used in order to further improve the classification accuracy for modes of transport by splitting travel modes in categories based on the GPS signal. In this way, modes of transport such as metro inputs could be efficiently detected and distinguished from train data points.
 
 As to urban environments detection, further work could be conducted by exploring more precise validation methods in order to improve the patterns of the results and make the unsupervised model more scalable to larger areas.
 
@@ -1114,12 +1207,12 @@ Further improvements could be performed on the data visualisation tool which imp
 
 \begin{appendices}
 
-\chapter{AirSpeck Device}
+\chapter{Airspeck Device}
 
 \begin{figure}[h!]
   \center
   \includegraphics[width=0.6\columnwidth]{airspeck_on_me.jpg}
-  \caption{This image presents the way the AirSpeck device set up with the running belt and wore during a normal data collection session.}
+  \caption{This image presents the way the Airspeck device set up with the running belt and wore during a normal data collection session.}
   \label{fig:airspeck_on_me}
 \end{figure}
 
@@ -1271,22 +1364,6 @@ The user has the option to choose of whether to utilise a specific dataset for v
   \includegraphics[width=\columnwidth]{appendix-classifiers-interface-validation.png}
   \caption{An option of whether to utilise a certain dataset for validation is provided via the checkbox field shown in the image.}
   \label{fig:validation-checkbox}
-\end{figure}
-
-\begin{figure}[h!]
-  \begin{subfigure}[t]{\textwidth}
-    \includegraphics[width=\textwidth]{queensferry_transport_1.png}
-    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the first part of the route.}
-    \label{fig:queensferry-return-transport-1}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{\textwidth}
-    \includegraphics[width=\textwidth]{queensferry_transport_2.png}
-    \caption{Validation data inputs labelled to corresponding modes of transport by best performing model in the second part of the route.}
-    \label{fig:queensferry-return-transport-2}
-  \end{subfigure}
-  \caption{Results obtained after utilising the best performing modes of transport classification model on the validation set of the return trip between Queensferry and Princes Street. The starting point is the bus stop in Queensferry and the ending point of the bus trip is on Princes Street, followed by a walking journey to Nicholson Street. Classification accuracy obtained was 96\%.}
-  \label{fig:queensferry-return-transport}
 \end{figure}
 
 \end{appendices}

@@ -16,6 +16,7 @@ $(function() {
   var $includeUrbanEnvironments = $('.include-urban-environments input:checked');
   var $normaliseBinCounts = $('.normalise-bins input:checked');
   var $datasetDropdown = $('.classification-form .dataset .ui.dropdown');
+  var $trainDatasetDropdown = $('.classification-form .train-dataset .ui.dropdown');
 
   var $pusher = $('.pusher');
 
@@ -321,6 +322,11 @@ $(function() {
     var includeUrbanEnvironments = $includeUrbanEnvironments.length;
     var normaliseBinCounts = $normaliseBinCounts.length;
     var dataset = $datasetDropdown.dropdown('get value');
+    var trainDataset = $trainDatasetDropdown.dropdown('get value');
+    console.log(trainDataset);
+    var extra = {
+      'train_dataset': trainDataset,
+    };
 
     transportLegend.addTo(map);
 
@@ -329,7 +335,7 @@ $(function() {
       classifier + '/' +
       normaliseBinCounts + '/' +
       includeUrbanEnvironments + '/' +
-      foldsNumber, circles.londonData, 'total', colors, binScale, "label", attrs, map);
+      foldsNumber, circles.londonData, 'total', colors, binScale, "label", attrs, map, extra);
   });
 
 //   var file = null;

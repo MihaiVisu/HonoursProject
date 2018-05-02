@@ -1,6 +1,9 @@
-function requestData(dataUrl, circles, radiusProperty, colors, scale, index, attrs, map) {
+function requestData(dataUrl, circles, radiusProperty, colors, scale, index, attrs, map, extra) {
   // use encodeURIComponent for XSS validation
-  $.getJSON(dataUrl, {"attrs[]": encodeURIComponent(attrs)}, function(data) {
+  $.getJSON(dataUrl, {
+    "attrs[]": encodeURIComponent(attrs),
+    "train_dataset": encodeURIComponent(extra['train_dataset'])
+  }, function(data) {
     data.features.forEach(function(feature) {
       if (!circles[feature.properties[index]]) {
         circles[feature.properties[index]] = [];

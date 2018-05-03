@@ -5,6 +5,10 @@ $(function() {
 
   // -----JQUERY VARIABLES-----
   var $classifyAttrsDropdown = $('.classification-form .attributes .ui.dropdown');
+
+  var $firstMixedAttrsDropdown = $('.classification-form .attributes-one .ui.dropdown');
+  var $secondMixedAttrsDropdown = $('.classification-form .attributes-two .ui.dropdown');
+
   var $clusterAttrsDropdown = $('.kmeans-form .attributes .ui.dropdown');
   var $environmentClustersInput = $('.kmeans-form input[name="environment-clusters-number"]');
   var $locationClustersInput = $('.kmeans-form input[name="location-clusters-number"]');
@@ -271,6 +275,9 @@ $(function() {
     if(this.checked) {
       $('.folds-number').hide();
       $('.train-dataset').show();
+      // reset the folds number input value
+      $foldsNumberInput.val(0);
+
     }
     else {
       $('.folds-number').show();
@@ -317,16 +324,24 @@ $(function() {
     var colors = transportColors;
     var classifier = $classifierDropdown.dropdown('get value');
     var attrs = $classifyAttrsDropdown.dropdown('get value');
+
+    var attrs_0 = $firstMixedAttrsDropdown.dropdown('get value');
+    var attrs_1 = $secondMixedAttrsDropdown.dropdown('get value');
+
     var validationCriterion = $validationCriterionDropdown.dropdown('get value');
     var foldsNumber = $foldsNumberInput.val() || 0;
     var includeUrbanEnvironments = $includeUrbanEnvironments.length;
     var normaliseBinCounts = $normaliseBinCounts.length;
     var dataset = $datasetDropdown.dropdown('get value');
     var trainDataset = $trainDatasetDropdown.dropdown('get value');
-    console.log(trainDataset);
+    
     var extra = {
       'train_dataset': trainDataset,
+      'attrs_0': attrs_0,
+      'attrs_1': attrs_1
     };
+
+    console.log(extra);
 
     transportLegend.addTo(map);
 

@@ -15,7 +15,7 @@ The notebooks are located in the notebooks folder, and once in the frontend fold
 jupyter notebook
 ```
 
-Then, a local environment on port 8888 should start and the notebooks can be visualised, edited and run. The main notebook containing the <b>results of the final models that are also highlighted in the report are in notebooks/mixed_final_model.ipynb<b>. The notebook should run with no errors unless the data paths are wrong.
+Then, a local environment on port 8888 should start and the notebooks can be visualised, edited and run. The main notebook containing the <b>results of the final models that are also highlighted in the report are in notebooks/mixed_final_model.ipynb</b>. The notebook should run with no errors unless the data paths are wrong.
 
 In order to run the frontend interface, it must be start by using the server.py file (it is built using flask):
 
